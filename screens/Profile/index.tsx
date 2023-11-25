@@ -267,6 +267,8 @@ import {
   TouchableOpacity,
   ScrollView,
   Image,
+  Dimensions,
+  FlatList,
 } from "react-native";
 import { ContentLabel } from "../../components/ContentLabel";
 import { useAuth } from "../../contexts/auth.context";
@@ -289,6 +291,162 @@ export default function HomeScreen() {
   const { user } = useAuth();
   const { theme, changeTheme } = useTheme();
 
+  type Statistic = {
+    key: string;
+    value: number;
+    label: string;
+    emoji: string;
+  };
+
+  const statistics: Statistic[] = [
+    {
+      key: "challenges",
+      value: 127,
+      label: "Challenges",
+      emoji: "🏆",
+    },
+    {
+      key: "lessons",
+      value: 458,
+      label: "Lessons",
+      emoji: "📚",
+    },
+    {
+      key: "xp",
+      value: 1234,
+      label: "XP",
+      emoji: "🎉",
+    },
+    {
+      key: "streak",
+      value: 3,
+      label: "Streak",
+      emoji: "🔥",
+    },
+    {
+      key: "rank",
+      value: 1,
+      label: "Rank",
+      emoji: "🥇",
+    },
+    {
+      key: "journeys",
+      value: 3,
+      label: "Journeys",
+      emoji: "🌎",
+    },
+    {
+      key: "prayers",
+      value: 3,
+      label: "Prayers",
+      emoji: "🙏",
+    },
+    {
+      key: "groups",
+      value: 3,
+      label: "Groups",
+      emoji: "👥",
+    },
+    {
+      key: "books",
+      value: 3,
+      label: "Books",
+      emoji: "📖",
+    },
+    {
+      key: "chapters",
+      value: 3,
+      label: "Chapters",
+      emoji: "📖",
+    },
+    {
+      key: "verses",
+      value: 3,
+      label: "Verses",
+      emoji: "📖",
+    },
+    {
+      key: "words",
+      value: 3,
+      label: "Words",
+      emoji: "📖",
+    },
+    {
+      key: "characters",
+      value: 3,
+      label: "Characters",
+      emoji: "📖",
+    },
+  ];
+
+  const renderStatisticItem = ({ item }: { item: Statistic }) => {
+    // let IconComponent: any = MaterialCommunityIcons; // Default icon set
+
+    // Determine which icon set to use
+    // switch (item.iconType) {
+    //   case "FontAwesome5":
+    //     IconComponent = FontAwesome5;
+    //     break;
+    //   case "Material":
+    //     IconComponent = MaterialIcons;
+    //     break;
+    //   case "Ionicons":
+    //     IconComponent = Ionicons;
+    //     break;
+    // }
+
+    return (
+      <View
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          backgroundColor: theme === "dark" ? "#333" : "#DDD",
+          borderRadius: 10,
+          padding: 10,
+          paddingBottom: 20,
+          marginBottom: 10,
+          marginLeft: 10,
+          width: Dimensions.get("window").width / 2 - 20,
+          alignItems: "flex-start",
+        }}
+      >
+        <Text
+          style={{
+            marginTop: 10,
+            fontSize: 30,
+          }}
+        >
+          {item.emoji}
+        </Text>
+        <View
+          style={{
+            marginLeft: 20,
+          }}
+        >
+          <Text
+            style={{
+              color: primaryTextColor(theme), // Replace with actual color code
+              fontSize: 24,
+              fontWeight: "bold",
+              marginTop: 8,
+            }}
+          >
+            {item.value}
+          </Text>
+          <Text
+            style={{
+              color: primaryTextColor(theme),
+              fontSize: 16,
+              marginTop: 4,
+            }}
+          >
+            {item.label}
+          </Text>
+        </View>
+      </View>
+    );
+  };
+
   const Header = () => {
     return (
       <View
@@ -309,7 +467,6 @@ export default function HomeScreen() {
             alignItems: "center",
           }}
         >
-   
           <TouchableOpacity
             onPress={() => {
               navigation.removeListener;
@@ -501,6 +658,175 @@ export default function HomeScreen() {
     );
   };
 
+  const Experience = () => {
+    return (
+      <View style={{ paddingHorizontal: 20 }}>
+        <Text
+          style={{
+            color: primaryTextColor(theme),
+            fontSize: 22,
+            fontWeight: "bold",
+            marginBottom: 20,
+          }}
+        >
+          Your Achievements
+        </Text>
+
+        {/* Achievement Items */}
+        {/* This should be mapped from data ideally */}
+        <View style={{ flexDirection: "row", marginBottom: 20 }}>
+          <View style={{ marginRight: 15 }}>
+            <Image
+              source={require("../../assets/icon.png")}
+              style={{ width: 50, height: 50 }}
+            />
+          </View>
+          <View style={{ flex: 1 }}>
+            <Text
+              style={{
+                color: primaryTextColor(theme),
+                fontSize: 18,
+                fontWeight: "bold",
+              }}
+            >
+              Great King
+            </Text>
+            <Text style={{ color: primaryTextColor(theme), fontSize: 14 }}>
+              Get 5000 XP in this month to get achievements.
+            </Text>
+            {/* Progress Bar */}
+            <View
+              style={{
+                height: 20,
+                backgroundColor: "#333333",
+                borderRadius: 10,
+                marginTop: 10,
+              }}
+            >
+              <View
+                style={{
+                  width: "75%",
+                  height: "100%",
+                  backgroundColor: "#4C9A2A",
+                  borderRadius: 10,
+                }}
+              />
+            </View>
+          </View>
+        </View>
+        {/* Repeat for other achievements... */}
+      </View>
+    );
+  };
+
+  const Statistics = () => {
+    return (
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-around",
+          paddingVertical: 20,
+        }}
+      >
+        <View>
+          <Text
+            style={{
+              color: primaryTextColor(theme),
+              fontSize: 20,
+              fontWeight: "bold",
+              textAlign: "center",
+            }}
+          >
+            1,536
+          </Text>
+          <Text
+            style={{
+              color: primaryTextColor(theme),
+              fontSize: 16,
+              textAlign: "center",
+            }}
+          >
+            followers
+          </Text>
+        </View>
+        <View>
+          <Text
+            style={{
+              color: primaryTextColor(theme),
+              fontSize: 20,
+              fontWeight: "bold",
+              textAlign: "center",
+            }}
+          >
+            195
+          </Text>
+          <Text
+            style={{
+              color: primaryTextColor(theme),
+              fontSize: 16,
+              textAlign: "center",
+            }}
+          >
+            following
+          </Text>
+        </View>
+        <View>
+          <Text
+            style={{
+              color: primaryTextColor(theme),
+              fontSize: 20,
+              fontWeight: "bold",
+              textAlign: "center",
+            }}
+          >
+            15,274
+          </Text>
+          <Text
+            style={{
+              color: primaryTextColor(theme),
+              fontSize: 16,
+              textAlign: "center",
+            }}
+          >
+            lifetime XP
+          </Text>
+        </View>
+      </View>
+    );
+  };
+
+  const Profile = () => {
+    return (
+      <View style={{ alignItems: "center" }}>
+        <Image
+          source={{
+            uri: user?.thumbnail,
+          }}
+          style={{ width: 100, height: 100, borderRadius: 50 }}
+        />
+        <Text
+          style={{
+            color: primaryTextColor(theme),
+            fontSize: 24,
+            fontWeight: "bold",
+            marginTop: 10,
+          }}
+        >
+          Andrew Ainsley
+        </Text>
+        <Text
+          style={{
+            color: primaryTextColor(theme),
+            fontSize: 16,
+            marginTop: 5,
+          }}
+        >
+          Joined since 20 June 2020
+        </Text>
+      </View>
+    );
+  };
+
   return (
     <View
       style={{
@@ -514,166 +840,31 @@ export default function HomeScreen() {
       <SafeAreaView>
         <Header />
 
-        <ScrollView>
-          <View style={{ alignItems: "center" }}>
-            <Image
-              source={{
-                uri: user?.thumbnail,
+        <FlatList
+          ListFooterComponent={
+            <View
+              style={{
+                height: 60,
               }}
-              style={{ width: 100, height: 100, borderRadius: 50 }}
             />
-            <Text
-              style={{
-                color: primaryTextColor(theme),
-                fontSize: 24,
-                fontWeight: "bold",
-                marginTop: 10,
-              }}
-            >
-              Andrew Ainsley
-            </Text>
-            <Text
-              style={{
-                color: primaryTextColor(theme),
-                fontSize: 16,
-                marginTop: 5,
-              }}
-            >
-              Joined since 20 June 2020
-            </Text>
-          </View>
+          }
+          ListHeaderComponent={
+            <>
+              <Profile />
 
-          {/* Statistics Section */}
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-around",
-              paddingVertical: 20,
-            }}
-          >
-            <View>
-              <Text
-                style={{
-                  color: primaryTextColor(theme),
-                  fontSize: 20,
-                  fontWeight: "bold",
-                  textAlign: "center",
-                }}
-              >
-                1,536
-              </Text>
-              <Text
-                style={{
-                  color: primaryTextColor(theme),
-                  fontSize: 16,
-                  textAlign: "center",
-                }}
-              >
-                followers
-              </Text>
-            </View>
-            <View>
-              <Text
-                style={{
-                  color: primaryTextColor(theme),
-                  fontSize: 20,
-                  fontWeight: "bold",
-                  textAlign: "center",
-                }}
-              >
-                195
-              </Text>
-              <Text
-                style={{
-                  color: primaryTextColor(theme),
-                  fontSize: 16,
-                  textAlign: "center",
-                }}
-              >
-                following
-              </Text>
-            </View>
-            <View>
-              <Text
-                style={{
-                  color: primaryTextColor(theme),
-                  fontSize: 20,
-                  fontWeight: "bold",
-                  textAlign: "center",
-                }}
-              >
-                15,274
-              </Text>
-              <Text
-                style={{
-                  color: primaryTextColor(theme),
-                  fontSize: 16,
-                  textAlign: "center",
-                }}
-              >
-                lifetime XP
-              </Text>
-            </View>
-          </View>
+              <Statistics />
 
-          {/* XP and Achievements Section */}
-          <View style={{ paddingHorizontal: 20 }}>
-            <Text
-              style={{
-                color: primaryTextColor(theme),
-                fontSize: 22,
-                fontWeight: "bold",
-                marginBottom: 20,
-              }}
-            >
-              Your Achievements
-            </Text>
-
-            {/* Achievement Items */}
-            {/* This should be mapped from data ideally */}
-            <View style={{ flexDirection: "row", marginBottom: 20 }}>
-              <View style={{ marginRight: 15 }}>
-                <Image
-                  source={require("../../assets/icon.png")}
-                  style={{ width: 50, height: 50 }}
-                />
-              </View>
-              <View style={{ flex: 1 }}>
-                <Text
-                  style={{
-                    color: primaryTextColor(theme),
-                    fontSize: 18,
-                    fontWeight: "bold",
-                  }}
-                >
-                  Great King
-                </Text>
-                <Text style={{ color: primaryTextColor(theme), fontSize: 14 }}>
-                  Get 5000 XP in this month to get achievements.
-                </Text>
-                {/* Progress Bar */}
-                <View
-                  style={{
-                    height: 20,
-                    backgroundColor: "#333333",
-                    borderRadius: 10,
-                    marginTop: 10,
-                  }}
-                >
-                  <View
-                    style={{
-                      width: "75%",
-                      height: "100%",
-                      backgroundColor: "#4C9A2A",
-                      borderRadius: 10,
-                    }}
-                  />
-                </View>
-              </View>
-            </View>
-            {/* Repeat for other achievements... */}
-          </View>
-        </ScrollView>
+              <Experience />
+            </>
+          }
+          data={statistics}
+          renderItem={renderStatisticItem}
+          keyExtractor={(item) => item.key}
+          numColumns={2} // Two items per row
+          style={{
+            paddingLeft: 5,
+          }}
+        />
       </SafeAreaView>
     </View>
   );
