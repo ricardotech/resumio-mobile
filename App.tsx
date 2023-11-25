@@ -16,9 +16,12 @@ import { StatusBar } from "expo-status-bar";
 import ChallengesScreen from "./screens/Challenges";
 import Journeys from "./screens/Home/components/Journeys";
 import JourneysScreen from "./screens/Journeys";
-import { ThemeProvider } from "./contexts/theme.context";
+import { ThemeProvider, useTheme } from "./contexts/theme.context";
+import SettingsScreen from "./screens/Profile/settings";
 
 const Tab = createBottomTabNavigator();
+
+export type authScreenProp = StackNavigationProp<StackNavigatorParams, "Tab">;
 
 export type StackNavigatorParams = {
   Tab: undefined; // For the TabNavigator screen
@@ -28,11 +31,14 @@ export type StackNavigatorParams = {
     title?: string;
     resume?: string;
   }; // For the BookScreen screen
+  Settings: undefined;
 };
 
 const Stack = createStackNavigator<StackNavigatorParams>(); // Use the defined type
 
 const TabNavigator = () => {
+  const { theme } = useTheme();
+
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -56,7 +62,10 @@ const TabNavigator = () => {
         },
         tabBarActiveTintColor: "tomato",
         tabBarInactiveTintColor: "gray",
-        tabBarStyle: { backgroundColor: "#111", borderTopColor: "#333" }, // Customiza o fundo
+        tabBarStyle: {
+          backgroundColor: theme === "light" ? "#FFF" : "#111",
+          borderTopColor: theme === "light" ? "#DDD" : "#333",
+        }, // Customiza o fundo
       })}
     >
       <Tab.Screen
@@ -120,6 +129,13 @@ export default function App() {
                 name="Book"
                 component={BookScreen}
                 initialParams={{ id: 1, name: "", title: "", resume: "" }}
+              />
+              <Stack.Screen
+                options={{
+                  headerShown: false,
+                }}
+                name="Settings"
+                component={SettingsScreen}
               />
             </Stack.Group>
           </Stack.Navigator>

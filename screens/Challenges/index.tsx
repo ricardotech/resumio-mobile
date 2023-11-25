@@ -1,9 +1,20 @@
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
-import { View, Text, Image, FlatList, SafeAreaView, TouchableOpacity, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  FlatList,
+  SafeAreaView,
+  TouchableOpacity,
+  ScrollView,
+} from "react-native";
 import { ContentLabel } from "../../components/ContentLabel";
+import { useTheme } from "../../contexts/theme.context";
 
-const LeaderboardScreen = () => {
+export default function LeaderboardScreen() {
+  const { theme } = useTheme();
+
   const leaderboardData = [
     {
       id: "1",
@@ -41,7 +52,7 @@ const LeaderboardScreen = () => {
           paddingBottom: 15,
         }}
       >
-        <ContentLabel title="Desafios" />
+        <ContentLabel theme={theme} title="Desafios" />
         <View
           style={{
             display: "flex",
@@ -56,7 +67,6 @@ const LeaderboardScreen = () => {
           >
             <Ionicons name="ios-trophy-outline" color="#333" size={30} />
           </TouchableOpacity>
- 
         </View>
       </View>
     );
@@ -167,19 +177,13 @@ const LeaderboardScreen = () => {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#FFF" }}>
-        <Header />
+      <Header />
       <FlatList
-        ListHeaderComponent={
-          <>
-            {renderPodium()}
-          </>
-        }
+        ListHeaderComponent={<>{renderPodium()}</>}
         data={leaderboardData}
         renderItem={renderUserItem}
         keyExtractor={(item) => item.id}
       />
     </SafeAreaView>
   );
-};
-
-export default LeaderboardScreen;
+}

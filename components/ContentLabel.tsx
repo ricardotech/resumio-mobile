@@ -3,11 +3,13 @@ import React from "react";
 import { Text, View } from "react-native";
 
 export function ContentLabel({
+  theme,
   size = "lg",
   bold = true,
   title,
   description,
 }: {
+  theme: "light" | "dark";
   bold?: boolean;
   size?: "sm" | "lg";
   title?: string;
@@ -22,7 +24,7 @@ export function ContentLabel({
       {title && (
         <Text
           style={{
-            color: "#000",
+            color: theme === "dark" ? "#FFF" : "#000",
             fontSize: size === "sm" ? 30 / 1.2 : 30,
             fontWeight: bold ? "900" : "normal",
             textAlign: "left",
@@ -35,7 +37,7 @@ export function ContentLabel({
         <Text
           style={{
             marginTop: 5,
-            color: "#333",
+            color: theme === "dark" ? "#333" : "#EEE",
             fontSize: 16,
             textAlign: "left",
           }}

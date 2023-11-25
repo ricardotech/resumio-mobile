@@ -4,3 +4,5 @@ export type Book = {
   description: string;
   imageBg: any;
 };
+
+export type Theme = "light" | "dark";

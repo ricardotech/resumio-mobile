@@ -14,8 +14,19 @@ import { Ionicons } from "@expo/vector-icons";
 import Journeys from "./components/Journeys";
 import { useTheme } from "../../contexts/theme.context";
 import { Button } from "../../components/Button";
+import { Theme } from "../../utils/types";
+import {
+  primaryTextColor,
+  primaryBackgroundColor,
+  secondaryBackgroundColor,
+  secondaryTextColor,
+} from "../../utils/style";
+import { useNavigation } from "@react-navigation/native";
+import { authScreenProp } from "../../App";
 
 export default function HomeScreen() {
+  const navigation = useNavigation<authScreenProp>();
+
   const { user } = useAuth();
   const { theme, changeTheme } = useTheme();
 
@@ -31,7 +42,7 @@ export default function HomeScreen() {
           paddingBottom: 15,
         }}
       >
-        <ContentLabel title="Início" />
+        <ContentLabel theme={theme} title="Início" />
         <View
           style={{
             display: "flex",
@@ -44,14 +55,26 @@ export default function HomeScreen() {
               marginLeft: 15,
             }}
           >
-            <Ionicons name="ios-notifications-outline" color="#FFF" size={30} />
+            <Ionicons
+              name="ios-notifications-outline"
+              color={primaryTextColor(theme)}
+              size={30}
+            />
           </TouchableOpacity>
           <TouchableOpacity
+            onPress={() => {
+              navigation.removeListener
+              navigation.navigate("Settings");
+            }}
             style={{
               marginLeft: 10,
             }}
           >
-            <Ionicons name="ios-settings-outline" color="#FFF" size={30} />
+            <Ionicons
+              name="ios-settings-outline"
+              color={primaryTextColor(theme)}
+              size={30}
+            />
           </TouchableOpacity>
         </View>
       </View>
@@ -188,7 +211,7 @@ export default function HomeScreen() {
           alignItems: "flex-start",
         }}
       >
-        <ContentLabel title="O que diz as escrituras?" />
+        <ContentLabel theme={theme} title="O que diz as escrituras?" />
 
         <View
           style={{
@@ -214,6 +237,7 @@ export default function HomeScreen() {
         }}
       >
         <ContentLabel
+          theme={theme}
           size="sm"
           title="Suas jornadas"
           description="Continue de onde parou"
@@ -236,7 +260,7 @@ export default function HomeScreen() {
     <View
       style={{
         flex: 1,
-        backgroundColor: "#000",
+        backgroundColor: theme === "dark" ? "#000" : "#FFF",
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
@@ -246,21 +270,6 @@ export default function HomeScreen() {
         <Header />
         <ScrollView>
           <DailyPray />
-          <Text
-            style={{
-              color: "#FFF",
-            }}
-          >
-            {theme}
-          </Text>
-          <Button
-            title="Mudar tema"
-            bgColor="#FFF"
-            color="#000"
-            onPress={() => {
-              changeTheme(theme === "light" ? "dark" : "light");
-            }}
-          />
           <View
             style={{
               height: 70,

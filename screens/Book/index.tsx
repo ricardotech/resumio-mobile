@@ -13,11 +13,9 @@ import { SvgXml } from "react-native-svg"; // Import SvgXml
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { StackNavigatorParams } from "../../App";
+import { StackNavigatorParams, authScreenProp } from "../../App";
 
 export default function BookScreen({ route }: { route: any }) {
-  type authScreenProp = StackNavigationProp<StackNavigatorParams, "Tab">;
-
   const navigation = useNavigation<authScreenProp>();
 
   const { id, name, title, resume } = route.params;
@@ -108,16 +106,18 @@ export default function BookScreen({ route }: { route: any }) {
           >
             {resume}
           </Text>
-          <TouchableOpacity style={{
-            marginTop: 30,
-            height: 50,
-            width: "100%",
-            borderRadius: 10,
-            backgroundColor: "tomato",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center"
-          }}>
+          <TouchableOpacity
+            style={{
+              marginTop: 30,
+              height: 50,
+              width: "100%",
+              borderRadius: 10,
+              backgroundColor: "tomato",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
             <Text
               style={{
                 color: "#FFF",

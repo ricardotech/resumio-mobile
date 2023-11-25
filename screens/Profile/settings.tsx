@@ -1,8 +1,45 @@
-import React, { useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, Switch, StyleSheet } from 'react-native';
-import { Ionicons, MaterialIcons, FontAwesome5 } from '@expo/vector-icons';
+import React, { useEffect, useState } from "react";
+import { View, Text, ScrollView, TouchableOpacity, Switch } from "react-native";
+import { Ionicons, MaterialIcons, FontAwesome5 } from "@expo/vector-icons";
+import { useTheme } from "../../contexts/theme.context";
+import { primaryTextColor } from "../../utils/style";
+import { authScreenProp } from "../../App";
+import { useNavigation } from "@react-navigation/native";
+import { ContentLabel } from "../../components/ContentLabel";
 
-const SettingsOption = ({ iconName, iconSize, iconColor, title, isSwitch, onToggle, switchValue }: {
+const SettingsScreen = () => {
+  const navigation = useNavigation<authScreenProp>();
+
+  const { theme, changeTheme } = useTheme();
+
+  const settingsOptions = [
+    {
+      title: "Personal Info",
+      iconName: "person-circle",
+      iconColor: "#F5A623",
+      isSwitch: false,
+    },
+    {
+      title: "Dark Mode",
+      iconName: "moon",
+      iconColor: "#4A90E2",
+      isSwitch: true,
+      switchValue: theme === "dark" ? true : false,
+      onToggle: () => {
+        changeTheme(theme === "dark" ? "light" : "dark");
+      },
+    },
+  ];
+
+  const SettingsOption = ({
+    iconName,
+    iconSize,
+    iconColor,
+    title,
+    isSwitch,
+    onToggle,
+    switchValue,
+  }: {
     iconName: any;
     iconSize: number;
     iconColor: string;
@@ -10,41 +47,109 @@ const SettingsOption = ({ iconName, iconSize, iconColor, title, isSwitch, onTogg
     isSwitch: any;
     onToggle: any;
     switchValue: any;
-}) => (
-  <TouchableOpacity style={styles.option} onPress={onToggle}>
-    <View style={[styles.iconBackground, { backgroundColor: iconColor }]}>
-      <Ionicons name={iconName} size={iconSize} color="#fff" />
-    </View>
-    <Text style={styles.optionText}>
-      {title}
-    </Text>
-    {isSwitch ? (
-      <Switch
-        trackColor={{ false: '#767577', true: '#81b0ff' }}
-        thumbColor={switchValue ? '#f5dd4b' : '#f4f3f4'}
-        onValueChange={onToggle}
-        value={switchValue}
-      />
-    ) : (
-      <Ionicons name="ios-arrow-forward" size={20} color="#fff" />
-    )}
-  </TouchableOpacity>
-);
+  }) => (
+    <TouchableOpacity
+      style={{
+        flexDirection: "row",
+        alignItems: "center",
+        paddingVertical: 12,
+      }}
+      onPress={onToggle}
+    >
+      <View
+        style={{
+          borderRadius: 20,
+          width: 40,
+          height: 40,
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: iconColor,
+        }}
+      >
+        <Ionicons
+          name={iconName}
+          size={iconSize}
+          color={primaryTextColor(theme)}
+        />
+      </View>
+      <Text
+        style={{
+          color: primaryTextColor(theme),
+          flex: 1,
+          marginLeft: 16,
+        }}
+      >
+        {title}
+      </Text>
+      {isSwitch ? (
+        <Switch
+          trackColor={{ false: "#767577", true: "#81b0ff" }}
+          onValueChange={onToggle}
+          value={switchValue}
+        />
+      ) : (
+        <Ionicons
+          name="ios-arrow-forward"
+          size={20}
+          color={primaryTextColor(theme)}
+        />
+      )}
+    </TouchableOpacity>
+  );
 
-const SettingsScreen = () => {
-  const [isDarkMode, setIsDarkMode] = useState(true);
-
-  const settingsOptions = [
-    { title: 'Personal Info', iconName: 'person-circle', iconColor: '#F5A623', isSwitch: false },
-    // ...add other options here...
-    { title: 'Dark Mode', iconName: 'moon', iconColor: '#4A90E2', isSwitch: true, switchValue: isDarkMode, onToggle: () => setIsDarkMode(!isDarkMode) },
-    // ...add other options here...
-  ];
+  const Header = () => {
+    return (
+      <View
+        style={{
+          paddingVertical: 20,
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <ContentLabel theme={theme} title="Ajustes" />
+        <View
+          style={{
+            paddingRight: 20,
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+          }}
+        >
+          <TouchableOpacity
+            onPress={() => {
+              navigation.removeListener;
+              navigation.goBack();
+            }}
+            style={{
+              marginLeft: 15,
+            }}
+          >
+            <Ionicons
+              name="ios-close-circle"
+              color={primaryTextColor(theme)}
+              size={30}
+            />
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
+  };
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.content}>
-        <Text style={styles.headerText}>Settings</Text>
+    <View
+      style={{
+        backgroundColor: theme === "light" ? "#EEE" : "#111",
+        flex: 1,
+      }}
+    >
+      <Header />
+      <View
+        style={{
+          padding: 20,
+        }}
+      >
         {settingsOptions.map((option, index) => (
           <SettingsOption
             key={index}
@@ -58,42 +163,8 @@ const SettingsScreen = () => {
           />
         ))}
       </View>
-    </ScrollView>
+    </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#000',
-    flex: 1,
-  },
-  content: {
-    marginTop: 44,
-    paddingHorizontal: 16,
-  },
-  headerText: {
-    color: '#fff',
-    fontSize: 34,
-    fontWeight: 'bold',
-    marginBottom: 24,
-  },
-  option: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 12,
-  },
-  iconBackground: {
-    borderRadius: 20,
-    width: 40,
-    height: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  optionText: {
-    color: '#fff',
-    flex: 1,
-    marginLeft: 16,
-  },
-});
 
 export default SettingsScreen;
