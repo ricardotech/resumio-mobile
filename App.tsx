@@ -64,7 +64,7 @@ const TabNavigator = () => {
         tabBarInactiveTintColor: "gray",
         tabBarStyle: {
           backgroundColor: theme === "light" ? "#FFF" : "#111",
-          borderTopColor: theme === "light" ? "#DDD" : "#333",
+          borderTopColor: theme === "light" ? "#EEE" : "#333",
         }, // Customiza o fundo
       })}
     >

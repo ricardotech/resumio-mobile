@@ -123,7 +123,6 @@ const SettingsScreen = () => {
               navigation.goBack();
             }}
             style={{
-              marginLeft: 15,
             }}
           >
             <Ionicons
@@ -147,7 +146,7 @@ const SettingsScreen = () => {
       <Header />
       <View
         style={{
-          padding: 20,
+          paddingHorizontal: 20,
         }}
       >
         {settingsOptions.map((option, index) => (

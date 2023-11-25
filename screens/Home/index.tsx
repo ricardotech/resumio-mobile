@@ -61,21 +61,6 @@ export default function HomeScreen() {
               size={30}
             />
           </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.removeListener
-              navigation.navigate("Settings");
-            }}
-            style={{
-              marginLeft: 10,
-            }}
-          >
-            <Ionicons
-              name="ios-settings-outline"
-              color={primaryTextColor(theme)}
-              size={30}
-            />
-          </TouchableOpacity>
         </View>
       </View>
     );
@@ -260,7 +245,7 @@ export default function HomeScreen() {
     <View
       style={{
         flex: 1,
-        backgroundColor: theme === "dark" ? "#000" : "#FFF",
+        backgroundColor: primaryBackgroundColor(theme),
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",

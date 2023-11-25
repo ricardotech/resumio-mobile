@@ -9,9 +9,9 @@ export const secondaryTextColor = (theme: Theme): string => {
 };
 
 export const primaryBackgroundColor = (theme: Theme): string => {
-  return theme === "light" ? "#FFF" : "#000";
+  return theme === "light" ? "#F6F6F6" : "#000";
 };
 
 export const secondaryBackgroundColor = (theme: Theme): string => {
-  return theme === "light" ? "#000" : "#FFF";
+  return theme === "light" ? "#FFF" : "#222";
 };
