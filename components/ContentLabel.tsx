@@ -22,7 +22,7 @@ export function ContentLabel({
       {title && (
         <Text
           style={{
-            color: "#333",
+            color: "#000",
             fontSize: size === "sm" ? 30 / 1.2 : 30,
             fontWeight: bold ? "900" : "normal",
             textAlign: "left",

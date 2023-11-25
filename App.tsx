@@ -16,6 +16,7 @@ import { StatusBar } from "expo-status-bar";
 import ChallengesScreen from "./screens/Challenges";
 import Journeys from "./screens/Home/components/Journeys";
 import JourneysScreen from "./screens/Journeys";
+import { ThemeProvider } from "./contexts/theme.context";
 
 const Tab = createBottomTabNavigator();
 
@@ -100,28 +101,30 @@ const TabNavigator = () => {
 export default function App() {
   return (
     <AuthProvider>
-      <StatusBar style="dark" />
-      <NavigationContainer>
-        <Stack.Navigator initialRouteName="Tab">
-          <Tab.Screen
-            options={{
-              headerShown: false,
-            }}
-            name="Tab"
-            component={TabNavigator}
-          />
-          <Stack.Group screenOptions={{ presentation: "modal" }}>
-            <Stack.Screen
+      <ThemeProvider>
+        <StatusBar style="dark" />
+        <NavigationContainer>
+          <Stack.Navigator initialRouteName="Tab">
+            <Tab.Screen
               options={{
                 headerShown: false,
               }}
-              name="Book"
-              component={BookScreen}
-              initialParams={{ id: 1, name: "", title: "", resume: "" }}
+              name="Tab"
+              component={TabNavigator}
             />
-          </Stack.Group>
-        </Stack.Navigator>
-      </NavigationContainer>
+            <Stack.Group screenOptions={{ presentation: "modal" }}>
+              <Stack.Screen
+                options={{
+                  headerShown: false,
+                }}
+                name="Book"
+                component={BookScreen}
+                initialParams={{ id: 1, name: "", title: "", resume: "" }}
+              />
+            </Stack.Group>
+          </Stack.Navigator>
+        </NavigationContainer>
+      </ThemeProvider>
     </AuthProvider>
   );
 }

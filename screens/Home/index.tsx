@@ -12,9 +12,12 @@ import { ContentLabel } from "../../components/ContentLabel";
 import { useAuth } from "../../contexts/auth.context";
 import { Ionicons } from "@expo/vector-icons";
 import Journeys from "./components/Journeys";
+import { useTheme } from "../../contexts/theme.context";
+import { Button } from "../../components/Button";
 
 export default function HomeScreen() {
   const { user } = useAuth();
+  const { theme, changeTheme } = useTheme();
 
   const Header = () => {
     return (
@@ -243,9 +246,26 @@ export default function HomeScreen() {
         <Header />
         <ScrollView>
           <DailyPray />
-          <View style={{
-            height: 70
-          }} />
+          <Text
+            style={{
+              color: "#FFF",
+            }}
+          >
+            {theme}
+          </Text>
+          <Button
+            title="Mudar tema"
+            bgColor="#FFF"
+            color="#000"
+            onPress={() => {
+              changeTheme(theme === "light" ? "dark" : "light");
+            }}
+          />
+          <View
+            style={{
+              height: 70,
+            }}
+          />
         </ScrollView>
       </SafeAreaView>
     </View>
