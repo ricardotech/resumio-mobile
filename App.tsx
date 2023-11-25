@@ -13,6 +13,9 @@ import {
   createStackNavigator,
 } from "@react-navigation/stack";
 import { StatusBar } from "expo-status-bar";
+import ChallengesScreen from "./screens/Challenges";
+import Journeys from "./screens/Home/components/Journeys";
+import JourneysScreen from "./screens/Journeys";
 
 const Tab = createBottomTabNavigator();
 
@@ -52,7 +55,7 @@ const TabNavigator = () => {
         },
         tabBarActiveTintColor: "tomato",
         tabBarInactiveTintColor: "gray",
-        tabBarStyle: { backgroundColor: "#fafafa" }, // Customiza o fundo
+        tabBarStyle: { backgroundColor: "#111", borderTopColor: "#333" }, // Customiza o fundo
       })}
     >
       <Tab.Screen
@@ -67,14 +70,14 @@ const TabNavigator = () => {
           headerShown: false,
         }}
         name="Jornadas"
-        component={ProfileScreen}
+        component={JourneysScreen}
       />
       <Tab.Screen
         options={{
           headerShown: false,
         }}
         name="Deafios"
-        component={ProfileScreen}
+        component={ChallengesScreen}
       />
       <Tab.Screen
         options={{

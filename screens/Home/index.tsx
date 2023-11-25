@@ -41,14 +41,14 @@ export default function HomeScreen() {
               marginLeft: 15,
             }}
           >
-            <Ionicons name="ios-notifications-outline" color="#333" size={30} />
+            <Ionicons name="ios-notifications-outline" color="#FFF" size={30} />
           </TouchableOpacity>
           <TouchableOpacity
             style={{
               marginLeft: 10,
             }}
           >
-            <Ionicons name="ios-settings-outline" color="#333" size={30} />
+            <Ionicons name="ios-settings-outline" color="#FFF" size={30} />
           </TouchableOpacity>
         </View>
       </View>
@@ -233,6 +233,7 @@ export default function HomeScreen() {
     <View
       style={{
         flex: 1,
+        backgroundColor: "#000",
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
@@ -242,8 +243,6 @@ export default function HomeScreen() {
         <Header />
         <ScrollView>
           <DailyPray />
-          <ScripturesResumes />
-          <MyJourneys />
           <View style={{
             height: 70
           }} />

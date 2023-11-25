@@ -1,84 +1,71 @@
-import React from "react";
+import React from 'react';
+import { View, Text, Image, ScrollView, StyleSheet } from 'react-native';
 
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  ScrollView,
-  SafeAreaView,
-  Image,
-} from "react-native";
-import { useAuth } from "../../contexts/auth.context";
-import { ContentLabel } from "../../components/ContentLabel";
+const UserProfileScreen = () => {
+  return (
+    <ScrollView style={{ flex: 1, backgroundColor: '#000' }}>
+      {/* Header */}
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between', padding: 20 }}>
+        <Image source={require('../../assets/icon.png')} style={{ width: 25, height: 25 }} />
+        <Image source={require('../../assets/icon.png')} style={{ width: 25, height: 25 }} />
+      </View>
 
-export default function ProfileScreen() {
-  const { user } = useAuth();
+      {/* Profile Section */}
+      <View style={{ alignItems: 'center', marginVertical: 20 }}>
+        <Image source={require('../../assets/icon.png')} style={{ width: 100, height: 100, borderRadius: 50 }} />
+        <Text style={{ color: '#FFFFFF', fontSize: 24, fontWeight: 'bold', marginTop: 10 }}>Andrew Ainsley</Text>
+        <Text style={{ color: '#FFFFFF', fontSize: 16, marginTop: 5 }}>Joined since 20 June 2020</Text>
+      </View>
 
-  const Header = () => {
-    return (
-      <View
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          paddingHorizontal: 20,
-        }}
-      >
-        <Image
-          source={{
-            uri: user?.thumbnail || "https://i.imgur.com/An9ltF8.png",
-          }}
-          style={{
-            height: 50,
-            width: 50,
-            borderRadius: 10,
-          }}
-        />
-
-        <View
-          style={{
-            marginLeft: 10,
-          }}
-        >
-          <Text
-            style={{
-              color: "#000",
-              fontSize: 22,
-              fontWeight: "900",
-              textAlign: "left",
-            }}
-          >
-            {user?.name || "Usuário"}
-          </Text>
-          <Text
-            style={{
-              marginTop: 5,
-              color: "#444",
-              fontSize: 14,
-              textAlign: "left",
-            }}
-          >
-            {user?.email || "Email"}
-          </Text>
+      {/* Statistics Section */}
+      <View style={{ flexDirection: 'row', justifyContent: 'space-around', paddingVertical: 20 }}>
+        <View>
+          <Text style={{ color: '#FFFFFF', fontSize: 20, fontWeight: 'bold', textAlign: 'center' }}>1,536</Text>
+          <Text style={{ color: '#FFFFFF', fontSize: 16, textAlign: 'center' }}>followers</Text>
+        </View>
+        <View>
+          <Text style={{ color: '#FFFFFF', fontSize: 20, fontWeight: 'bold', textAlign: 'center' }}>195</Text>
+          <Text style={{ color: '#FFFFFF', fontSize: 16, textAlign: 'center' }}>following</Text>
+        </View>
+        <View>
+          <Text style={{ color: '#FFFFFF', fontSize: 20, fontWeight: 'bold', textAlign: 'center' }}>15,274</Text>
+          <Text style={{ color: '#FFFFFF', fontSize: 16, textAlign: 'center' }}>lifetime XP</Text>
         </View>
       </View>
-    );
-  };
 
-  return (
-    <View
-      style={{
-        flex: 1,
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "space-between",
-      }}
-    >
-      <SafeAreaView>
-        <ContentLabel 
-            title="Profile"
-            description="These are your data"
-        />
-      </SafeAreaView>
-    </View>
+      {/* XP and Achievements Section */}
+      <View style={{ paddingHorizontal: 20 }}>
+        <Text style={{ color: '#FFFFFF', fontSize: 22, fontWeight: 'bold', marginBottom: 20 }}>Your Achievements</Text>
+
+        {/* Achievement Items */}
+        {/* This should be mapped from data ideally */}
+        <View style={{ flexDirection: 'row', marginBottom: 20 }}>
+          <View style={{ marginRight: 15 }}>
+            <Image source={require('../../assets/icon.png')} style={{ width: 50, height: 50 }} />
+          </View>
+          <View style={{ flex: 1 }}>
+            <Text style={{ color: '#FFFFFF', fontSize: 18, fontWeight: 'bold' }}>Great King</Text>
+            <Text style={{ color: '#FFFFFF', fontSize: 14 }}>Get 5000 XP in this month to get achievements.</Text>
+            {/* Progress Bar */}
+            <View style={{ height: 20, backgroundColor: '#333333', borderRadius: 10, marginTop: 10 }}>
+              <View style={{ width: '75%', height: '100%', backgroundColor: '#4C9A2A', borderRadius: 10 }} />
+            </View>
+          </View>
+        </View>
+        {/* Repeat for other achievements... */}
+      </View>
+      
+      {/* Navigation Bar (Placeholder) */}
+      <View style={{ flexDirection: 'row', justifyContent: 'space-around', paddingVertical: 20 }}>
+        {/* Placeholder for navigation items */}
+        <Text style={{ color: '#FFFFFF' }}>Nav Item 1</Text>
+        <Text style={{ color: '#FFFFFF' }}>Nav Item 2</Text>
+        <Text style={{ color: '#FFFFFF' }}>Nav Item 3</Text>
+        <Text style={{ color: '#FFFFFF' }}>Nav Item 4</Text>
+      </View>
+
+    </ScrollView>
   );
-}
+};
+
+export default UserProfileScreen;
