@@ -20,6 +20,7 @@ import JourneysScreen from "./screens/Journeys";
 import { ThemeProvider, useTheme } from "./contexts/theme.context";
 import SettingsScreen from "./screens/Profile/settings";
 import LoginPage from "./screens/Login";
+import RegisterPage from "./screens/Register";
 
 const Tab = createBottomTabNavigator();
 
@@ -34,7 +35,8 @@ export type StackNavigatorParams = {
     resume?: string;
   }; // For the BookScreen screen
   Settings: undefined;
-  login: undefined;
+  Login: undefined;
+  Register: undefined;
 };
 
 const Stack = createStackNavigator<StackNavigatorParams>(); // Use the defined type
@@ -116,7 +118,7 @@ export default function App() {
       <AuthProvider>
         <ThemeProvider>
           <NavigationContainer>
-            <Stack.Navigator initialRouteName="login">
+            <Stack.Navigator initialRouteName="Register">
               <Tab.Screen
                 options={{
                   headerShown: false,
@@ -128,8 +130,15 @@ export default function App() {
                 options={{
                   headerShown: false,
                 }}
-                name="login"
+                name="Login"
                 component={LoginPage}
+              />
+              <Tab.Screen
+                options={{
+                  headerShown: false,
+                }}
+                name="Register"
+                component={RegisterPage}
               />
               <Stack.Group screenOptions={{ presentation: "modal" }}>
                 <Stack.Screen

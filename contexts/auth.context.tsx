@@ -8,6 +8,12 @@ import React, {
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios, { Axios, AxiosInstance, AxiosStatic } from "axios";
+import {
+  createUserWithEmailAndPassword,
+  getAuth,
+  updateProfile,
+} from "firebase/auth";
+import { app } from "../utils/firebaseConfig";
 
 type User = {
   id?: string;
@@ -29,9 +35,9 @@ type SignInCredentials = {
 
 type SignUpCredentials = {
   name: string;
-  username: string;
+  username?: string;
   email: string;
-  thumbnail: string;
+  thumbnail?: string;
   password: string;
 };
 
@@ -98,11 +104,7 @@ function AuthProvider({ children }: AuthProviderProps) {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  // trocar setUser(storagedUser)
-  // manter storagedToken
-  // get userId from token
-  // request user by id
-  // setUser
+  const auth = getAuth(app);
 
   useEffect(() => {
     async function loadStoragedData() {
@@ -176,45 +178,34 @@ function AuthProvider({ children }: AuthProviderProps) {
     try {
       setIsLoading(true);
 
-      await api
-        .post("/auth/signup", {
-          name,
-          username,
-          thumbnail,
-          email,
-          password,
-        })
-        .then((response: any) => {
-          console.log(response.data);
+      await createUserWithEmailAndPassword(auth, email, password)
+        .then(async (userCredential) => {
+          const user = userCredential.user;
+          console.log(JSON.stringify(user));
 
-          if (response.data.error) {
-            setError(response.data.error);
-          } else {
-            setTimeout(async () => {
-              AsyncStorage.setItem(TOKEN, response.data.data.token);
-              AsyncStorage.setItem(
-                USER,
-                JSON.stringify(response.data.data.user)
-              );
-              setToken(response.data.data.token);
-              setUser({
-                id: response.data.data.user.id,
-                name: response.data.data.user.name,
-                username: response.data.data.user.username,
-                thumbnail: response.data.data.user.thumbnail,
-                email: response.data.data.user.email,
-              });
-            }, 1000);
-          }
-          // setUser(response.data.user)
-          // AsyncStorage.setItem(TOKEN, response.data.token)
+          await updateProfile(user, {
+            displayName: name,
+            photoURL: thumbnail,
+          });
+
+          AsyncStorage.setItem(TOKEN, user.refreshToken);
+          AsyncStorage.setItem(USER, JSON.stringify(user));
+          setToken(user.refreshToken);
+          setUser({
+            id: user.uid,
+            name: String(user.displayName),
+            email: String(user.email),
+          });
         })
-        .catch((error: any) => {
-          setError(error);
-        })
-        .finally(() => setIsLoading(false));
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          console.log(error, errorCode, errorMessage);
+          return errorMessage;
+        });
     } catch (error: any) {
       console.log(error.message);
+      return error.message;
     }
   }
 
