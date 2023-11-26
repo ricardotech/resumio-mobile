@@ -23,6 +23,7 @@ import {
 } from "../../utils/style";
 import { useNavigation } from "@react-navigation/native";
 import { authScreenProp } from "../../App";
+import { StatusBar } from "expo-status-bar";
 
 export default function HomeScreen() {
   const navigation = useNavigation<authScreenProp>();
@@ -251,6 +252,7 @@ export default function HomeScreen() {
         justifyContent: "space-between",
       }}
     >
+      <StatusBar style={theme === "dark" ? "light" : "dark"} />
       <SafeAreaView>
         <Header />
         <ScrollView>

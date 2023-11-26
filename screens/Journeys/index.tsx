@@ -12,7 +12,12 @@ import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { ContentLabel } from "../../components/ContentLabel";
 import { useTheme } from "../../contexts/theme.context";
 import { authScreenProp } from "../../App";
-import { primaryBackgroundColor, primaryTextColor } from "../../utils/style";
+import {
+  primaryBackgroundColor,
+  primaryTextColor,
+  secondaryBackgroundColor,
+  secondaryTextColor,
+} from "../../utils/style";
 import { useNavigation } from "@react-navigation/native";
 
 const missions: {
@@ -101,7 +106,7 @@ const JourneysScreen = () => {
         <Header />
         <ScrollView
           style={{
-            backgroundColor: "#000",
+            backgroundColor: primaryBackgroundColor(theme),
             marginTop: 10,
             paddingHorizontal: 20,
           }}
@@ -121,23 +126,26 @@ const JourneysScreen = () => {
                 backgroundColor: "#6448FE",
                 borderRadius: 20,
                 padding: 10,
-                width: Dimensions.get("window").width / 2 - 20,
+                width: Dimensions.get("window").width / 2 - 25,
+                marginRight: 10,
               }}
             >
-              <Text style={{ color: "#fff", fontSize: 16 }}>Target</Text>
+              <Text style={{ color: "#fff", fontSize: 16 }}>Todas</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={{
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
-                backgroundColor: "transparent",
+                backgroundColor: theme === "light" ? "#E0E0E0" : "#111",
                 borderRadius: 20,
                 padding: 10,
-                width: Dimensions.get("window").width / 2 - 20,
+                width: Dimensions.get("window").width / 2 - 25,
               }}
             >
-              <Text style={{ color: "#fff", fontSize: 16 }}>Badges</Text>
+              <Text style={{ color: primaryTextColor(theme), fontSize: 16 }}>
+                Minhas
+              </Text>
             </TouchableOpacity>
           </View>
 
@@ -149,9 +157,15 @@ const JourneysScreen = () => {
               marginBottom: 20,
             }}
           >
-            <Text style={{ color: "#fff", fontSize: 20 }}>Daily Missions</Text>
+            <Text style={{ color: primaryTextColor(theme), fontSize: 20 }}>
+              Daily Missions
+            </Text>
             <TouchableOpacity>
-              <Ionicons name="chevron-forward" size={24} color="#fff" />
+              <Ionicons
+                name="chevron-forward"
+                size={24}
+                color={primaryTextColor(theme)}
+              />
             </TouchableOpacity>
           </View>
 

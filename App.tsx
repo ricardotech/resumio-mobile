@@ -111,7 +111,6 @@ export default function App() {
   return (
     <AuthProvider>
       <ThemeProvider>
-        <StatusBar style="dark" />
         <NavigationContainer>
           <Stack.Navigator initialRouteName="Tab">
             <Tab.Screen
