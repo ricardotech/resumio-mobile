@@ -53,7 +53,8 @@ const JourneysScreen = () => {
   const { theme } = useTheme();
 
   type Journey = {
-    id: number;
+    id: string;
+    collectionId: string;
     title: string;
     description: string;
     icon?: React.ComponentProps<typeof MaterialCommunityIcons>["name"];
@@ -64,6 +65,7 @@ const JourneysScreen = () => {
   };
 
   type JourneyCollection = {
+    id: string;
     name: string;
     description: string;
     journeys: Journey[];
@@ -72,7 +74,8 @@ const JourneysScreen = () => {
   // Crie um array inicial de jornadas
   const initialJourneysForOldTestament: Journey[] = [
     {
-      id: 1,
+      id: "1",
+      collectionId: "1",
       title: "Jornada pelos Livros da Lei",
       progress: 1,
       iconColor: "#4fc3f7",
@@ -81,7 +84,8 @@ const JourneysScreen = () => {
         "Explore os cinco primeiros livros da Bíblia para entender a fundação da fé judaico-cristã...",
     },
     {
-      id: 2,
+      id: "2",
+      collectionId: "1",
       progress: 0.1,
       iconColor: "#ffa726",
       icon: "book-open-page-variant",
@@ -90,7 +94,8 @@ const JourneysScreen = () => {
         "Mergulhe na vida e nas profecias dos profetas maiores do Antigo Testamento...",
     },
     {
-      id: 3,
+      id: "3",
+      collectionId: "1",
       progress: 0.1,
       iconColor: "#e57373",
       icon: "book-open-page-variant",
@@ -99,7 +104,8 @@ const JourneysScreen = () => {
         "Explore as mensagens dos profetas menores do Antigo Testamento...",
     },
     {
-      id: 4,
+      id: "4",
+      collectionId: "1",
       progress: 0.1,
       iconColor: "#ffeb3b",
       icon: "book-open-page-variant",
@@ -108,7 +114,8 @@ const JourneysScreen = () => {
         "Aprofunde-se nos Salmos para descobrir canções de louvor e adoração...",
     },
     {
-      id: 5,
+      id: "5",
+      collectionId: "1",
       progress: 0.1,
       iconColor: "#4fc3f7",
       icon: "book-open-page-variant",
@@ -117,7 +124,8 @@ const JourneysScreen = () => {
         "Siga a vida de Davi desde sua unção como rei até sua jornada como salmista...",
     },
     {
-      id: 6,
+      id: "6",
+      collectionId: "1",
       progress: 0.1,
       iconColor: "#ffa726",
       icon: "book-open-page-variant",
@@ -126,7 +134,8 @@ const JourneysScreen = () => {
         "Viaje com Abraão desde sua chamada por Deus para deixar sua terra até as promessas de Deus...",
     },
     {
-      id: 7,
+      id: "7",
+      collectionId: "1",
       progress: 0.1,
       iconColor: "#e57373",
       icon: "book-open-page-variant",
@@ -135,7 +144,8 @@ const JourneysScreen = () => {
         "Relembre a história do êxodo do povo de Israel do Egito, liderado por Moisés...",
     },
     {
-      id: 8,
+      id: "8",
+      collectionId: "1",
       progress: 0.1,
       iconColor: "#ffeb3b",
       icon: "book-open-page-variant",
@@ -144,7 +154,8 @@ const JourneysScreen = () => {
         "Siga a história de José, desde sua venda como escravo até se tornar governador do Egito...",
     },
     {
-      id: 9,
+      id: "9",
+      collectionId: "1",
       progress: 0.1,
       iconColor: "#4fc3f7",
       icon: "book-open-page-variant",
@@ -152,7 +163,8 @@ const JourneysScreen = () => {
       description: "Estude os milagres registrados no Antigo Testamento...",
     },
     {
-      id: 10,
+      id: "10",
+      collectionId: "1",
       progress: 0.1,
       iconColor: "#ffa726",
       icon: "book-open-page-variant",
@@ -161,7 +173,8 @@ const JourneysScreen = () => {
         "Explore os Dez Mandamentos dados por Deus a Moisés no Monte Sinai...",
     },
     {
-      id: 11,
+      id: "11",
+      collectionId: "1",
       progress: 0.1,
       iconColor: "#e57373",
       icon: "book-open-page-variant",
@@ -170,7 +183,8 @@ const JourneysScreen = () => {
         "Analise a história de Jó e as questões teológicas e existenciais levantadas por seu sofrimento...",
     },
     {
-      id: 12,
+      id: "12",
+      collectionId: "1",
       progress: 0.1,
       iconColor: "#ffeb3b",
       icon: "book-open-page-variant",
@@ -179,7 +193,8 @@ const JourneysScreen = () => {
         "Estude os reis de Israel e Judá, incluindo suas realizações e quedas...",
     },
     {
-      id: 13,
+      id: "13",
+      collectionId: "1",
       progress: 0.1,
       iconColor: "#4fc3f7",
       icon: "book-open-page-variant",
@@ -187,7 +202,8 @@ const JourneysScreen = () => {
       description: "Explore a narrativa da criação e o dilúvio global...",
     },
     {
-      id: 14,
+      id: "14",
+      collectionId: "1",
       progress: 0.1,
       iconColor: "#ffa726",
       icon: "book-open-page-variant",
@@ -196,7 +212,8 @@ const JourneysScreen = () => {
         "Siga a história de Rute e Noemi, destacando temas de lealdade, providência divina e redenção...",
     },
     {
-      id: 15,
+      id: "15",
+      collectionId: "1",
       progress: 0.1,
       iconColor: "#e57373",
       icon: "book-open-page-variant",
@@ -207,6 +224,7 @@ const JourneysScreen = () => {
   ];
 
   const collectionOldTestament: JourneyCollection = {
+    id: "1",
     name: "Jornada pelo Antigo Testamento",
     description:
       "Uma série de jornadas que abordam livros, profetas e eventos específicos do Antigo Testamento.",
@@ -215,51 +233,79 @@ const JourneysScreen = () => {
 
   const initialJourneysForPsalmsAndProverbs: Journey[] = [
     {
-      id: 1,
+      id: "1",
+      collectionId: "2",
+      progress: 0.1,
+      iconColor: "#4fc3f7",
+      icon: "book-open-page-variant",
       title: "Jornada pelos Salmos de Louvor",
       description:
         "Explore os Salmos para momentos de louvor e adoração a Deus...",
     },
     {
-      id: 2,
+      id: "2",
+      collectionId: "2",
+      progress: 0.1,
+      iconColor: "#ffa726",
+      icon: "book-open-page-variant",
       title: "Jornada pelos Salmos de Lamentação",
       description:
         "Reflicta sobre os Salmos que expressam lamentos e buscam consolo...",
     },
     {
-      id: 3,
+      id: "3",
+      collectionId: "2",
+      progress: 0.1,
+      iconColor: "#e57373",
+      icon: "book-open-page-variant",
       title: "Jornada pelos Provérbios de Sabedoria",
       description:
         "Aprofunde-se nos Provérbios para obter sabedoria prática para a vida cotidiana...",
     },
     {
-      id: 4,
+      id: "4",
+      collectionId: "2",
+      progress: 0.1,
+      iconColor: "#ffeb3b",
+      icon: "book-open-page-variant",
       title: "Jornada pelos Provérbios sobre Relacionamentos",
       description:
         "Estude os Provérbios que oferecem orientações para relacionamentos saudáveis...",
     },
     {
-      id: 5,
+      id: "5",
+      collectionId: "2",
+      progress: 0.1,
+      iconColor: "#4fc3f7",
+      icon: "book-open-page-variant",
       title: "Jornada pelos Salmos de Gratidão",
       description:
         "Explore os Salmos que expressam gratidão e reconhecimento pelas bênçãos de Deus...",
     },
     {
-      id: 6,
+      id: "6",
+      collectionId: "2",
+      progress: 0.1,
+      iconColor: "#ffa726",
+      icon: "book-open-page-variant",
       title: "Jornada pelos Salmos de Confiança",
       description:
         "Mergulhe nos Salmos que enfatizam a confiança em Deus em tempos de dificuldade...",
     },
     {
-      id: 7,
+      id: "7",
+      collectionId: "2",
+      progress: 0.1,
+      iconColor: "#e57373",
+      icon: "book-open-page-variant",
       title: "Jornada pelos Salmos de Sabedoria",
       description:
         "Examine os Salmos que oferecem ensinamentos e conselhos práticos...",
     },
-    // Adicione outras jornadas para esta coleção, se desejar...
   ];
 
   const collectionPsalmsAndProverbs: JourneyCollection = {
+    id: "2",
     name: "Jornada pelos Salmos e Provérbios",
     description:
       "Explore os Salmos para momentos de louvor e adoração, e os Provérbios para sabedoria prática.",
@@ -370,7 +416,7 @@ const JourneysScreen = () => {
 
           {allCollections.map((collection, index) => {
             return (
-              <View>
+              <View key={index}>
                 <View
                   style={{
                     flexDirection: "row",
@@ -406,6 +452,7 @@ const JourneysScreen = () => {
                     if (Number(journey.progress) < 1)
                       return (
                         <View
+                          key={index}
                           style={{
                             marginRight: 10,
                             width: 220,
@@ -421,13 +468,13 @@ const JourneysScreen = () => {
                             style={{
                               flexDirection: "row",
                               alignItems: "center",
-                              marginBottom: 20
+                              marginBottom: 20,
                             }}
                           >
                             <MaterialCommunityIcons
-                            style={{
-                              marginLeft: 10,
-                            }}
+                              style={{
+                                marginLeft: 10,
+                              }}
                               name={journey.icon}
                               size={30}
                               color={journey.iconColor}
