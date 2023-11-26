@@ -13,7 +13,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useState } from "react";
 import React from "react";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-import { app } from "./firebaseConfig";
+import { app } from "../../utils/firebaseConfig";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
