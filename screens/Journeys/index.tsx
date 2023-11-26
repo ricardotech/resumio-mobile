@@ -153,6 +153,18 @@ const JourneysScreen = () => {
           {allCollections.map((collection, index) => {
             return (
               <View key={index}>
+                       <TouchableOpacity
+                    onPress={() => {
+                      navigation.removeListener;
+                      navigation.navigate("JourneyCollection", {
+                        journeys: collection.journeys,
+                        description: collection.description,
+                        id: collection.id,
+                        name: collection.name,
+                      });
+                    }}
+                  >
+
                 <View
                   style={{
                     flexDirection: "row",
@@ -186,6 +198,8 @@ const JourneysScreen = () => {
                     />
                   </TouchableOpacity>
                 </View>
+                </TouchableOpacity>
+
 
                 <ScrollView
                   showsHorizontalScrollIndicator={false}

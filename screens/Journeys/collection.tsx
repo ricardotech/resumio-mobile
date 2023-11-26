@@ -75,7 +75,7 @@ export default function JourneyCollectionScreen({ route }: { route: any }) {
                 }}>
                   <Ionicons
                     size={30}
-                    name="ios-arrow-back"
+                    name="chevron-back"
                     color={primaryTextColor(theme)}
                   />
                 </TouchableOpacity>
