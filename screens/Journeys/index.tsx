@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -19,6 +19,7 @@ import {
   secondaryTextColor,
 } from "../../utils/style";
 import { useNavigation } from "@react-navigation/native";
+import { allCollections } from "../../db";
 
 const missions: {
   title: string;
@@ -149,260 +150,130 @@ const JourneysScreen = () => {
             </TouchableOpacity>
           </View>
 
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "center",
-              marginBottom: 20,
-              marginTop: 10,
-              paddingHorizontal: 20,
-            }}
-          >
-              <Text style={{ color: primaryTextColor(theme), fontSize: 20 }}>
-                Novo testamento
-              </Text>
-            <TouchableOpacity>
-              <Ionicons
-                name="chevron-forward"
-                size={24}
-                color={primaryTextColor(theme)}
-              />
-            </TouchableOpacity>
-          </View>
+          {allCollections.map((collection, index) => {
+            return (
+              <View key={index}>
+                       <TouchableOpacity
+                    onPress={() => {
+                      navigation.removeListener;
+                      navigation.navigate("JourneyCollection", {
+                        journeys: collection.journeys,
+                        description: collection.description,
+                        id: collection.id,
+                        name: collection.name,
+                      });
+                    }}
+                  >
 
-          <ScrollView
-          showsHorizontalScrollIndicator={false}
-            horizontal
-            style={{
-              paddingLeft: 20,
-            }}
-          >
-            {missions.map((mission, index) => {
-              return (
                 <View
                   style={{
-                    marginRight: 10,
-                    height: 100,
-                    backgroundColor: secondaryBackgroundColor(theme),
-                    borderRadius: 10,
-                    marginBottom: 10,
-                    padding: 20,
-                    alignItems: "center",
+                    flexDirection: "row",
                     justifyContent: "space-between",
+                    alignItems: "center",
+                    marginBottom: 20,
+                    marginTop: 10,
+                    paddingHorizontal: 20,
                   }}
                 >
-                  <View style={{ flexDirection: "row", alignItems: "center" }}>
-                    <MaterialCommunityIcons
-                      name={mission.icon}
-                      size={30}
-                      color={mission.iconColor}
+                  <Text
+                    style={{ color: primaryTextColor(theme), fontSize: 20 }}
+                  >
+                    {collection.name}
+                  </Text>
+                  <TouchableOpacity
+                    onPress={() => {
+                      navigation.removeListener;
+                      navigation.navigate("JourneyCollection", {
+                        journeys: collection.journeys,
+                        description: collection.description,
+                        id: collection.id,
+                        name: collection.name,
+                      });
+                    }}
+                  >
+                    <Ionicons
+                      name="chevron-forward"
+                      size={24}
+                      color={primaryTextColor(theme)}
                     />
-                    <View style={{ marginLeft: 10 }}>
-                      <Text
-                        style={{
-                          color: primaryTextColor(theme),
-                          fontSize: 16,
-                        }}
-                      >
-                        {mission.title}
-                      </Text>
-                      <Text
-                        style={{
-                          color: primaryTextColor(theme),
-                          fontSize: 12,
-                        }}
-                      >
-                        2/3
-                      </Text>
-                    </View>
-                  </View>
-                  <Progress.Bar
-                    progress={mission.progress}
-                    width={Dimensions.get("window").width / 2 - 100}
-                    height={10}
-                    color="#4fc3f7"
-                    unfilledColor={theme === "light" ? "#E0E0E0" : "#333"}
-                    borderWidth={0}
-                    borderRadius={10}
-                  />
+                  </TouchableOpacity>
                 </View>
-              );
-            })}
-            <View style={{
-              width: 30
-            }} />
-          </ScrollView>
+                </TouchableOpacity>
 
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "center",
-              marginBottom: 20,
-              marginTop: 10,
-              paddingHorizontal: 20,
-            }}
-          >
-              <Text style={{ color: primaryTextColor(theme), fontSize: 20 }}>
-                Novo testamento
-              </Text>
-            <TouchableOpacity>
-              <Ionicons
-                name="chevron-forward"
-                size={24}
-                color={primaryTextColor(theme)}
-              />
-            </TouchableOpacity>
-          </View>
 
-          <ScrollView
-          showsHorizontalScrollIndicator={false}
-            horizontal
-            style={{
-              paddingLeft: 20,
-            }}
-          >
-            {missions.map((mission, index) => {
-              return (
-                <View
+                <ScrollView
+                  showsHorizontalScrollIndicator={false}
+                  horizontal
                   style={{
-                    marginRight: 10,
-                    height: 100,
-                    backgroundColor: secondaryBackgroundColor(theme),
-                    borderRadius: 10,
-                    marginBottom: 10,
-                    padding: 20,
-                    alignItems: "center",
-                    justifyContent: "space-between",
+                    paddingLeft: 20,
                   }}
                 >
-                  <View style={{ flexDirection: "row", alignItems: "center" }}>
-                    <MaterialCommunityIcons
-                      name={mission.icon}
-                      size={30}
-                      color={mission.iconColor}
-                    />
-                    <View style={{ marginLeft: 10 }}>
-                      <Text
-                        style={{
-                          color: primaryTextColor(theme),
-                          fontSize: 16,
-                        }}
-                      >
-                        {mission.title}
-                      </Text>
-                      <Text
-                        style={{
-                          color: primaryTextColor(theme),
-                          fontSize: 12,
-                        }}
-                      >
-                        2/3
-                      </Text>
-                    </View>
-                  </View>
-                  <Progress.Bar
-                    progress={mission.progress}
-                    width={Dimensions.get("window").width / 2 - 100}
-                    height={10}
-                    color="#4fc3f7"
-                    unfilledColor={theme === "light" ? "#E0E0E0" : "#333"}
-                    borderWidth={0}
-                    borderRadius={10}
+                  {collection.journeys.map((journey, index) => {
+                    if (Number(journey.progress) < 1)
+                      return (
+                        <View
+                          key={index}
+                          style={{
+                            marginRight: 10,
+                            width: 220,
+                            backgroundColor: secondaryBackgroundColor(theme),
+                            borderRadius: 10,
+                            marginBottom: 10,
+                            padding: 20,
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                          }}
+                        >
+                          <View
+                            style={{
+                              flexDirection: "row",
+                              alignItems: "center",
+                              marginBottom: 20,
+                            }}
+                          >
+                            <MaterialCommunityIcons
+                              style={{
+                                marginLeft: 10,
+                              }}
+                              name={journey.icon}
+                              size={30}
+                              color={journey.iconColor}
+                            />
+                            <View style={{ marginLeft: 20, width: "75%" }}>
+                              <Text
+                                style={{
+                                  color: primaryTextColor(theme),
+                                  fontSize: 14,
+                                  textAlign: "left",
+                                }}
+                              >
+                                {journey.title}
+                              </Text>
+                            </View>
+                          </View>
+                          <Progress.Bar
+                            progress={journey.progress}
+                            width={180}
+                            height={10}
+                            color={journey.iconColor}
+                            unfilledColor={
+                              theme === "light" ? "#E0E0E0" : "#333"
+                            }
+                            borderWidth={0}
+                            borderRadius={10}
+                          />
+                        </View>
+                      );
+                  })}
+                  <View
+                    style={{
+                      width: 30,
+                    }}
                   />
-                </View>
-              );
-            })}
-            <View style={{
-              width: 30
-            }} />
-          </ScrollView>
-
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "center",
-              marginBottom: 20,
-              marginTop: 10,
-              paddingHorizontal: 20,
-            }}
-          >
-              <Text style={{ color: primaryTextColor(theme), fontSize: 20 }}>
-                Novo testamento
-              </Text>
-            <TouchableOpacity>
-              <Ionicons
-                name="chevron-forward"
-                size={24}
-                color={primaryTextColor(theme)}
-              />
-            </TouchableOpacity>
-          </View>
-
-          <ScrollView
-          showsHorizontalScrollIndicator={false}
-            horizontal
-            style={{
-              paddingLeft: 20,
-            }}
-          >
-            {missions.map((mission, index) => {
-              return (
-                <View
-                  style={{
-                    marginRight: 10,
-                    height: 100,
-                    backgroundColor: secondaryBackgroundColor(theme),
-                    borderRadius: 10,
-                    marginBottom: 10,
-                    padding: 20,
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <View style={{ flexDirection: "row", alignItems: "center" }}>
-                    <MaterialCommunityIcons
-                      name={mission.icon}
-                      size={30}
-                      color={mission.iconColor}
-                    />
-                    <View style={{ marginLeft: 10 }}>
-                      <Text
-                        style={{
-                          color: primaryTextColor(theme),
-                          fontSize: 16,
-                        }}
-                      >
-                        {mission.title}
-                      </Text>
-                      <Text
-                        style={{
-                          color: primaryTextColor(theme),
-                          fontSize: 12,
-                        }}
-                      >
-                        2/3
-                      </Text>
-                    </View>
-                  </View>
-                  <Progress.Bar
-                    progress={mission.progress}
-                    width={Dimensions.get("window").width / 2 - 100}
-                    height={10}
-                    color="#4fc3f7"
-                    unfilledColor={theme === "light" ? "#E0E0E0" : "#333"}
-                    borderWidth={0}
-                    borderRadius={10}
-                  />
-                </View>
-              );
-            })}
-            <View style={{
-              width: 30
-            }} />
-          </ScrollView>
+                </ScrollView>
+              </View>
+            );
+          })}
         </ScrollView>
       </SafeAreaView>
     </View>
