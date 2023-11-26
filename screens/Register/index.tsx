@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Text,
   SafeAreaView,
@@ -11,7 +12,6 @@ import {
 import { Input, Icon, Button } from "@rneui/themed";
 import { Ionicons } from "@expo/vector-icons";
 import { useState } from "react";
-import React from "react";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { app } from "../../utils/firebaseConfig";
 import { useAuth } from "../../contexts/auth.context";
