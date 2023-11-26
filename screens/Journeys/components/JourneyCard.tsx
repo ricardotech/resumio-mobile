@@ -15,10 +15,12 @@ export default function JourneyCard({
       <View
         style={[
           styles.cardContainer,
-          { marginRight: index % 2 === 0 ? 10 : 0 }, // Add marginRight for even-indexed cards
+          { marginRight: index % 1 === 0 ? 10 : 0,
+          marginBottom: 10
+          },
+           // Add marginRight for even-indexed cards
         ]}
       >
-        <View style={styles.cardHeader}>
           <MaterialCommunityIcons
             style={styles.icon}
             name={journey.icon}
@@ -28,10 +30,9 @@ export default function JourneyCard({
           <View style={styles.titleContainer}>
             <Text style={styles.title}>{journey.title}</Text>
           </View>
-        </View>
         <Progress.Bar
           progress={journey.progress}
-          width={Dimensions.get("window").width / 2 - 40}
+          width={Dimensions.get("window").width / 2 - 60}
           height={10}
           color={journey.iconColor}
           unfilledColor={journey.theme === "light" ? "#E0E0E0" : "#333"}
@@ -48,9 +49,8 @@ const styles = StyleSheet.create({
     width: Dimensions.get("window").width / 2 - 25,
     backgroundColor: "#FFF", // Set your desired background color
     borderRadius: 10,
-    marginBottom: 10,
     padding: 20,
-    alignItems: "center",
+    alignItems: "flex-start",
     justifyContent: "space-between",
   },
   cardHeader: {
@@ -62,8 +62,8 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   titleContainer: {
-    marginLeft: 20,
-    width: "75%",
+    width: "100%",
+
   },
   title: {
     fontSize: 14,
