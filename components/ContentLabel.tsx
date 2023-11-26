@@ -37,7 +37,7 @@ export function ContentLabel({
         <Text
           style={{
             marginTop: 5,
-            color: theme === "dark" ? "#333" : "#EEE",
+            color: theme === "dark" ? "#EEE" : "#333",
             fontSize: 16,
             textAlign: "left",
           }}

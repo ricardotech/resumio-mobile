@@ -72,7 +72,7 @@ const JourneysScreen = () => {
             alignItems: "center",
           }}
         >
-          {/* <TouchableOpacity
+          <TouchableOpacity
             onPress={() => {
               navigation.removeListener;
               navigation.navigate("Settings");
@@ -82,11 +82,11 @@ const JourneysScreen = () => {
             }}
           >
             <Ionicons
-              name="ios-settings-outline"
+              name="ios-search-outline"
               color={primaryTextColor(theme)}
               size={30}
             />
-          </TouchableOpacity> */}
+          </TouchableOpacity>
         </View>
       </View>
     );
@@ -108,7 +108,6 @@ const JourneysScreen = () => {
           style={{
             backgroundColor: primaryBackgroundColor(theme),
             marginTop: 10,
-            paddingHorizontal: 20,
           }}
         >
           <View
@@ -116,6 +115,7 @@ const JourneysScreen = () => {
               flexDirection: "row",
               justifyContent: "space-around",
               marginBottom: 20,
+              paddingHorizontal: 20,
             }}
           >
             <TouchableOpacity
@@ -144,7 +144,7 @@ const JourneysScreen = () => {
               }}
             >
               <Text style={{ color: primaryTextColor(theme), fontSize: 16 }}>
-                Minhas
+                Favoritas
               </Text>
             </TouchableOpacity>
           </View>
@@ -155,11 +155,13 @@ const JourneysScreen = () => {
               justifyContent: "space-between",
               alignItems: "center",
               marginBottom: 20,
+              marginTop: 10,
+              paddingHorizontal: 20,
             }}
           >
-            <Text style={{ color: primaryTextColor(theme), fontSize: 20 }}>
-              Daily Missions
-            </Text>
+              <Text style={{ color: primaryTextColor(theme), fontSize: 20 }}>
+                Novo testamento
+              </Text>
             <TouchableOpacity>
               <Ionicons
                 name="chevron-forward"
@@ -169,43 +171,238 @@ const JourneysScreen = () => {
             </TouchableOpacity>
           </View>
 
-          {missions.map((mission, index) => (
-            <View
-              key={index}
-              style={{
-                backgroundColor: "#1c1c1e",
-                borderRadius: 10,
-                padding: 16,
-                flexDirection: "row",
-                alignItems: "center",
-                marginBottom: 16,
-              }}
-            >
-              <MaterialCommunityIcons
-                name={mission.icon}
-                size={24}
-                color={mission.iconColor}
-                style={{ marginRight: 8 }}
-              />
-              <View style={{ flex: 1 }}>
-                <Text style={{ color: "#fff", fontSize: 16, marginBottom: 4 }}>
-                  {mission.title}
-                </Text>
-                <Progress.Bar
-                  progress={mission.progress}
-                  width={null}
-                  color={mission.iconColor}
-                  unfilledColor="rgba(255,255,255,0.5)"
-                  borderWidth={0}
-                  borderRadius={5}
-                  style={{ height: 10 }}
-                />
-              </View>
-              <Text style={{ color: "#fff", marginLeft: 8 }}>
-                {Math.floor(mission.progress * 100)}%
+          <ScrollView
+          showsHorizontalScrollIndicator={false}
+            horizontal
+            style={{
+              paddingLeft: 20,
+            }}
+          >
+            {missions.map((mission, index) => {
+              return (
+                <View
+                  style={{
+                    marginRight: 10,
+                    height: 100,
+                    backgroundColor: secondaryBackgroundColor(theme),
+                    borderRadius: 10,
+                    marginBottom: 10,
+                    padding: 20,
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <View style={{ flexDirection: "row", alignItems: "center" }}>
+                    <MaterialCommunityIcons
+                      name={mission.icon}
+                      size={30}
+                      color={mission.iconColor}
+                    />
+                    <View style={{ marginLeft: 10 }}>
+                      <Text
+                        style={{
+                          color: primaryTextColor(theme),
+                          fontSize: 16,
+                        }}
+                      >
+                        {mission.title}
+                      </Text>
+                      <Text
+                        style={{
+                          color: primaryTextColor(theme),
+                          fontSize: 12,
+                        }}
+                      >
+                        2/3
+                      </Text>
+                    </View>
+                  </View>
+                  <Progress.Bar
+                    progress={mission.progress}
+                    width={Dimensions.get("window").width / 2 - 100}
+                    height={10}
+                    color="#4fc3f7"
+                    unfilledColor={theme === "light" ? "#E0E0E0" : "#333"}
+                    borderWidth={0}
+                    borderRadius={10}
+                  />
+                </View>
+              );
+            })}
+            <View style={{
+              width: 30
+            }} />
+          </ScrollView>
+
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginBottom: 20,
+              marginTop: 10,
+              paddingHorizontal: 20,
+            }}
+          >
+              <Text style={{ color: primaryTextColor(theme), fontSize: 20 }}>
+                Novo testamento
               </Text>
-            </View>
-          ))}
+            <TouchableOpacity>
+              <Ionicons
+                name="chevron-forward"
+                size={24}
+                color={primaryTextColor(theme)}
+              />
+            </TouchableOpacity>
+          </View>
+
+          <ScrollView
+          showsHorizontalScrollIndicator={false}
+            horizontal
+            style={{
+              paddingLeft: 20,
+            }}
+          >
+            {missions.map((mission, index) => {
+              return (
+                <View
+                  style={{
+                    marginRight: 10,
+                    height: 100,
+                    backgroundColor: secondaryBackgroundColor(theme),
+                    borderRadius: 10,
+                    marginBottom: 10,
+                    padding: 20,
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <View style={{ flexDirection: "row", alignItems: "center" }}>
+                    <MaterialCommunityIcons
+                      name={mission.icon}
+                      size={30}
+                      color={mission.iconColor}
+                    />
+                    <View style={{ marginLeft: 10 }}>
+                      <Text
+                        style={{
+                          color: primaryTextColor(theme),
+                          fontSize: 16,
+                        }}
+                      >
+                        {mission.title}
+                      </Text>
+                      <Text
+                        style={{
+                          color: primaryTextColor(theme),
+                          fontSize: 12,
+                        }}
+                      >
+                        2/3
+                      </Text>
+                    </View>
+                  </View>
+                  <Progress.Bar
+                    progress={mission.progress}
+                    width={Dimensions.get("window").width / 2 - 100}
+                    height={10}
+                    color="#4fc3f7"
+                    unfilledColor={theme === "light" ? "#E0E0E0" : "#333"}
+                    borderWidth={0}
+                    borderRadius={10}
+                  />
+                </View>
+              );
+            })}
+            <View style={{
+              width: 30
+            }} />
+          </ScrollView>
+
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginBottom: 20,
+              marginTop: 10,
+              paddingHorizontal: 20,
+            }}
+          >
+              <Text style={{ color: primaryTextColor(theme), fontSize: 20 }}>
+                Novo testamento
+              </Text>
+            <TouchableOpacity>
+              <Ionicons
+                name="chevron-forward"
+                size={24}
+                color={primaryTextColor(theme)}
+              />
+            </TouchableOpacity>
+          </View>
+
+          <ScrollView
+          showsHorizontalScrollIndicator={false}
+            horizontal
+            style={{
+              paddingLeft: 20,
+            }}
+          >
+            {missions.map((mission, index) => {
+              return (
+                <View
+                  style={{
+                    marginRight: 10,
+                    height: 100,
+                    backgroundColor: secondaryBackgroundColor(theme),
+                    borderRadius: 10,
+                    marginBottom: 10,
+                    padding: 20,
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <View style={{ flexDirection: "row", alignItems: "center" }}>
+                    <MaterialCommunityIcons
+                      name={mission.icon}
+                      size={30}
+                      color={mission.iconColor}
+                    />
+                    <View style={{ marginLeft: 10 }}>
+                      <Text
+                        style={{
+                          color: primaryTextColor(theme),
+                          fontSize: 16,
+                        }}
+                      >
+                        {mission.title}
+                      </Text>
+                      <Text
+                        style={{
+                          color: primaryTextColor(theme),
+                          fontSize: 12,
+                        }}
+                      >
+                        2/3
+                      </Text>
+                    </View>
+                  </View>
+                  <Progress.Bar
+                    progress={mission.progress}
+                    width={Dimensions.get("window").width / 2 - 100}
+                    height={10}
+                    color="#4fc3f7"
+                    unfilledColor={theme === "light" ? "#E0E0E0" : "#333"}
+                    borderWidth={0}
+                    borderRadius={10}
+                  />
+                </View>
+              );
+            })}
+            <View style={{
+              width: 30
+            }} />
+          </ScrollView>
         </ScrollView>
       </SafeAreaView>
     </View>

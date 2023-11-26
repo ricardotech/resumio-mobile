@@ -347,36 +347,6 @@ export default function HomeScreen() {
       label: "Groups",
       emoji: "👥",
     },
-    {
-      key: "books",
-      value: 3,
-      label: "Books",
-      emoji: "📖",
-    },
-    {
-      key: "chapters",
-      value: 3,
-      label: "Chapters",
-      emoji: "📖",
-    },
-    {
-      key: "verses",
-      value: 3,
-      label: "Verses",
-      emoji: "📖",
-    },
-    {
-      key: "words",
-      value: 3,
-      label: "Words",
-      emoji: "📖",
-    },
-    {
-      key: "characters",
-      value: 3,
-      label: "Characters",
-      emoji: "📖",
-    },
   ];
 
   const renderStatisticItem = ({ item }: { item: Statistic }) => {
@@ -812,7 +782,7 @@ export default function HomeScreen() {
             marginTop: 10,
           }}
         >
-          Andrew Ainsley
+          {user?.name}
         </Text>
         <Text
           style={{
