@@ -13,14 +13,13 @@ import {
   createStackNavigator,
 } from "@react-navigation/stack";
 import { StatusBar } from "expo-status-bar";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 import ChallengesScreen from "./screens/Challenges";
 import Journeys from "./screens/Home/components/Journeys";
 import JourneysScreen from "./screens/Journeys";
 import { ThemeProvider, useTheme } from "./contexts/theme.context";
 import SettingsScreen from "./screens/Profile/settings";
-import JourneysCollection from "./screens/Journeys/collection";
-import { Journey, JourneyCollection } from "./utils/types";
-import JourneyCollectionScreen from "./screens/Journeys/collection";
+import LoginPage from "./screens/Login";
 
 const Tab = createBottomTabNavigator();
 
@@ -35,7 +34,7 @@ export type StackNavigatorParams = {
     resume?: string;
   }; // For the BookScreen screen
   Settings: undefined;
-  JourneyCollection: JourneyCollection;
+  login: undefined;
 };
 
 const Stack = createStackNavigator<StackNavigatorParams>(); // Use the defined type
@@ -64,7 +63,7 @@ const TabNavigator = () => {
           // Você pode retornar qualquer componente aqui!
           return <Ionicons name={iconName} size={size} color={color} />;
         },
-        tabBarActiveTintColor: "#6448FE",
+        tabBarActiveTintColor: "tomato",
         tabBarInactiveTintColor: "gray",
         tabBarStyle: {
           backgroundColor: theme === "light" ? "#FFF" : "#111",
@@ -113,44 +112,46 @@ const TabNavigator = () => {
 
 export default function App() {
   return (
-    <AuthProvider>
-      <ThemeProvider>
-        <NavigationContainer>
-          <Stack.Navigator initialRouteName="Tab">
-            <Tab.Screen
-              options={{
-                headerShown: false,
-              }}
-              name="Tab"
-              component={TabNavigator}
-            />
-            <Stack.Screen
-              options={{
-                headerShown: false,
-              }}
-              name="JourneyCollection"
-              component={JourneyCollectionScreen}
-            />
-            <Stack.Group screenOptions={{ presentation: "modal" }}>
-              <Stack.Screen
+    <SafeAreaProvider>
+      <AuthProvider>
+        <ThemeProvider>
+          <NavigationContainer>
+            <Stack.Navigator initialRouteName="login">
+              <Tab.Screen
                 options={{
                   headerShown: false,
                 }}
-                name="Book"
-                component={BookScreen}
-                initialParams={{ id: 1, name: "", title: "", resume: "" }}
+                name="Tab"
+                component={TabNavigator}
               />
-              <Stack.Screen
+              <Tab.Screen
                 options={{
                   headerShown: false,
                 }}
-                name="Settings"
-                component={SettingsScreen}
+                name="login"
+                component={LoginPage}
               />
-            </Stack.Group>
-          </Stack.Navigator>
-        </NavigationContainer>
-      </ThemeProvider>
-    </AuthProvider>
+              <Stack.Group screenOptions={{ presentation: "modal" }}>
+                <Stack.Screen
+                  options={{
+                    headerShown: false,
+                  }}
+                  name="Book"
+                  component={BookScreen}
+                  initialParams={{ id: 1, name: "", title: "", resume: "" }}
+                />
+                <Stack.Screen
+                  options={{
+                    headerShown: false,
+                  }}
+                  name="Settings"
+                  component={SettingsScreen}
+                />
+              </Stack.Group>
+            </Stack.Navigator>
+          </NavigationContainer>
+        </ThemeProvider>
+      </AuthProvider>
+    </SafeAreaProvider>
   );
 }
