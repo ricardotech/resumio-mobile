@@ -97,10 +97,13 @@ const LoginPage = () => {
               Email
             </Text>
             <Input
+              autoCapitalize="none"
+              keyboardType="email-address"
               style={{
+                paddingLeft: 0,
                 color: "#fff",
                 padding: 10,
-                fontSize: 24,
+                fontSize: 20,
               }}
               inputContainerStyle={{
                 width: "95%",
@@ -123,9 +126,10 @@ const LoginPage = () => {
             <Input
               secureTextEntry={!isPasswordVisible}
               style={{
+                paddingLeft: 0,
                 color: "#fff",
                 padding: 10,
-                fontSize: 24,
+                fontSize: 20,
               }}
               rightIcon={
                 <TouchableWithoutFeedback onPress={handlePasswordVisibility}>
