@@ -18,6 +18,9 @@ import Journeys from "./screens/Home/components/Journeys";
 import JourneysScreen from "./screens/Journeys";
 import { ThemeProvider, useTheme } from "./contexts/theme.context";
 import SettingsScreen from "./screens/Profile/settings";
+import JourneysCollection from "./screens/Journeys/collection";
+import { Journey, JourneyCollection } from "./utils/types";
+import JourneyCollectionScreen from "./screens/Journeys/collection";
 
 const Tab = createBottomTabNavigator();
 
@@ -32,6 +35,7 @@ export type StackNavigatorParams = {
     resume?: string;
   }; // For the BookScreen screen
   Settings: undefined;
+  JourneyCollection: JourneyCollection;
 };
 
 const Stack = createStackNavigator<StackNavigatorParams>(); // Use the defined type
@@ -60,7 +64,7 @@ const TabNavigator = () => {
           // Você pode retornar qualquer componente aqui!
           return <Ionicons name={iconName} size={size} color={color} />;
         },
-        tabBarActiveTintColor: "tomato",
+        tabBarActiveTintColor: "#6448FE",
         tabBarInactiveTintColor: "gray",
         tabBarStyle: {
           backgroundColor: theme === "light" ? "#FFF" : "#111",
@@ -119,6 +123,13 @@ export default function App() {
               }}
               name="Tab"
               component={TabNavigator}
+            />
+            <Stack.Screen
+              options={{
+                headerShown: false,
+              }}
+              name="JourneyCollection"
+              component={JourneyCollectionScreen}
             />
             <Stack.Group screenOptions={{ presentation: "modal" }}>
               <Stack.Screen

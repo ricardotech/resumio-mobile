@@ -168,7 +168,17 @@ const JourneysScreen = () => {
                   >
                     {collection.name}
                   </Text>
-                  <TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => {
+                      navigation.removeListener;
+                      navigation.navigate("JourneyCollection", {
+                        journeys: collection.journeys,
+                        description: collection.description,
+                        id: collection.id,
+                        name: collection.name,
+                      });
+                    }}
+                  >
                     <Ionicons
                       name="chevron-forward"
                       size={24}
@@ -231,7 +241,7 @@ const JourneysScreen = () => {
                             progress={journey.progress}
                             width={180}
                             height={10}
-                            color="#4fc3f7"
+                            color={journey.iconColor}
                             unfilledColor={
                               theme === "light" ? "#E0E0E0" : "#333"
                             }
