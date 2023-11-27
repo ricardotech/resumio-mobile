@@ -30,6 +30,8 @@ import { useTheme } from "../../contexts/theme.context";
 import { useNavigation } from "@react-navigation/native";
 import { authScreenProp } from "../../routes/auth.routes";
 
+import Toast from "react-native-toast-message";
+
 const LoginPage = () => {
   const navigation = useNavigation<authScreenProp>();
 
@@ -48,7 +50,57 @@ const LoginPage = () => {
   const auth = getAuth(app);
   const handleLogin = async () => {
     const res = await signIn({ email, password });
-    console.log(res)
+
+    const errorMessage = res.errorMessage?.replace("Firebase: ", "");
+
+    if (res.errorCode === "auth/invalid-login-credentials") {
+      Toast.show({
+        type: "error",
+        text1: "Erro ao fazer login",
+        text2: "Email ou senha inválidos",
+      });
+    } else if (res.errorCode === "auth/too-many-requests") {
+      Toast.show({
+        type: "error",
+        text1: "Erro ao fazer login",
+        text2: "Muitas tentativas de login, tente novamente mais tarde",
+      });
+    } else if (res.errorCode === "auth/user-not-found") {
+      Toast.show({
+        type: "error",
+        text1: "Usuário não encontrado",
+      });
+    } else if (res.errorCode === "auth/wrong-password") {
+      Toast.show({
+        type: "error",
+        text1: "Erro ao fazer login",
+        text2: "Senha incorreta",
+      });
+    } else if (res.errorCode === "auth/network-request-failed") {
+      Toast.show({
+        type: "error",
+        text1: "Erro ao fazer login",
+        text2: "Sem conexão com a internet",
+      });
+    } else if (res.errorCode === "auth/invalid-email") {
+      Toast.show({
+        type: "error",
+        text1: "Erro ao fazer login",
+        text2: "Email inválido",
+      });
+    } else if (res.errorCode === "auth/user-disabled") {
+      Toast.show({
+        type: "error",
+        text1: "Erro ao fazer login",
+        text2: "Usuário desabilitado",
+      });
+    } else {
+      Toast.show({
+        type: "success",
+        text1: "Sucesso ao fazer login",
+        text2: "Você será redirecionado para a página inicial",
+      });
+    }
   };
   return (
     <SafeAreaView
@@ -72,6 +124,16 @@ const LoginPage = () => {
             flexDirection: "column",
           }}
         >
+            <TouchableOpacity
+            onPress={() => {
+              navigation.removeListener;
+              navigation.goBack();
+            }}
+          >
+           <View style={{
+            height: 24
+           }} />
+          </TouchableOpacity>
           <View
             style={{
               padding: 20,
@@ -81,7 +143,7 @@ const LoginPage = () => {
               style={{
                 color: primaryTextColor(theme),
                 marginTop: 20,
-                fontSize: 32,
+                fontSize: 28,
                 fontWeight: "bold",
               }}
             >
@@ -92,7 +154,7 @@ const LoginPage = () => {
             <Text
               style={{
                 color: primaryTextColor(theme),
-                marginTop: 20,
+                marginTop: 10,
                 fontSize: 20,
                 fontWeight: "bold",
                 marginLeft: 20,
@@ -119,7 +181,7 @@ const LoginPage = () => {
             <Text
               style={{
                 color: primaryTextColor(theme),
-                marginTop: 20,
+                marginTop: 10,
                 fontSize: 20,
                 fontWeight: "bold",
                 marginLeft: 20,
@@ -157,7 +219,7 @@ const LoginPage = () => {
               flex: 1,
               justifyContent: "flex-end",
               alignItems: "center",
-              marginBottom: 50,
+              marginBottom: 70,
             }}
           >
             <Button
@@ -168,7 +230,7 @@ const LoginPage = () => {
                 height: 50,
               }}
               containerStyle={{
-                width: "80%",
+                width: "90%",
                 marginHorizontal: 50,
                 marginVertical: 10,
               }}
@@ -191,9 +253,8 @@ const LoginPage = () => {
                 height: 50,
               }}
               containerStyle={{
-                width: "80%",
+                width: "90%",
                 marginHorizontal: 50,
-                marginVertical: 10,
               }}
               loadingProps={{ size: "small", color: secondaryTextColor(theme) }}
               titleStyle={{
@@ -205,6 +266,7 @@ const LoginPage = () => {
           </View>
         </KeyboardAvoidingView>
       </Pressable>
+      <Toast />
     </SafeAreaView>
   );
 };

@@ -259,6 +259,7 @@
 
 // export default UserProfileScreen;
 import React from "react";
+import { Image } from "expo-image";
 import {
   View,
   Text,
@@ -266,7 +267,6 @@ import {
   SafeAreaView,
   TouchableOpacity,
   ScrollView,
-  Image,
   Dimensions,
   FlatList,
 } from "react-native";
@@ -647,7 +647,12 @@ export default function HomeScreen() {
         <View style={{ flexDirection: "row", marginBottom: 20 }}>
           <View style={{ marginRight: 15 }}>
             <Image
-              source={require("../../assets/icon.png")}
+              cachePolicy="memory-disk"
+              contentFit="cover"
+              transition={1000}
+              source={{
+                uri: "https://github.com/ricardotech.png",
+              }}
               style={{ width: 50, height: 50 }}
             />
           </View>
@@ -769,8 +774,10 @@ export default function HomeScreen() {
     return (
       <View style={{ alignItems: "center" }}>
         <Image
+          contentFit="cover"
+          cachePolicy="memory-disk"
           source={{
-            uri: user?.thumbnail,
+            uri: "https://github.com/ricardotech.png",
           }}
           style={{ width: 100, height: 100, borderRadius: 50 }}
         />

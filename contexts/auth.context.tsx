@@ -45,8 +45,8 @@ type SignUpCredentials = {
 type AuthContextData = {
   user: User | undefined | null;
   error: Error | undefined | null;
-  signIn: (credentials: SignInCredentials) => Promise<void>;
-  signUp: (credentials: SignUpCredentials) => Promise<void>;
+  signIn: (credentials: SignInCredentials) => Promise<any>;
+  signUp: (credentials: SignUpCredentials) => Promise<any>;
   signOut: () => Promise<void>;
   loading: boolean;
   token: string;
@@ -126,7 +126,7 @@ function AuthProvider({ children }: AuthProviderProps) {
     try {
       setLoading(true);
 
-      await signInWithEmailAndPassword(auth, email, password)
+      const res = await signInWithEmailAndPassword(auth, email, password)
         .then(async (userCredential) => {
           const user = userCredential.user;
 
@@ -139,14 +139,19 @@ function AuthProvider({ children }: AuthProviderProps) {
             email: String(user.email),
           });
           setLoading(false);
-          return userCredential;
+          return user;
         })
         .catch((error) => {
           const errorCode = error.code;
           const errorMessage = error.message;
           setLoading(false);
-          return error;
+          return {
+            errorCode,
+            errorMessage,
+          };
         });
+
+      return res;
     } catch (error: any) {
       setLoading(false);
       return error;
@@ -182,18 +187,20 @@ function AuthProvider({ children }: AuthProviderProps) {
             email: String(user.email),
           });
           setLoading(false);
+          return user;
         })
         .catch((error) => {
           const errorCode = error.code;
           const errorMessage = error.message;
-          console.log(error, errorCode, errorMessage);
           setLoading(false);
-          return errorMessage;
+          return {
+            errorCode,
+            errorMessage,
+          };
         });
     } catch (error: any) {
       setLoading(false);
-      console.log(error.message);
-      return error.message;
+      return error;
     }
   }
 

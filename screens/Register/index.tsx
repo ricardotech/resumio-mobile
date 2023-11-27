@@ -98,19 +98,18 @@ export default function RegisterPage() {
             <Text
               style={{
                 color: primaryTextColor(theme),
-                marginTop: 20,
-                fontSize: 32,
+                fontSize: 28,
                 fontWeight: "bold",
               }}
             >
-              Vamos começar sua jornada?
+              Pronto para começar?👋
             </Text>
           </View>
           <View>
             <Text
               style={{
                 color: primaryTextColor(theme),
-                marginTop: 20,
+                marginTop: 10,
                 fontSize: 20,
                 fontWeight: "bold",
                 marginLeft: 20,
@@ -136,7 +135,7 @@ export default function RegisterPage() {
             <Text
               style={{
                 color: primaryTextColor(theme),
-                marginTop: 20,
+                marginTop: 10,
                 fontSize: 20,
                 fontWeight: "bold",
                 marginLeft: 20,
@@ -163,7 +162,7 @@ export default function RegisterPage() {
             <Text
               style={{
                 color: primaryTextColor(theme),
-                marginTop: 20,
+                marginTop: 10,
                 fontSize: 20,
                 fontWeight: "bold",
                 marginLeft: 20,
@@ -202,7 +201,7 @@ export default function RegisterPage() {
               flex: 1,
               justifyContent: "flex-end",
               alignItems: "center",
-              marginBottom: 50,
+              marginBottom: 60,
             }}
           >
             <Button
@@ -213,7 +212,7 @@ export default function RegisterPage() {
                 height: 50,
               }}
               containerStyle={{
-                width: "80%",
+                width: "90%",
                 marginHorizontal: 50,
                 marginVertical: 10,
               }}
