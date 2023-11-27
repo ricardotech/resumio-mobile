@@ -7,15 +7,36 @@ import {
   Keyboard,
   Platform,
   Pressable,
+  TouchableOpacity,
 } from "react-native";
 import { Input, Icon, Button } from "@rneui/themed";
 import { Ionicons } from "@expo/vector-icons";
 import { useState } from "react";
 import React from "react";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 import { app } from "../../utils/firebaseConfig";
+import { useAuth } from "../../contexts/auth.context";
+import {
+  primaryBackgroundColor,
+  primaryTextColor,
+  secondaryBackgroundColor,
+  secondaryTextColor,
+} from "../../utils/style";
+import { useTheme } from "../../contexts/theme.context";
+import { useNavigation } from "@react-navigation/native";
+import { authScreenProp } from "../../routes/auth.routes";
 
 const LoginPage = () => {
+  const navigation = useNavigation<authScreenProp>();
+
+  const { theme } = useTheme();
+
+  const { loading, signIn } = useAuth();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -25,49 +46,32 @@ const LoginPage = () => {
   };
 
   const auth = getAuth(app);
-  const handleLogin = () => {
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        const user = userCredential.user;
-        console.log(user);
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log(error, errorCode, errorMessage);
-      });
+  const handleLogin = async () => {
+    const res = await signIn({ email, password });
+    console.log(res)
   };
   return (
     <SafeAreaView
       style={{
         flex: 1,
-        backgroundColor: "#000",
+        backgroundColor: primaryBackgroundColor(theme),
       }}
     >
       <Pressable
         style={{
           flex: 1,
-          backgroundColor: "#000",
+          backgroundColor: primaryBackgroundColor(theme),
         }}
         onPress={Keyboard.dismiss}
       >
         <KeyboardAvoidingView
           behavior={Platform.OS === "ios" ? "padding" : "height"}
           style={{
-            backgroundColor: "#000",
+            backgroundColor: primaryBackgroundColor(theme),
             flex: 1,
             flexDirection: "column",
           }}
         >
-          <Ionicons
-            style={{
-              marginTop: 20,
-              marginLeft: 20,
-            }}
-            name="ios-arrow-back"
-            size={24}
-            color="#fff"
-          />
           <View
             style={{
               padding: 20,
@@ -75,7 +79,7 @@ const LoginPage = () => {
           >
             <Text
               style={{
-                color: "#fff",
+                color: primaryTextColor(theme),
                 marginTop: 20,
                 fontSize: 32,
                 fontWeight: "bold",
@@ -87,7 +91,7 @@ const LoginPage = () => {
           <View>
             <Text
               style={{
-                color: "#fff",
+                color: primaryTextColor(theme),
                 marginTop: 20,
                 fontSize: 20,
                 fontWeight: "bold",
@@ -101,7 +105,7 @@ const LoginPage = () => {
               keyboardType="email-address"
               style={{
                 paddingLeft: 0,
-                color: "#fff",
+                color: primaryTextColor(theme),
                 padding: 10,
                 fontSize: 20,
               }}
@@ -114,7 +118,7 @@ const LoginPage = () => {
             />
             <Text
               style={{
-                color: "#fff",
+                color: primaryTextColor(theme),
                 marginTop: 20,
                 fontSize: 20,
                 fontWeight: "bold",
@@ -127,7 +131,7 @@ const LoginPage = () => {
               secureTextEntry={!isPasswordVisible}
               style={{
                 paddingLeft: 0,
-                color: "#fff",
+                color: primaryTextColor(theme),
                 padding: 10,
                 fontSize: 20,
               }}
@@ -136,7 +140,7 @@ const LoginPage = () => {
                   <Ionicons
                     name={isPasswordVisible ? "ios-eye-off" : "ios-eye"}
                     size={24}
-                    color="#fff"
+                    color={primaryTextColor(theme)}
                   />
                 </TouchableWithoutFeedback>
               }
@@ -157,9 +161,9 @@ const LoginPage = () => {
             }}
           >
             <Button
-              title="LOG IN"
+              title="Ainda não tem uma conta?"
               buttonStyle={{
-                backgroundColor: "white",
+                backgroundColor: "transparent",
                 borderRadius: 30,
                 height: 50,
               }}
@@ -168,7 +172,34 @@ const LoginPage = () => {
                 marginHorizontal: 50,
                 marginVertical: 10,
               }}
-              titleStyle={{ fontWeight: "bold", color: "#000" }}
+              loadingProps={{ size: "small", color: primaryTextColor(theme) }}
+              titleStyle={{
+                fontWeight: "bold",
+                color: primaryTextColor(theme),
+              }}
+              onPress={() => {
+                navigation.navigate("SignUp");
+              }}
+            />
+            <Button
+              disabled={loading}
+              loading={loading}
+              title="Entrar"
+              buttonStyle={{
+                backgroundColor: secondaryBackgroundColor(theme),
+                borderRadius: 30,
+                height: 50,
+              }}
+              containerStyle={{
+                width: "80%",
+                marginHorizontal: 50,
+                marginVertical: 10,
+              }}
+              loadingProps={{ size: "small", color: secondaryTextColor(theme) }}
+              titleStyle={{
+                fontWeight: "bold",
+                color: secondaryTextColor(theme),
+              }}
               onPress={handleLogin}
             />
           </View>

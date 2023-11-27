@@ -6,8 +6,11 @@ import { primaryTextColor } from "../../utils/style";
 import { authScreenProp } from "../../App";
 import { useNavigation } from "@react-navigation/native";
 import { ContentLabel } from "../../components/ContentLabel";
+import { useAuth } from "../../contexts/auth.context";
 
 const SettingsScreen = () => {
+  const { signOut } = useAuth();
+
   const navigation = useNavigation<authScreenProp>();
 
   const { theme, changeTheme } = useTheme();
@@ -27,6 +30,15 @@ const SettingsScreen = () => {
       switchValue: theme === "dark" ? true : false,
       onToggle: () => {
         changeTheme(theme === "dark" ? "light" : "dark");
+      },
+    },
+    {
+      title: "Sign Out",
+      iconName: "log-out",
+      iconColor: "#F5A623",
+      isSwitch: false,
+      onToggle: () => {
+        signOut();
       },
     },
   ];
@@ -122,8 +134,7 @@ const SettingsScreen = () => {
               navigation.removeListener;
               navigation.goBack();
             }}
-            style={{
-            }}
+            style={{}}
           >
             <Ionicons
               name="ios-close-circle"

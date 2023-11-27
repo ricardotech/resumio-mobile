@@ -11,6 +11,7 @@ import axios, { Axios, AxiosInstance, AxiosStatic } from "axios";
 import {
   createUserWithEmailAndPassword,
   getAuth,
+  signInWithEmailAndPassword,
   updateProfile,
 } from "firebase/auth";
 import { app } from "../utils/firebaseConfig";
@@ -47,7 +48,7 @@ type AuthContextData = {
   signIn: (credentials: SignInCredentials) => Promise<void>;
   signUp: (credentials: SignUpCredentials) => Promise<void>;
   signOut: () => Promise<void>;
-  isLoading: boolean;
+  loading: boolean;
   token: string;
   api: AxiosInstance;
 };
@@ -91,18 +92,12 @@ async function handleApi() {
 }
 
 function AuthProvider({ children }: AuthProviderProps) {
-  const [user, setUser] = useState<User | null>({
-    email: "9q9o6b3@gmail.com",
-    id: "0",
-    name: "Ricardo Fonseca",
-    thumbnail: "https://github.com/ricardotech.png",
-    username: "ricardotech",
-  });
+  const [user, setUser] = useState<User | null>();
   const [token, setToken] = useState<string>("");
 
   const [error, setError] = useState<Error | null>(null);
 
-  const [isLoading, setIsLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const auth = getAuth(app);
 
@@ -129,42 +124,32 @@ function AuthProvider({ children }: AuthProviderProps) {
 
   async function signIn({ email, password }: SignInCredentials) {
     try {
-      setIsLoading(true);
+      setLoading(true);
 
-      await api
-        .post("/auth/signin", {
-          email: email,
-          password,
+      await signInWithEmailAndPassword(auth, email, password)
+        .then(async (userCredential) => {
+          const user = userCredential.user;
+
+          AsyncStorage.setItem(TOKEN, user.refreshToken);
+          AsyncStorage.setItem(USER, JSON.stringify(user));
+          setToken(user.refreshToken);
+          setUser({
+            id: user.uid,
+            name: String(user.displayName),
+            email: String(user.email),
+          });
+          setLoading(false);
+          return userCredential;
         })
-        .then((response: any) => {
-          if (response.data.error) {
-            setError(response.data.error);
-          } else {
-            setTimeout(async () => {
-              await AsyncStorage.setItem(TOKEN, response.data.data.token);
-              await AsyncStorage.setItem(
-                USER,
-                JSON.stringify(response.data.data.user)
-              );
-              setToken(response.data.data.token);
-              setUser({
-                id: response.data.data.user.id,
-                email: response.data.data.user.email,
-                name: response.data.data.user.name,
-                username: response.data.data.username,
-                thumbnail: response.data.data.thumbnail,
-              });
-            }, 1250);
-          }
-        })
-        .catch((error: any) => {
-          setError(error);
-        })
-        .finally(() => {
-          setIsLoading(false);
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          setLoading(false);
+          return error;
         });
     } catch (error: any) {
-      console.log(error.message);
+      setLoading(false);
+      return error;
     }
   }
 
@@ -176,7 +161,7 @@ function AuthProvider({ children }: AuthProviderProps) {
     password,
   }: SignUpCredentials) {
     try {
-      setIsLoading(true);
+      setLoading(true);
 
       await createUserWithEmailAndPassword(auth, email, password)
         .then(async (userCredential) => {
@@ -196,14 +181,17 @@ function AuthProvider({ children }: AuthProviderProps) {
             name: String(user.displayName),
             email: String(user.email),
           });
+          setLoading(false);
         })
         .catch((error) => {
           const errorCode = error.code;
           const errorMessage = error.message;
           console.log(error, errorCode, errorMessage);
+          setLoading(false);
           return errorMessage;
         });
     } catch (error: any) {
+      setLoading(false);
       console.log(error.message);
       return error.message;
     }
@@ -216,7 +204,7 @@ function AuthProvider({ children }: AuthProviderProps) {
     AsyncStorage.removeItem(TOKEN).then(() => {
       setUser(null);
     });
-    // AsyncStorage.clear().then(() => {});
+    await auth.signOut();
   }
 
   return (
@@ -228,7 +216,7 @@ function AuthProvider({ children }: AuthProviderProps) {
         signIn,
         signUp,
         signOut,
-        isLoading,
+        loading,
         api,
       }}
     >
