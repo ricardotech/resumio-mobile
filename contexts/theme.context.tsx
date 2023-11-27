@@ -25,10 +25,12 @@ export const themeStorageKey = "@Theme:theme";
 export const ThemeContext = createContext({} as ThemeContextData);
 
 function ThemeProvider({ children }: ThemeProviderProps) {
-  const [theme, setTheme] = useState<Theme>("light");
+  const [theme, setTheme] = useState<Theme>("dark");
 
   useEffect(() => {
     async function loadTheme() {
+      await AsyncStorage.setItem(themeStorageKey, theme);
+      
       const themeStorage = await AsyncStorage.getItem(themeStorageKey);
 
       if (themeStorage) {

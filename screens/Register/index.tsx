@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Text,
   SafeAreaView,
@@ -12,12 +13,7 @@ import {
 import { Input, Icon, Button } from "@rneui/themed";
 import { Ionicons } from "@expo/vector-icons";
 import { useState } from "react";
-import React from "react";
-import {
-  getAuth,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-} from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { app } from "../../utils/firebaseConfig";
 import { useAuth } from "../../contexts/auth.context";
 import {
@@ -27,18 +23,18 @@ import {
   secondaryTextColor,
 } from "../../utils/style";
 import { useTheme } from "../../contexts/theme.context";
-import { useNavigation } from "@react-navigation/native";
 import { authScreenProp } from "../../routes/auth.routes";
+import { useNavigation } from "@react-navigation/native";
 
-import Toast from "react-native-toast-message";
-
-const LoginPage = () => {
+export default function RegisterPage() {
   const navigation = useNavigation<authScreenProp>();
 
   const { theme } = useTheme();
 
-  const { loading, signIn } = useAuth();
+  const { loading, signUp } = useAuth();
 
+  const [photoURL, setPhotoURL] = useState("");
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -48,60 +44,14 @@ const LoginPage = () => {
   };
 
   const auth = getAuth(app);
-  const handleLogin = async () => {
-    const res = await signIn({ email, password });
 
-    const errorMessage = res.errorMessage?.replace("Firebase: ", "");
-
-    if (res.errorCode === "auth/invalid-login-credentials") {
-      Toast.show({
-        type: "error",
-        text1: "Erro ao fazer login",
-        text2: "Email ou senha inválidos",
-      });
-    } else if (res.errorCode === "auth/too-many-requests") {
-      Toast.show({
-        type: "error",
-        text1: "Erro ao fazer login",
-        text2: "Muitas tentativas de login, tente novamente mais tarde",
-      });
-    } else if (res.errorCode === "auth/user-not-found") {
-      Toast.show({
-        type: "error",
-        text1: "Usuário não encontrado",
-      });
-    } else if (res.errorCode === "auth/wrong-password") {
-      Toast.show({
-        type: "error",
-        text1: "Erro ao fazer login",
-        text2: "Senha incorreta",
-      });
-    } else if (res.errorCode === "auth/network-request-failed") {
-      Toast.show({
-        type: "error",
-        text1: "Erro ao fazer login",
-        text2: "Sem conexão com a internet",
-      });
-    } else if (res.errorCode === "auth/invalid-email") {
-      Toast.show({
-        type: "error",
-        text1: "Erro ao fazer login",
-        text2: "Email inválido",
-      });
-    } else if (res.errorCode === "auth/user-disabled") {
-      Toast.show({
-        type: "error",
-        text1: "Erro ao fazer login",
-        text2: "Usuário desabilitado",
-      });
-    } else {
-      Toast.show({
-        type: "success",
-        text1: "Sucesso ao fazer login",
-        text2: "Você será redirecionado para a página inicial",
-      });
-    }
+  const handleSignUp = async () => {
+    await signUp({ name, email, password });
   };
+
+  const isValidRegister =
+    name.split(" ").length > 1 && email && password.length > 8;
+
   return (
     <SafeAreaView
       style={{
@@ -124,15 +74,21 @@ const LoginPage = () => {
             flexDirection: "column",
           }}
         >
-            <TouchableOpacity
+          <TouchableOpacity
             onPress={() => {
               navigation.removeListener;
               navigation.goBack();
             }}
           >
-           <View style={{
-            height: 24
-           }} />
+            <Ionicons
+              style={{
+                marginTop: 20,
+                marginLeft: 20,
+              }}
+              name="ios-arrow-back"
+              size={24}
+              color={primaryTextColor(theme)}
+            />
           </TouchableOpacity>
           <View
             style={{
@@ -142,15 +98,40 @@ const LoginPage = () => {
             <Text
               style={{
                 color: primaryTextColor(theme),
-                marginTop: 20,
                 fontSize: 28,
                 fontWeight: "bold",
               }}
             >
-              Bem vindo de volta!👋
+              Pronto para começar?👋
             </Text>
           </View>
           <View>
+            <Text
+              style={{
+                color: primaryTextColor(theme),
+                marginTop: 10,
+                fontSize: 20,
+                fontWeight: "bold",
+                marginLeft: 20,
+              }}
+            >
+              Seu nome completo
+            </Text>
+            <Input
+              autoCapitalize="words"
+              style={{
+                paddingLeft: 0,
+                color: primaryTextColor(theme),
+                padding: 10,
+                fontSize: 20,
+              }}
+              inputContainerStyle={{
+                width: "95%",
+                alignSelf: "center",
+              }}
+              onChangeText={setName}
+              value={name}
+            />
             <Text
               style={{
                 color: primaryTextColor(theme),
@@ -214,39 +195,17 @@ const LoginPage = () => {
               value={password}
             />
           </View>
+
           <View
             style={{
               flex: 1,
               justifyContent: "flex-end",
               alignItems: "center",
-              marginBottom: 70,
+              marginBottom: 60,
             }}
           >
             <Button
-              title="Ainda não tem uma conta?"
-              buttonStyle={{
-                backgroundColor: "transparent",
-                borderRadius: 30,
-                height: 50,
-              }}
-              containerStyle={{
-                width: "90%",
-                marginHorizontal: 50,
-                marginVertical: 10,
-              }}
-              loadingProps={{ size: "small", color: primaryTextColor(theme) }}
-              titleStyle={{
-                fontWeight: "bold",
-                color: primaryTextColor(theme),
-              }}
-              onPress={() => {
-                navigation.navigate("SignUp");
-              }}
-            />
-            <Button
-              disabled={loading}
-              loading={loading}
-              title="Entrar"
+              title="Registrar"
               buttonStyle={{
                 backgroundColor: secondaryBackgroundColor(theme),
                 borderRadius: 30,
@@ -255,20 +214,23 @@ const LoginPage = () => {
               containerStyle={{
                 width: "90%",
                 marginHorizontal: 50,
+                marginVertical: 10,
               }}
-              loadingProps={{ size: "small", color: secondaryTextColor(theme) }}
+              disabled={loading}
+              loading={loading}
+              loadingProps={{
+                size: "small",
+                color: secondaryTextColor(theme),
+              }}
               titleStyle={{
                 fontWeight: "bold",
                 color: secondaryTextColor(theme),
               }}
-              onPress={handleLogin}
+              onPress={handleSignUp}
             />
           </View>
         </KeyboardAvoidingView>
       </Pressable>
-      <Toast />
     </SafeAreaView>
   );
-};
-
-export default LoginPage;
+}
