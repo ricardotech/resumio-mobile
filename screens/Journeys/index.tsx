@@ -4,9 +4,9 @@ import {
   Text,
   TouchableOpacity,
   ScrollView,
-  SafeAreaView,
   Dimensions,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import * as Progress from "react-native-progress";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { ContentLabel } from "../../components/ContentLabel";

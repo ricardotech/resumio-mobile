@@ -3,10 +3,10 @@ import {
   View,
   Text,
   Pressable,
-  SafeAreaView,
   TouchableOpacity,
   ScrollView,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import Books from "./components/Books";
 import { ContentLabel } from "../../components/ContentLabel";
 import { useAuth } from "../../contexts/auth.context";

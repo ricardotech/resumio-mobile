@@ -1,4 +1,5 @@
-{
++ 
+ {
   "expo": {
     "name": "resumio",
     "slug": "resumio",
@@ -26,6 +27,11 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "46980250-381e-4ae9-a48b-6e20f09b4b70"
+      }
     },
     "runtimeVersion": {
       "policy": "appVersion"

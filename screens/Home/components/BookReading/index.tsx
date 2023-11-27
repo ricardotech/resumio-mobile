@@ -6,10 +6,10 @@ import {
   Pressable,
   TouchableOpacity,
   ScrollView,
-  SafeAreaView,
   ImageBackground,
   Image,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 import { useNavigation } from "@react-navigation/native";
 

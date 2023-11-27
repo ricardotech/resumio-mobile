@@ -3,11 +3,11 @@ import {
   View,
   Text,
   Pressable,
-  SafeAreaView,
   ScrollView,
   TouchableOpacity,
   Dimensions,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { ContentLabel } from "../../components/ContentLabel";
 import { SvgXml } from "react-native-svg"; // Import SvgXml
 import { Ionicons } from "@expo/vector-icons";

@@ -264,12 +264,12 @@ import {
   View,
   Text,
   Pressable,
-  SafeAreaView,
   TouchableOpacity,
   ScrollView,
   Dimensions,
   FlatList,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { ContentLabel } from "../../components/ContentLabel";
 import { useAuth } from "../../contexts/auth.context";
 import { Ionicons } from "@expo/vector-icons";

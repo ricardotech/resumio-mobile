@@ -1,6 +1,5 @@
 import {
   Text,
-  SafeAreaView,
   View,
   TouchableWithoutFeedback,
   KeyboardAvoidingView,
@@ -9,6 +8,7 @@ import {
   Pressable,
   TouchableOpacity,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { Input, Icon, Button } from "@rneui/themed";
 import { Ionicons } from "@expo/vector-icons";
 import { useState } from "react";

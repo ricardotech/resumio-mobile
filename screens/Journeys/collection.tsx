@@ -4,8 +4,8 @@ import {
   Text,
   FlatList,
   TouchableOpacity,
-  SafeAreaView,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import JourneyCard from "./components/JourneyCard";
 import { primaryBackgroundColor, primaryTextColor } from "../../utils/style";
 import { useTheme } from "../../contexts/theme.context";
