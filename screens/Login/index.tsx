@@ -31,6 +31,7 @@ import { useNavigation } from "@react-navigation/native";
 import { authScreenProp } from "../../routes/auth.routes";
 
 import Toast from "react-native-toast-message";
+import { StatusBar } from "expo-status-bar";
 
 const LoginPage = () => {
   const navigation = useNavigation<authScreenProp>();
@@ -102,6 +103,7 @@ const LoginPage = () => {
       });
     }
   };
+
   return (
     <SafeAreaView
       style={{
@@ -109,6 +111,7 @@ const LoginPage = () => {
         backgroundColor: primaryBackgroundColor(theme),
       }}
     >
+      <StatusBar style={theme === "dark" ? "light" : "dark"} />
       <Pressable
         style={{
           flex: 1,
@@ -124,15 +127,17 @@ const LoginPage = () => {
             flexDirection: "column",
           }}
         >
-            <TouchableOpacity
+          <TouchableOpacity
             onPress={() => {
               navigation.removeListener;
               navigation.goBack();
             }}
           >
-           <View style={{
-            height: 24
-           }} />
+            <View
+              style={{
+                height: 24,
+              }}
+            />
           </TouchableOpacity>
           <View
             style={{

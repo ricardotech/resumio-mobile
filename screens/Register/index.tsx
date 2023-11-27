@@ -25,6 +25,8 @@ import {
 import { useTheme } from "../../contexts/theme.context";
 import { authScreenProp } from "../../routes/auth.routes";
 import { useNavigation } from "@react-navigation/native";
+import Toast from "react-native-toast-message";
+import { StatusBar } from "expo-status-bar";
 
 export default function RegisterPage() {
   const navigation = useNavigation<authScreenProp>();
@@ -46,7 +48,49 @@ export default function RegisterPage() {
   const auth = getAuth(app);
 
   const handleSignUp = async () => {
-    await signUp({ name, email, password });
+    const res = await signUp({ name, email, password });
+
+    const errorMessage = res.errorMessage?.replace("Firebase: ", "");
+
+    // validate the createUserWithEmailAndPassword firebase
+
+    if (res.errorCode === "auth/email-already-in-use") {
+      Toast.show({
+        type: "error",
+        text1: "Erro ao registrar",
+        text2: "Email já cadastrado",
+      });
+    } else if (res.errorCode === "auth/invalid-email") {
+      Toast.show({
+        type: "error",
+        text1: "Erro ao registrar",
+        text2: "Email inválido",
+      });
+    } else if (res.errorCode === "auth/weak-password") {
+      Toast.show({
+        type: "error",
+        text1: "Erro ao registrar",
+        text2: "Senha muito fraca",
+      });
+    } else if (res.errorCode === "auth/too-many-requests") {
+      Toast.show({
+        type: "error",
+        text1: "Erro ao registrar",
+        text2: "Muitas tentativas de login, tente novamente mais tarde",
+      });
+    } else if (res.errorCode === "auth/network-request-failed") {
+      Toast.show({
+        type: "error",
+        text1: "Erro ao registrar",
+        text2: "Sem conexão com a internet",
+      });
+    } else {
+      Toast.show({
+        type: "success",
+        text1: "Registrado com sucesso",
+        text2: "Bem vindo!",
+      });
+    }
   };
 
   const isValidRegister =
@@ -59,6 +103,7 @@ export default function RegisterPage() {
         backgroundColor: primaryBackgroundColor(theme),
       }}
     >
+      <StatusBar style={theme === "dark" ? "light" : "dark"} />
       <Pressable
         style={{
           flex: 1,
@@ -231,6 +276,7 @@ export default function RegisterPage() {
           </View>
         </KeyboardAvoidingView>
       </Pressable>
+      <Toast />
     </SafeAreaView>
   );
 }
