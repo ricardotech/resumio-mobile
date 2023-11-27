@@ -12,7 +12,7 @@ import axios, { Axios, AxiosInstance, AxiosStatic } from "axios";
 type Theme = "light" | "dark";
 
 type ThemeContextData = {
-  theme: Theme;
+  theme: Theme | undefined | null;
   changeTheme: (theme: Theme) => Promise<void>;
 };
 
@@ -25,12 +25,10 @@ export const themeStorageKey = "@Theme:theme";
 export const ThemeContext = createContext({} as ThemeContextData);
 
 function ThemeProvider({ children }: ThemeProviderProps) {
-  const [theme, setTheme] = useState<Theme>("dark");
+  const [theme, setTheme] = useState<Theme>("light");
 
   useEffect(() => {
     async function loadTheme() {
-      await AsyncStorage.setItem(themeStorageKey, theme);
-      
       const themeStorage = await AsyncStorage.getItem(themeStorageKey);
 
       if (themeStorage) {
