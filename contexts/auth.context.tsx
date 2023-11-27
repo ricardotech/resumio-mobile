@@ -168,7 +168,7 @@ function AuthProvider({ children }: AuthProviderProps) {
     try {
       setLoading(true);
 
-      await createUserWithEmailAndPassword(auth, email, password)
+      const res = await createUserWithEmailAndPassword(auth, email, password)
         .then(async (userCredential) => {
           const user = userCredential.user;
           console.log(JSON.stringify(user));
@@ -198,6 +198,8 @@ function AuthProvider({ children }: AuthProviderProps) {
             errorMessage,
           };
         });
+
+      return res;
     } catch (error: any) {
       setLoading(false);
       return error;
