@@ -16,6 +16,7 @@ import {
   primaryTextColor,
   secondaryBackgroundColor,
   secondaryTextColor,
+  tertiaryBackgroundColor,
 } from "../../utils/style";
 import { useNavigation } from "@react-navigation/native";
 import { allCollections } from "../../db";
@@ -214,7 +215,7 @@ const JourneysScreen = () => {
                           style={{
                             marginRight: 10,
                             width: 220,
-                            backgroundColor: secondaryBackgroundColor(theme),
+                            backgroundColor: tertiaryBackgroundColor(theme),
                             borderRadius: 10,
                             marginBottom: 10,
                             padding: 20,

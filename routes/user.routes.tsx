@@ -15,6 +15,7 @@ import JourneysScreen from "../screens/Journeys";
 import { useTheme } from "../contexts/theme.context";
 import SettingsScreen from "../screens/Profile/settings";
 import { Journey } from "../utils/types";
+import JourneyCollectionScreen from "../screens/Journeys/collection";
 
 const Tab = createBottomTabNavigator();
 
@@ -137,6 +138,13 @@ export function UserRoutes() {
           component={SettingsScreen}
         />
       </Stack.Group>
+      <Stack.Screen
+        options={{
+          headerShown: false,
+        }}
+        name="JourneyCollection"
+        component={JourneyCollectionScreen}
+      />
     </Stack.Navigator>
   );
 }
