@@ -261,7 +261,7 @@ export default function RegisterPage() {
                 marginHorizontal: 50,
                 marginVertical: 10,
               }}
-              disabled={loading}
+              disabled={!isValidRegister}
               loading={loading}
               loadingProps={{
                 size: "small",
