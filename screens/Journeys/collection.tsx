@@ -10,8 +10,8 @@ import JourneyCard from "./components/JourneyCard";
 import { primaryBackgroundColor, primaryTextColor } from "../../utils/style";
 import { useTheme } from "../../contexts/theme.context";
 import { Ionicons } from "@expo/vector-icons";
-import { authScreenProp } from "../../App";
 import { useNavigation } from "@react-navigation/native";
+import { authScreenProp } from "../../routes/user.routes";
 
 export default function JourneyCollectionScreen({ route }: { route: any }) {
   const navigation = useNavigation<authScreenProp>();
@@ -44,55 +44,58 @@ export default function JourneyCollectionScreen({ route }: { route: any }) {
         backgroundColor: primaryBackgroundColor(theme),
       }}
     >
+      <View
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginBottom: 20,
+        }}
+      >
+        <SafeAreaView>
+          <View
+            style={{
+              paddingHorizontal: 10,
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
+            <TouchableOpacity
+              onPress={() => {
+                navigation.removeListener;
+                navigation.goBack();
+              }}
+            >
+              <Ionicons
+                size={30}
+                name="chevron-back"
+                color={primaryTextColor(theme)}
+              />
+            </TouchableOpacity>
+            <Text
+              style={{
+                marginLeft: 15,
+                fontSize: 24,
+                fontWeight: "bold",
+                width: "90%",
+                color: primaryTextColor(theme),
+              }}
+            >
+              {name}
+            </Text>
+          </View>
+        </SafeAreaView>
+      </View>
       <FlatList
         data={data}
         renderItem={renderItem}
         keyExtractor={(item, index) => index.toString()}
         contentContainerStyle={{
-          padding: 20,
+          paddingHorizontal: 20,
+          paddingBottom: 160,
         }}
-        ListHeaderComponent={
-          <View
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "center",
-              marginBottom: 20,
-            }}
-          >
-            <SafeAreaView>
-              <View
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  alignItems: "center",
-                }}
-              >
-                <TouchableOpacity onPress={() => {
-                  navigation.removeListener;
-                  navigation.goBack();
-                }}>
-                  <Ionicons
-                    size={30}
-                    name="chevron-back"
-                    color={primaryTextColor(theme)}
-                  />
-                </TouchableOpacity>
-                <Text
-                  style={{
-                    marginLeft: 15,
-                    fontSize: 24,
-                    fontWeight: "bold",
-                    color: primaryTextColor(theme),
-                  }}
-                >
-                  {name}
-                </Text>
-              </View>
-            </SafeAreaView>
-          </View>
-        }
       />
     </View>
   );

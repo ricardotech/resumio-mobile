@@ -1,26 +1,21 @@
 import React from "react";
-import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
 
 // Importe suas telas aqui
 import HomeScreen from "../screens/Home";
 import ProfileScreen from "../screens/Profile";
-import { AuthProvider } from "../contexts/auth.context";
 import BookScreen from "../screens/Book";
 import {
   StackNavigationProp,
   createStackNavigator,
 } from "@react-navigation/stack";
-import { StatusBar } from "expo-status-bar";
-import { SafeAreaProvider } from "react-native-safe-area-context";
 import ChallengesScreen from "../screens/Challenges";
-import Journeys from "../screens/Home/components/Journeys";
 import JourneysScreen from "../screens/Journeys";
-import { ThemeProvider, useTheme } from "../contexts/theme.context";
+import { useTheme } from "../contexts/theme.context";
 import SettingsScreen from "../screens/Profile/settings";
-import LoginPage from "../screens/Login";
-import RegisterPage from "../screens/Register";
+import { Journey } from "../utils/types";
+import JourneyCollectionScreen from "../screens/Journeys/collection";
 
 const Tab = createBottomTabNavigator();
 
@@ -35,6 +30,12 @@ export type StackNavigatorParams = {
     resume?: string;
   }; // For the BookScreen screen
   Settings: undefined;
+  JourneyCollection: {
+    journeys: Journey[];
+    description: string;
+    id: string;
+    name: string;
+  };
 };
 
 const Stack = createStackNavigator<StackNavigatorParams>(); // Use the defined type
@@ -137,6 +138,13 @@ export function UserRoutes() {
           component={SettingsScreen}
         />
       </Stack.Group>
+      <Stack.Screen
+        options={{
+          headerShown: false,
+        }}
+        name="JourneyCollection"
+        component={JourneyCollectionScreen}
+      />
     </Stack.Navigator>
   );
 }
