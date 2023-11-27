@@ -268,6 +268,7 @@ import {
   ScrollView,
   Dimensions,
   FlatList,
+  Platform,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ContentLabel } from "../../components/ContentLabel";
@@ -284,8 +285,38 @@ import {
 } from "../../utils/style";
 import { useNavigation } from "@react-navigation/native";
 import { authScreenProp } from "../../App";
+import { Avatar } from "@rneui/base";
+import { loadProfileImage, changeProfileImage } from "../../contexts/auth.context";
+import {useEffect} from "react";
+import * as ImagePicker from 'expo-image-picker'; 
 
 export default function HomeScreen() {
+  const pfp = loadProfileImage();
+  const [image, setImage] = React.useState<string | null>(null);
+
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [10, 10],
+      quality: 1,
+    });
+
+    if( !result.canceled ) {
+      setImage(result.assets[0].uri);
+      changeProfileImage(result.assets[0].uri);
+    }
+  }
+
+  useEffect(() => {
+    async function loadImage() {
+      const source = await loadProfileImage(); // replace with your actual image loading logic
+      setImage(source);
+    }
+  
+    loadImage();
+  }, []);
+
   const navigation = useNavigation<authScreenProp>();
 
   const { user } = useAuth();
@@ -644,16 +675,20 @@ export default function HomeScreen() {
 
         {/* Achievement Items */}
         {/* This should be mapped from data ideally */}
-        <View style={{ flexDirection: "row", marginBottom: 20 }}>
-          <View style={{ marginRight: 15 }}>
+        <View style={{ flexDirection: "row", marginBottom: 20, justifyContent: 'center' }}>
+          <View style={
+            Platform.OS === 'ios' ? {
+              marginRight: 15, marginTop: 3 
+            } : {
+              marginRight: 15, marginTop: 15
+            }
+          }>
             <Image
               cachePolicy="memory-disk"
               contentFit="cover"
               transition={1000}
-              source={{
-                uri: "https://github.com/ricardotech.png",
-              }}
-              style={{ width: 50, height: 50 }}
+              source={image || require("../../assets/default.jpg")}
+              style={{ width:60, height: 60, borderRadius: 50 }}
             />
           </View>
           <View style={{ flex: 1 }}>
@@ -771,16 +806,15 @@ export default function HomeScreen() {
   };
 
   const Profile = () => {
+    
     return (
       <View style={{ alignItems: "center" }}>
-        <Image
-          contentFit="cover"
-          cachePolicy="memory-disk"
-          source={{
-            uri: "https://github.com/ricardotech.png",
-          }}
-          style={{ width: 100, height: 100, borderRadius: 50 }}
-        />
+        <TouchableOpacity onPress={pickImage} >
+          <Image
+            source={image || require("../../assets/default.jpg")}
+            style={{ width: 100, height: 100, borderRadius: 50 }}
+          />
+        </TouchableOpacity>
         <Text
           style={{
             color: primaryTextColor(theme),
