@@ -11,7 +11,6 @@ import * as Progress from "react-native-progress";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { ContentLabel } from "../../components/ContentLabel";
 import { useTheme } from "../../contexts/theme.context";
-import { authScreenProp } from "../../App";
 import {
   primaryBackgroundColor,
   primaryTextColor,
@@ -20,6 +19,7 @@ import {
 } from "../../utils/style";
 import { useNavigation } from "@react-navigation/native";
 import { allCollections } from "../../db";
+import { authScreenProp } from "../../routes/user.routes";
 
 const missions: {
   title: string;
@@ -153,53 +153,51 @@ const JourneysScreen = () => {
           {allCollections.map((collection, index) => {
             return (
               <View key={index}>
-                       <TouchableOpacity
-                    onPress={() => {
-                      navigation.removeListener;
-                      navigation.navigate("JourneyCollection", {
-                        journeys: collection.journeys,
-                        description: collection.description,
-                        id: collection.id,
-                        name: collection.name,
-                      });
-                    }}
-                  >
-
-                <View
-                  style={{
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    marginBottom: 20,
-                    marginTop: 10,
-                    paddingHorizontal: 20,
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.removeListener;
+                    navigation.navigate("JourneyCollection", {
+                      journeys: collection.journeys,
+                      description: collection.description,
+                      id: collection.id,
+                      name: collection.name,
+                    });
                   }}
                 >
-                  <Text
-                    style={{ color: primaryTextColor(theme), fontSize: 20 }}
-                  >
-                    {collection.name}
-                  </Text>
-                  <TouchableOpacity
-                    onPress={() => {
-                      navigation.removeListener;
-                      navigation.navigate("JourneyCollection", {
-                        journeys: collection.journeys,
-                        description: collection.description,
-                        id: collection.id,
-                        name: collection.name,
-                      });
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      marginBottom: 20,
+                      marginTop: 10,
+                      paddingHorizontal: 20,
                     }}
                   >
-                    <Ionicons
-                      name="chevron-forward"
-                      size={24}
-                      color={primaryTextColor(theme)}
-                    />
-                  </TouchableOpacity>
-                </View>
+                    <Text
+                      style={{ color: primaryTextColor(theme), fontSize: 20 }}
+                    >
+                      {collection.name}
+                    </Text>
+                    <TouchableOpacity
+                      onPress={() => {
+                        navigation.removeListener;
+                        // navigation.navigate("JourneyCollection", {
+                        //   journeys: collection?.journeys,
+                        //   description: collection?.description,
+                        //   id: collection?.id,
+                        //   name: collection?.name,
+                        // });
+                      }}
+                    >
+                      <Ionicons
+                        name="chevron-forward"
+                        size={24}
+                        color={primaryTextColor(theme)}
+                      />
+                    </TouchableOpacity>
+                  </View>
                 </TouchableOpacity>
-
 
                 <ScrollView
                   showsHorizontalScrollIndicator={false}

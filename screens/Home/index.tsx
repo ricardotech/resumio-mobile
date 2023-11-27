@@ -22,8 +22,8 @@ import {
   secondaryTextColor,
 } from "../../utils/style";
 import { useNavigation } from "@react-navigation/native";
-import { authScreenProp } from "../../App";
 import { StatusBar } from "expo-status-bar";
+import { authScreenProp } from "../../routes/user.routes";
 
 export default function HomeScreen() {
   const navigation = useNavigation<authScreenProp>();
