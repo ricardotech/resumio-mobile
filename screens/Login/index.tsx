@@ -48,7 +48,8 @@ const LoginPage = () => {
     setIsPasswordVisible(!isPasswordVisible);
   };
 
-  const auth = getAuth(app);
+  const isValidLogin = email.includes("@") && password.length > 8;
+
   const handleLogin = async () => {
     const res = await signIn({ email, password });
 
@@ -249,7 +250,7 @@ const LoginPage = () => {
               }}
             />
             <Button
-              disabled={loading}
+              disabled={!isValidLogin}
               loading={loading}
               title="Entrar"
               buttonStyle={{
