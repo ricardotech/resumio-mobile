@@ -13,6 +13,7 @@ import {
   getAuth,
   signInWithEmailAndPassword,
   updateProfile,
+
 } from "firebase/auth";
 import { app } from "../utils/firebaseConfig";
 
@@ -240,4 +241,27 @@ function useAuth() {
   return context;
 }
 
-export { AuthProvider, useAuth, signOut, handleApi };
+const loadProfileImage = async () => {
+  const user = getAuth().currentUser;
+
+  if (user) {
+    const photoURL = user.photoURL;
+
+    if (photoURL) {
+      return photoURL;
+    }
+  }
+  return "";
+}
+
+const changeProfileImage = async (image: string) => {
+  const user = getAuth().currentUser;
+
+  if (user) {
+    await updateProfile(user, {
+      photoURL: image,
+    });
+  }
+}
+
+export { AuthProvider, useAuth, signOut, handleApi, loadProfileImage, changeProfileImage };

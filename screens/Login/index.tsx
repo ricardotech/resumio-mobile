@@ -238,7 +238,7 @@ const LoginPage = () => {
               containerStyle={{
                 width: "90%",
                 marginHorizontal: 50,
-                marginVertical: 10,
+                marginVertical: -8,
               }}
               loadingProps={{ size: "small", color: primaryTextColor(theme) }}
               titleStyle={{
