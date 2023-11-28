@@ -13,7 +13,6 @@ import {
   getAuth,
   signInWithEmailAndPassword,
   updateProfile,
-
 } from "firebase/auth";
 import { app } from "../utils/firebaseConfig";
 
@@ -49,6 +48,8 @@ type AuthContextData = {
   signIn: (credentials: SignInCredentials) => Promise<any>;
   signUp: (credentials: SignUpCredentials) => Promise<any>;
   signOut: () => Promise<void>;
+  changeProfileImage: (image: string) => Promise<void>;
+  loadUser: () => Promise<void>;
   loading: boolean;
   token: string;
   api: AxiosInstance;
@@ -110,6 +111,8 @@ function AuthProvider({ children }: AuthProviderProps) {
         setUser(JSON.parse(storagedUser));
         setToken(JSON.stringify(TOKEN));
       }
+
+      loadUser();
     }
 
     loadStoragedData();
@@ -217,6 +220,35 @@ function AuthProvider({ children }: AuthProviderProps) {
     await auth.signOut();
   }
 
+  async function loadUser() {
+    const user = getAuth().currentUser;
+
+    if (user) {
+      setUser({
+        id: user.uid,
+        name: String(user.displayName),
+        email: String(user.email),
+        thumbnail: String(user.photoURL),
+      });
+    }
+  }
+
+  async function changeProfileImage(image: string) {
+    const user = getAuth().currentUser;
+
+    if (user) {
+      await updateProfile(user, {
+        photoURL: image,
+      });
+      setUser({
+        id: user.uid,
+        name: String(user.displayName),
+        email: String(user.email),
+        thumbnail: image,
+      });
+    }
+  }
+
   return (
     <AuthContext.Provider
       value={{
@@ -226,6 +258,8 @@ function AuthProvider({ children }: AuthProviderProps) {
         signIn,
         signUp,
         signOut,
+        changeProfileImage,
+        loadUser,
         loading,
         api,
       }}
@@ -241,27 +275,4 @@ function useAuth() {
   return context;
 }
 
-const loadProfileImage = async () => {
-  const user = getAuth().currentUser;
-
-  if (user) {
-    const photoURL = user.photoURL;
-
-    if (photoURL) {
-      return photoURL;
-    }
-  }
-  return "";
-}
-
-const changeProfileImage = async (image: string) => {
-  const user = getAuth().currentUser;
-
-  if (user) {
-    await updateProfile(user, {
-      photoURL: image,
-    });
-  }
-}
-
-export { AuthProvider, useAuth, signOut, handleApi, loadProfileImage, changeProfileImage };
+export { AuthProvider, useAuth, signOut, handleApi };

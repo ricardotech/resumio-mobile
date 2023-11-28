@@ -15,13 +15,13 @@ export default function Routes() {
 
   const [loading, setLoading] = useState<boolean>(true);
 
-  const { user, token, signOut } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
 
   useEffect(() => {
     setTimeout(() => {
       setLoading(false);
     }, 500);
-  }, [user]);
+  }, []);
 
   if (loading) return <Loading />;
 

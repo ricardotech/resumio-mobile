@@ -12,7 +12,7 @@ import axios, { Axios, AxiosInstance, AxiosStatic } from "axios";
 type Theme = "light" | "dark";
 
 type ThemeContextData = {
-  theme: Theme | undefined | null;
+  theme: Theme;
   changeTheme: (theme: Theme) => Promise<void>;
 };
 

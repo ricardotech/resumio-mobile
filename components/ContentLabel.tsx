@@ -1,6 +1,7 @@
 import React from "react";
 
 import { Text, View } from "react-native";
+import { Theme } from "../utils/types";
 
 export function ContentLabel({
   theme,
@@ -9,7 +10,7 @@ export function ContentLabel({
   title,
   description,
 }: {
-  theme: "light" | "dark";
+  theme: Theme;
   bold?: boolean;
   size?: "sm" | "lg";
   title?: string;

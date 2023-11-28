@@ -1,271 +1,9 @@
-// import React from "react";
-// import {
-//   View,
-//   Text,
-//   Image,
-//   ScrollView,
-//   StyleSheet,
-//   TouchableOpacity,
-//   SafeAreaView,
-// } from "react-native";
-// import { useTheme } from "../../contexts/theme.context";
-// import { primaryBackgroundColor, primaryTextColor } from "../../utils/style";
-// import { Ionicons } from "@expo/vector-icons";
-// import { ContentLabel } from "../../components/ContentLabel";
-// import { authScreenProp } from "../../App";
-// import { useNavigation } from "@react-navigation/native";
-
-// const UserProfileScreen = () => {
-//   const navigation = useNavigation<authScreenProp>();
-
-//   const { theme } = useTheme();
-
-//   const Header = () => {
-//     return (
-//       <View
-//         style={{
-//           display: "flex",
-//           flexDirection: "row",
-//           justifyContent: "space-between",
-//           alignItems: "center",
-//           paddingRight: 20,
-//           paddingBottom: 15,
-//         }}
-//       >
-//         <ContentLabel theme={theme} title="Início" />
-//         <View
-//           style={{
-//             display: "flex",
-//             flexDirection: "row",
-//             alignItems: "center",
-//           }}
-//         >
-//           <TouchableOpacity
-//             style={{
-//               marginLeft: 15,
-//             }}
-//           >
-//             <Ionicons
-//               name="ios-notifications-outline"
-//               color={primaryTextColor(theme)}
-//               size={30}
-//             />
-//           </TouchableOpacity>
-//           <TouchableOpacity
-//             onPress={() => {
-//               navigation.removeListener;
-//               navigation.navigate("Settings");
-//             }}
-//             style={{
-//               marginLeft: 10,
-//             }}
-//           >
-//             <Ionicons
-//               name="ios-settings-outline"
-//               color={primaryTextColor(theme)}
-//               size={30}
-//             />
-//           </TouchableOpacity>
-//         </View>
-//       </View>
-//     );
-//   };
-
-//   return (
-//     <ScrollView
-//       style={{ flex: 1, backgroundColor: primaryBackgroundColor(theme) }}
-//     >
-//       <SafeAreaView>
-//         <Header />
-
-//         <View
-//           style={{
-//             flexDirection: "row",
-//             justifyContent: "space-between",
-//             padding: 20,
-//           }}
-//         >
-//           <Image
-//             source={require("../../assets/icon.png")}
-//             style={{ width: 25, height: 25 }}
-//           />
-//           <Image
-//             source={require("../../assets/icon.png")}
-//             style={{ width: 25, height: 25 }}
-//           />
-//         </View>
-
-//         {/* Profile Section */}
-//         <View style={{ alignItems: "center", marginVertical: 20 }}>
-//           <Image
-//             source={require("../../assets/icon.png")}
-//             style={{ width: 100, height: 100, borderRadius: 50 }}
-//           />
-//           <Text
-//             style={{
-//               color: primaryTextColor(theme),
-//               fontSize: 24,
-//               fontWeight: "bold",
-//               marginTop: 10,
-//             }}
-//           >
-//             Andrew Ainsley
-//           </Text>
-//           <Text
-//             style={{
-//               color: primaryTextColor(theme),
-//               fontSize: 16,
-//               marginTop: 5,
-//             }}
-//           >
-//             Joined since 20 June 2020
-//           </Text>
-//         </View>
-
-//         {/* Statistics Section */}
-//         <View
-//           style={{
-//             flexDirection: "row",
-//             justifyContent: "space-around",
-//             paddingVertical: 20,
-//           }}
-//         >
-//           <View>
-//             <Text
-//               style={{
-//                 color: primaryTextColor(theme),
-//                 fontSize: 20,
-//                 fontWeight: "bold",
-//                 textAlign: "center",
-//               }}
-//             >
-//               1,536
-//             </Text>
-//             <Text
-//               style={{
-//                 color: primaryTextColor(theme),
-//                 fontSize: 16,
-//                 textAlign: "center",
-//               }}
-//             >
-//               followers
-//             </Text>
-//           </View>
-//           <View>
-//             <Text
-//               style={{
-//                 color: primaryTextColor(theme),
-//                 fontSize: 20,
-//                 fontWeight: "bold",
-//                 textAlign: "center",
-//               }}
-//             >
-//               195
-//             </Text>
-//             <Text
-//               style={{
-//                 color: primaryTextColor(theme),
-//                 fontSize: 16,
-//                 textAlign: "center",
-//               }}
-//             >
-//               following
-//             </Text>
-//           </View>
-//           <View>
-//             <Text
-//               style={{
-//                 color: primaryTextColor(theme),
-//                 fontSize: 20,
-//                 fontWeight: "bold",
-//                 textAlign: "center",
-//               }}
-//             >
-//               15,274
-//             </Text>
-//             <Text
-//               style={{
-//                 color: primaryTextColor(theme),
-//                 fontSize: 16,
-//                 textAlign: "center",
-//               }}
-//             >
-//               lifetime XP
-//             </Text>
-//           </View>
-//         </View>
-
-//         {/* XP and Achievements Section */}
-//         <View style={{ paddingHorizontal: 20 }}>
-//           <Text
-//             style={{
-//               color: primaryTextColor(theme),
-//               fontSize: 22,
-//               fontWeight: "bold",
-//               marginBottom: 20,
-//             }}
-//           >
-//             Your Achievements
-//           </Text>
-
-//           {/* Achievement Items */}
-//           {/* This should be mapped from data ideally */}
-//           <View style={{ flexDirection: "row", marginBottom: 20 }}>
-//             <View style={{ marginRight: 15 }}>
-//               <Image
-//                 source={require("../../assets/icon.png")}
-//                 style={{ width: 50, height: 50 }}
-//               />
-//             </View>
-//             <View style={{ flex: 1 }}>
-//               <Text
-//                 style={{
-//                   color: primaryTextColor(theme),
-//                   fontSize: 18,
-//                   fontWeight: "bold",
-//                 }}
-//               >
-//                 Great King
-//               </Text>
-//               <Text style={{ color: primaryTextColor(theme), fontSize: 14 }}>
-//                 Get 5000 XP in this month to get achievements.
-//               </Text>
-//               {/* Progress Bar */}
-//               <View
-//                 style={{
-//                   height: 20,
-//                   backgroundColor: "#333333",
-//                   borderRadius: 10,
-//                   marginTop: 10,
-//                 }}
-//               >
-//                 <View
-//                   style={{
-//                     width: "75%",
-//                     height: "100%",
-//                     backgroundColor: "#4C9A2A",
-//                     borderRadius: 10,
-//                   }}
-//                 />
-//               </View>
-//             </View>
-//           </View>
-//           {/* Repeat for other achievements... */}
-//         </View>
-//       </SafeAreaView>
-//     </ScrollView>
-//   );
-// };
-
-// export default UserProfileScreen;
 import React from "react";
 import { Image } from "expo-image";
 import {
   View,
   Text,
-  Pressable,
   TouchableOpacity,
-  ScrollView,
   Dimensions,
   FlatList,
   Platform,
@@ -275,59 +13,19 @@ import { ContentLabel } from "../../components/ContentLabel";
 import { useAuth } from "../../contexts/auth.context";
 import { Ionicons } from "@expo/vector-icons";
 import { useTheme } from "../../contexts/theme.context";
-import { Button } from "../../components/Button";
-import { Theme } from "../../utils/types";
-import {
-  primaryTextColor,
-  primaryBackgroundColor,
-  secondaryBackgroundColor,
-  secondaryTextColor,
-} from "../../utils/style";
+import { primaryTextColor, primaryBackgroundColor } from "../../utils/style";
 import { useNavigation } from "@react-navigation/native";
-import { authScreenProp } from "../../App";
-import { Avatar } from "@rneui/base";
-import { loadProfileImage, changeProfileImage } from "../../contexts/auth.context";
-import {useEffect} from "react";
-import * as ImagePicker from 'expo-image-picker'; 
+import { useEffect } from "react";
+import { authScreenProp } from "../../routes/user.routes";
+
+import { Statistic } from "../../utils/types";
+import { pickProfileImage } from "../../utils/services";
 
 export default function HomeScreen() {
-  const pfp = loadProfileImage();
-  const [image, setImage] = React.useState<string | null>(null);
-
-  const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [10, 10],
-      quality: 1,
-    });
-
-    if( !result.canceled ) {
-      setImage(result.assets[0].uri);
-      changeProfileImage(result.assets[0].uri);
-    }
-  }
-
-  useEffect(() => {
-    async function loadImage() {
-      const source = await loadProfileImage(); // replace with your actual image loading logic
-      setImage(source);
-    }
-  
-    loadImage();
-  }, []);
-
   const navigation = useNavigation<authScreenProp>();
 
-  const { user } = useAuth();
+  const { user, loadUser, changeProfileImage } = useAuth();
   const { theme, changeTheme } = useTheme();
-
-  type Statistic = {
-    key: string;
-    value: number;
-    label: string;
-    emoji: string;
-  };
 
   const statistics: Statistic[] = [
     {
@@ -488,177 +186,6 @@ export default function HomeScreen() {
     );
   };
 
-  const DailyPray = () => {
-    return (
-      <View
-        style={{
-          marginTop: 10,
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "center",
-          paddingHorizontal: 20,
-        }}
-      >
-        <View
-          style={{
-            width: "100%",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "flex-start",
-            backgroundColor: "#009cb8",
-            borderRadius: 10,
-            padding: 20,
-          }}
-        >
-          <View
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "space-between",
-              width: "100%",
-            }}
-          >
-            <View
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-              }}
-            >
-              <Ionicons size={20} name="ios-chatbox" color="#FFF" />
-
-              <Text
-                style={{
-                  marginLeft: 5,
-                  fontSize: 20,
-                  fontWeight: "bold",
-                  color: "#FFF",
-                }}
-              >
-                Oração de hoje
-              </Text>
-            </View>
-            <View
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-              }}
-            >
-              <View
-                style={{
-                  borderRadius: 10,
-                  backgroundColor: "#FFF",
-                  display: "flex",
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  padding: 5,
-                  paddingHorizontal: 7,
-                  marginLeft: 5,
-                }}
-              >
-                <Text
-                  style={{
-                    fontSize: 12,
-                    color: "#009cb8",
-                  }}
-                >
-                  3 min
-                </Text>
-              </View>
-            </View>
-          </View>
-          <Text
-            style={{
-              marginTop: 10,
-              fontSize: 14,
-              color: "#FFF",
-            }}
-          >
-            A oração de hoje diz que devemos ser gratos por tudo que temos e por
-            tudo que somos.
-          </Text>
-          <TouchableOpacity
-            style={{
-              height: 45,
-              width: "100%",
-              backgroundColor: "#FFF",
-              borderRadius: 10,
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "center",
-              marginTop: 20,
-            }}
-          >
-            <Text
-              style={{
-                fontSize: 16,
-                fontWeight: "bold",
-                color: "#009cb8",
-              }}
-            >
-              Fazer oração
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    );
-  };
-
-  const ScripturesResumes = () => {
-    return (
-      <View
-        style={{
-          marginTop: 25,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "flex-start",
-        }}
-      >
-        <ContentLabel theme={theme} title="O que diz as escrituras?" />
-
-        <View
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-          }}
-        ></View>
-      </View>
-    );
-  };
-
-  const MyJourneys = () => {
-    return (
-      <View
-        style={{
-          marginTop: 40,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "flex-start",
-        }}
-      >
-        <ContentLabel
-          theme={theme}
-          size="sm"
-          title="Suas jornadas"
-          description="Continue de onde parou"
-        />
-
-        <View
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-          }}
-        ></View>
-      </View>
-    );
-  };
-
   const Experience = () => {
     return (
       <View style={{ paddingHorizontal: 20 }}>
@@ -675,20 +202,32 @@ export default function HomeScreen() {
 
         {/* Achievement Items */}
         {/* This should be mapped from data ideally */}
-        <View style={{ flexDirection: "row", marginBottom: 20, justifyContent: 'center' }}>
-          <View style={
-            Platform.OS === 'ios' ? {
-              marginRight: 15, marginTop: 3 
-            } : {
-              marginRight: 15, marginTop: 15
+        <View
+          style={{
+            flexDirection: "row",
+            marginBottom: 20,
+            justifyContent: "center",
+          }}
+        >
+          <View
+            style={
+              Platform.OS === "ios"
+                ? {
+                    marginRight: 15,
+                    marginTop: 3,
+                  }
+                : {
+                    marginRight: 15,
+                    marginTop: 15,
+                  }
             }
-          }>
+          >
             <Image
               cachePolicy="memory-disk"
               contentFit="cover"
               transition={1000}
-              source={image || require("../../assets/default.jpg")}
-              style={{ width:60, height: 60, borderRadius: 50 }}
+              source={user?.thumbnail || require("../../assets/default.jpg")}
+              style={{ width: 60, height: 60, borderRadius: 50 }}
             />
           </View>
           <View style={{ flex: 1 }}>
@@ -806,12 +345,15 @@ export default function HomeScreen() {
   };
 
   const Profile = () => {
-    
     return (
       <View style={{ alignItems: "center" }}>
-        <TouchableOpacity onPress={pickImage} >
+        <TouchableOpacity
+          onPress={() => {
+            pickProfileImage(changeProfileImage);
+          }}
+        >
           <Image
-            source={image || require("../../assets/default.jpg")}
+            source={user?.thumbnail || require("../../assets/default.jpg")}
             style={{ width: 100, height: 100, borderRadius: 50 }}
           />
         </TouchableOpacity>
@@ -837,6 +379,10 @@ export default function HomeScreen() {
       </View>
     );
   };
+
+  useEffect(() => {
+    loadUser();
+  }, []);
 
   return (
     <View
