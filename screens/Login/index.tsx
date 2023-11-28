@@ -231,6 +231,7 @@ const LoginPage = () => {
             <Button
               title="Ainda não tem uma conta?"
               buttonStyle={{
+                marginBottom: 20,
                 backgroundColor: "transparent",
                 borderRadius: 30,
                 height: 50,
