@@ -27,3 +27,10 @@ export type JourneyCollection = {
   description: string;
   journeys: Journey[];
 };
+
+export type Statistic = {
+  key: string;
+  value: number;
+  label: string;
+  emoji: string;
+};
