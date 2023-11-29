@@ -1,69 +1,128 @@
 import * as ImagePicker from "expo-image-picker";
 import data from "../assets/acf.json";
 import removeAcentos from "./removeAcentos";
-import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
-import { storage } from "./firebaseConfig";
 
-export const pickProfileImage = async () => {
-  let result = await ImagePicker.launchImageLibraryAsync({
+import {
+  getStorage,
+  ref,
+  uploadBytes,
+  getDownloadURL,
+  uploadBytesResumable,
+} from "firebase/storage";
+import { app, storage } from "./firebaseConfig";
+
+// export const pickProfileImage = async () => {
+//   let result = await ImagePicker.launchImageLibraryAsync({
+//     mediaTypes: ImagePicker.MediaTypeOptions.Images,
+//     allowsEditing: true,
+//     aspect: [10, 10],
+//     quality: 1,
+//     base64: true,
+//   });
+
+//   if (!result.canceled) {
+//     return {
+//       base64: result.assets[0].base64,
+//       uri: result.assets[0].uri,
+//       name: result.assets[0].uri.split("/").pop(),
+//     };
+//     // changeProfileImage(result.assets[0].uri);
+//   }
+// };
+
+// // Upload image to firebase
+// export async function uploadImageAsync(uri: string, path: string, name: string) {
+//   const response = await fetch(uri);
+//   const blob = await response.blob();
+
+//   const storageRef = ref(storage, path + "/" + name);
+//   const uploadTask = uploadBytesResumable(storageRef, blob);
+
+//   uploadTask.on(
+//     "state_changed",
+//     (snapshot) => {
+//       // Observe state change events such as progress, pause, and resume
+//       // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+//       const progress =
+//         (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+//       console.log("Upload is " + progress + "% done");
+//       switch (snapshot.state) {
+//         case "paused":
+//           console.log("Upload is paused");
+//           break;
+//         case "running":
+//           console.log("Upload is running");
+//           break;
+//       }
+//     },
+//     (error) => {
+//       // Handle unsuccessful uploads
+//     },
+//     () => {
+//       // Handle successful uploads on complete
+//       // For instance, get the download URL: https://firebasestorage.googleapis.com/...
+//       const url = getDownloadURL(uploadTask.snapshot.ref).then(
+//         (downloadURL) => {
+//           console.log("File available at", downloadURL);
+//           return downloadURL;
+//         }
+//       );
+
+//       return url;
+//     }
+//   );
+// }
+
+export const changeProfileImageFunc = async (usuario: any, setUploadProgress: any, loadUser: any, changeProfileImage: any) => {
+  let res = await ImagePicker.launchImageLibraryAsync({
     mediaTypes: ImagePicker.MediaTypeOptions.Images,
     allowsEditing: true,
-    aspect: [10, 10],
-    quality: 1,
-    base64: true,
+    aspect: [3, 4],
+    quality: 0.1,
   });
 
-  if (!result.canceled) {
-    return {
-      base64: result.assets[0].base64,
-      uri: result.assets[0].uri,
-      name: result.assets[0].uri.split("/").pop(),
-    };
-    // changeProfileImage(result.assets[0].uri);
-  }
-};
+  if (!res.canceled) {
+    const response = await fetch(res.assets[0].uri);
+    const blob = await response.blob();
 
-// Upload image to firebase
-export async function uploadImageAsync(uri: string, path: string, name: string) {
-  const response = await fetch(uri);
-  const blob = await response.blob();
+    const storageRef = ref(storage, `users/${usuario?.id}/profile.jpg`);
+    const uploadTask = uploadBytesResumable(storageRef, blob);
 
-  const storageRef = ref(storage, path + "/" + name);
-  const uploadTask = uploadBytesResumable(storageRef, blob);
-
-  uploadTask.on(
-    "state_changed",
-    (snapshot) => {
-      // Observe state change events such as progress, pause, and resume
-      // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-      const progress =
-        (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-      console.log("Upload is " + progress + "% done");
-      switch (snapshot.state) {
-        case "paused":
-          console.log("Upload is paused");
-          break;
-        case "running":
-          console.log("Upload is running");
-          break;
-      }
-    },
-    (error) => {
-      // Handle unsuccessful uploads
-    },
-    () => {
-      // Handle successful uploads on complete
-      // For instance, get the download URL: https://firebasestorage.googleapis.com/...
-      const url = getDownloadURL(uploadTask.snapshot.ref).then(
-        (downloadURL) => {
-          console.log("File available at", downloadURL);
-          return downloadURL;
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        // Observe state change events such as progress, pause, and resume
+        // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+        const progress =
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        setUploadProgress(progress);
+        console.log("Upload is " + progress + "% done");
+        switch (snapshot.state) {
+          case "paused":
+            console.log("Upload is paused");
+            break;
+          case "running":
+            console.log("Upload is running");
+            break;
         }
-      );
-
-      return url;
-    }
-  );
+      },
+      (error) => {
+        console.log(error)
+      },
+      () => {
+        // Handle successful uploads on complete
+        // For instance, get the download URL: https://firebasestorage.googleapis.com/...
+        getDownloadURL(uploadTask.snapshot.ref).then(
+          (downloadURL) => {
+            console.log("File available at", downloadURL);
+            changeProfileImage(downloadURL);
+            loadUser()
+            setUploadProgress(0); 
+          }
+        );
+      }
+    );
+  }
 }
 
 // Pegar os dados do JSON da biblia

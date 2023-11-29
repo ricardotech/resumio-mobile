@@ -7,7 +7,6 @@ import {
   Dimensions,
   FlatList,
   Platform,
-  ActivityIndicator,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ContentLabel } from "../../components/ContentLabel";
@@ -18,27 +17,17 @@ import { primaryTextColor, primaryBackgroundColor } from "../../utils/style";
 import { useNavigation } from "@react-navigation/native";
 import { useEffect } from "react";
 import { authScreenProp } from "../../routes/user.routes";
-
 import { Statistic } from "../../utils/types";
-import * as ImagePicker from "expo-image-picker";
 
-import {
-  getStorage,
-  ref,
-  uploadBytes,
-  getDownloadURL,
-  uploadBytesResumable,
-} from "firebase/storage";
-import { app, storage } from "../../utils/firebaseConfig";
 
 export default function HomeScreen() {
 
   const navigation = useNavigation<authScreenProp>();
 
-  const { user, loadUser, changeProfileImage } = useAuth();
+  const { user, loadUser } = useAuth();
   const { theme, changeTheme } = useTheme();
 
-  const [uploadProgress, setUploadProgress] = React.useState(0);
+
 
   const statistics: Statistic[] = [
     {
@@ -360,73 +349,10 @@ export default function HomeScreen() {
   const Profile = () => {
     return (
       <View style={{ alignItems: "center" }}>
-        <TouchableOpacity
-          onPress={async () => {
-            let res = await ImagePicker.launchImageLibraryAsync({
-              mediaTypes: ImagePicker.MediaTypeOptions.Images,
-              allowsEditing: true,
-              aspect: [3, 4],
-              quality: 0.1,
-            });
-
-            if (!res.canceled) {
-              const response = await fetch(res.assets[0].uri);
-              const blob = await response.blob();
-
-              const storageRef = ref(storage, `users/${user?.id}/profile.jpg`);
-              const uploadTask = uploadBytesResumable(storageRef, blob);
-
-              uploadTask.on(
-                "state_changed",
-                (snapshot) => {
-                  // Observe state change events such as progress, pause, and resume
-                  // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-                  const progress =
-                    (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                  setUploadProgress(progress);
-                  console.log("Upload is " + progress + "% done");
-                  switch (snapshot.state) {
-                    case "paused":
-                      console.log("Upload is paused");
-                      break;
-                    case "running":
-                      console.log("Upload is running");
-                      break;
-                  }
-                },
-                (error) => {
-                  // Handle unsuccessful uploads
-                },
-                () => {
-                  // Handle successful uploads on complete
-                  // For instance, get the download URL: https://firebasestorage.googleapis.com/...
-                  getDownloadURL(uploadTask.snapshot.ref).then(
-                    (downloadURL) => {
-                      console.log("File available at", downloadURL);
-                      changeProfileImage(downloadURL);
-                      loadUser()
-                      setUploadProgress(0); 
-                    }
-                  );
-                }
-              );
-            }
-          }}
-        >
-          {uploadProgress > 0 ? (
-            <View style={{ display: "flex", justifyContent: "center", alignItems: "center", width: 100, height: 100 }}>
-              <ActivityIndicator
-                size="large"
-                color={primaryTextColor(theme)}
-              />
-            </View>
-          ) : (
-            <Image
+        <Image
               source={user?.thumbnail || require("../../assets/default.jpg")}
               style={{ width: 100, height: 100, borderRadius: 50 }}
-            />
-          )}
-        </TouchableOpacity>
+        />
         <Text
           style={{
             color: primaryTextColor(theme),

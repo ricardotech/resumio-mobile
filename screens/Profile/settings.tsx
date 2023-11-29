@@ -14,6 +14,10 @@ const SettingsScreen = () => {
   const navigation = useNavigation<authScreenProp>();
 
   const { theme, changeTheme } = useTheme();
+  
+  const openInfoScreen = () => {
+    navigation.navigate('Info')
+  }
 
   const settingsOptions = [
     {
@@ -51,6 +55,7 @@ const SettingsScreen = () => {
     isSwitch,
     onToggle,
     switchValue,
+    openInfoScreen,
   }: {
     iconName: any;
     iconSize: number;
@@ -59,6 +64,7 @@ const SettingsScreen = () => {
     isSwitch: any;
     onToggle: any;
     switchValue: any;
+    openInfoScreen: () => void
   }) => (
     <TouchableOpacity
       style={{
@@ -66,7 +72,7 @@ const SettingsScreen = () => {
         alignItems: "center",
         paddingVertical: 12,
       }}
-      onPress={onToggle}
+      onPress={title == "Personal Info" ? openInfoScreen : undefined }
     >
       <View
         style={{
@@ -81,6 +87,7 @@ const SettingsScreen = () => {
         <Ionicons
           name={iconName}
           size={iconSize}
+          
           color={primaryTextColor(theme)}
         />
       </View>
@@ -170,6 +177,7 @@ const SettingsScreen = () => {
             isSwitch={option.isSwitch}
             onToggle={option.onToggle}
             switchValue={option.switchValue}
+            openInfoScreen={openInfoScreen}
           />
         ))}
       </View>
