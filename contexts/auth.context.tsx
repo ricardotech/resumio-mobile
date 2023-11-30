@@ -12,9 +12,13 @@ import {
   createUserWithEmailAndPassword,
   getAuth,
   signInWithEmailAndPassword,
+  sendEmailVerification,
   updateProfile,
+  updateEmail,
+  updatePassword,
 } from "firebase/auth";
 import { app } from "../utils/firebaseConfig";
+import Toast from "react-native-toast-message";
 
 type User = {
   id?: string;
@@ -50,6 +54,8 @@ type AuthContextData = {
   signOut: () => Promise<void>;
   changeProfileImage: (image: string) => Promise<void>;
   loadUser: () => Promise<void>;
+  updateUser: (nome: string, email: string, senha: string) => Promise<void>;
+  verificationEmail: () => void;
   loading: boolean;
   token: string;
   api: AxiosInstance;
@@ -220,6 +226,41 @@ function AuthProvider({ children }: AuthProviderProps) {
     await auth.signOut();
   }
 
+  async function updateUser(nome: string, email: string, senha: string) {
+    const user = getAuth().currentUser;
+
+    if (user) {
+      try{
+        updateProfile(user, {
+          displayName: nome,
+        })
+        updateEmail(user, email)
+        updatePassword(user, senha)
+      }catch(error){
+        console.log(error)
+      }
+    }
+  }
+  function checkEmailVerified() {
+    const user = getAuth().currentUser;
+    if (user) {
+      return user.emailVerified;
+    }
+  }
+  function verificationEmail() {
+    const user = getAuth().currentUser;
+    const isVerified = checkEmailVerified();
+    if (user && !isVerified) {
+      sendEmailVerification(user)
+        .then(() => {
+          console.log("Email enviado");
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }
+
   async function loadUser() {
     const user = getAuth().currentUser;
 
@@ -260,6 +301,8 @@ function AuthProvider({ children }: AuthProviderProps) {
         signOut,
         changeProfileImage,
         loadUser,
+        updateUser,
+        verificationEmail,
         loading,
         api,
       }}

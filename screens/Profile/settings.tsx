@@ -72,7 +72,7 @@ const SettingsScreen = () => {
         alignItems: "center",
         paddingVertical: 12,
       }}
-      onPress={title == "Personal Info" ? openInfoScreen : undefined }
+      onPress={title == "Personal Info" ? openInfoScreen : signOut }
     >
       <View
         style={{
