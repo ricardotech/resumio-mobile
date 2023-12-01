@@ -17,6 +17,7 @@ import SettingsScreen from "../screens/Profile/settings";
 import { Journey } from "../utils/types";
 import JourneyCollectionScreen from "../screens/Journeys/collection";
 import InfoScreen from "../screens/Profile/info";
+import JourneyContentScreen from "../screens/Journeys/components/JourneyContent";
 
 const Tab = createBottomTabNavigator();
 
@@ -32,6 +33,7 @@ export type StackNavigatorParams = {
   }; // For the BookScreen screen
   Settings: undefined;
   Info: undefined;
+  JourneyContentScreen: undefined;
   JourneyCollection: {
     journeys: Journey[];
     description: string;
@@ -145,6 +147,13 @@ export function UserRoutes() {
           }}
           name="Info"
           component={InfoScreen}
+        />
+        <Stack.Screen
+          options={{
+            headerShown: false
+          }}
+          name="JourneyContentScreen"
+          component={JourneyContentScreen}
         />
       </Stack.Group>
       <Stack.Screen

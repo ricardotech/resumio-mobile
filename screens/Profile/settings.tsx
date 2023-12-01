@@ -12,7 +12,7 @@ const SettingsScreen = () => {
   const { signOut } = useAuth();
 
   const navigation = useNavigation<authScreenProp>();
-
+  
   const { theme, changeTheme } = useTheme();
   
   const openInfoScreen = () => {

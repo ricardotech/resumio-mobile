@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Image,
   TouchableWithoutFeedback,
+  ActivityIndicator,
 } from "react-native";
 import { authScreenProp } from "../../App";
 import { AuthContext, useAuth } from "../../contexts/auth.context";
@@ -76,6 +77,7 @@ const InfoScreen = () => {
   };
 
   const ProfileInfo = () => {
+    const [imageLoading, setImageLoading] = useState(true);
     const handleChangeImage = () => {
       changeProfileImageFunc(
         user,
@@ -85,11 +87,7 @@ const InfoScreen = () => {
       );
     };
     return (
-      <View
-        style={{
-          flex: 1,
-        }}
-      >
+      <View>
         <View
           style={{
             alignItems: "center",
@@ -107,13 +105,12 @@ const InfoScreen = () => {
               size={32}
               color={primaryTextColor(theme)}
             />
-            <Avatar
-              rounded
-              size={100}
-              source={{
-                uri: user?.thumbnail,
-              }}
-            />
+            <Avatar rounded size={100}>
+              <Image
+                source={{ uri: user?.thumbnail }}
+                onLoad={() => setImageLoading(false)}
+              />
+            </Avatar>
           </TouchableOpacity>
         </View>
       </View>
@@ -131,26 +128,26 @@ const InfoScreen = () => {
       setIsPasswordVisible(!isPasswordVisible);
     };
     const handleUpdateUser = () => {
-        updateUser(name, email, password).then(() => {
-            Toast.show({
-                type: "success",
-                text1: "Sucesso",
-                text2: "Dados atualizados com sucesso",
-                position: "bottom",
-                visibilityTime: 2000,
-                autoHide: true,
-                onHide: () => {},
-            })
+      updateUser(name, email, password).then(() => {
+        Toast.show({
+          type: "success",
+          text1: "Sucesso",
+          text2: "Dados atualizados com sucesso",
+          position: "bottom",
+          visibilityTime: 2000,
+          autoHide: true,
+          onHide: () => { },
         })
+      })
     }
     return (
       <View
         style={{
           flex: 1,
           justifyContent: "flex-start",
-          marginTop: -420,
         }}
       >
+        <ProfileInfo />
         <Text
           style={{
             color: primaryTextColor(theme),
@@ -190,12 +187,12 @@ const InfoScreen = () => {
           Seu email
         </Text>
         <TouchableOpacity onPress={verificationEmail}>
-            <Text style={{
-                color: primaryTextColor(theme),
-                marginLeft: 20,
-            }}>
-                Verificar email
-            </Text>
+          <Text style={{
+            color: primaryTextColor(theme),
+            marginLeft: 20,
+          }}>
+            Verificar email
+          </Text>
         </TouchableOpacity>
         <Input
           autoCapitalize="words"
@@ -213,7 +210,7 @@ const InfoScreen = () => {
           onChangeText={setEmail}
           value={email}
         />
-        
+
         <Text
           style={{
             color: primaryTextColor(theme),
@@ -293,10 +290,9 @@ const InfoScreen = () => {
           }}
         >
           <Header />
-          <ProfileInfo />
           <ProfileForm />
         </SafeAreaView>
-        <Toast/>
+        <Toast />
       </KeyboardAvoidingView>
     </TouchableWithoutFeedback>
   );
