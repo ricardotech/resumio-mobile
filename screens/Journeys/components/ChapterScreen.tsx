@@ -76,6 +76,14 @@ const ChapterScreen = ({ route }: { route: any }) => {
           paddingBottom: 5,
         }}
       >
+        <Text style={{
+          color: theme === "light" ? "#000" : "#EEE",
+          fontSize: 20,
+          marginLeft: 30,
+          alignSelf: "flex-start",
+        }}>
+          {book}
+        </Text>
         <View
           style={{
             display: "flex",
@@ -99,7 +107,7 @@ const ChapterScreen = ({ route }: { route: any }) => {
             <Text
               style={{
                 color: theme === "light" ? "#000" : "#FFF",
-                fontSize: 32,
+                fontSize: 28,
                 fontWeight: "bold",
                 textAlign: "center",
               }}
@@ -205,8 +213,7 @@ const ChapterScreen = ({ route }: { route: any }) => {
               }}
               style={{
                 padding: 20,
-                marginTop: -40,
-                marginBottom: 30,
+                marginTop: -50,
                 width: "80%",
                 height: 60,
                 alignSelf: "center",
