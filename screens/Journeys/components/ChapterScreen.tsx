@@ -82,62 +82,44 @@ const ChapterScreen = ({ route }: { route: any }) => {
             width: "100%",
             flexDirection: "row",
             alignItems: "center",
-            justifyContent: "space-between",
+            justifyContent: "center",
           }}
         >
-          {id > 1 ? (
+          <View
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              width: "100%",
+              justifyContent: "space-between",
+              paddingHorizontal: 30
+              ,
+            }}
+          >
+            <Text
+              style={{
+                color: theme === "light" ? "#000" : "#FFF",
+                fontSize: 32,
+                fontWeight: "bold",
+                textAlign: "center",
+              }}
+            >
+              Capítulo {id}
+            </Text>
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate("ChapterPage", {
-                  id: id - 1,
-                  name: `Capítulo ${id}`,
-                  title: `Capítulo ${id}`,
-                  resume: `Capítulo ${id}`,
-                  book: book,
-                });
-              }}
-              style={{
-                marginLeft: 10,
+                navigation.removeListener;
+                navigation.goBack();
               }}
             >
               <Ionicons
-                name="ios-arrow-back"
+                name="ios-close"
                 color={primaryTextColor(theme)}
                 size={30}
               />
             </TouchableOpacity>
-          ) : (
-            <View
-              style={{
-                marginLeft: 10,
-              }}
-            ></View>
-          )}
-          <Text
-            style={{
-              color: theme === "light" ? "#000" : "#FFF",
-              fontSize: 32,
-              fontWeight: "bold",
-              textAlign: "center",
-            }}
-          >
-            Capítulo {id}
-          </Text>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.removeListener;
-              navigation.goBack();
-            }}
-            style={{
-              marginLeft: 10,
-            }}
-          >
-            <Ionicons
-              name="ios-close"
-              color={primaryTextColor(theme)}
-              size={30}
-            />
-          </TouchableOpacity>
+          </View>
+
         </View>
       </View>
     );
@@ -176,6 +158,40 @@ const ChapterScreen = ({ route }: { route: any }) => {
           >
             {chapterWithVerses()}
           </View>
+          {id > 1 ? (
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("ChapterPage", {
+                  id: id - 1,
+                  name: `Capítulo ${id}`,
+                  title: `Capítulo ${id}`,
+                  resume: `Capítulo ${id}`,
+                  book: book,
+                });
+              }
+              }
+              style={{
+                padding: 20,
+                marginTop: -40,
+                marginBottom: 40,
+                
+              }}
+            >
+              <Text
+                style={{
+                  textDecorationLine: "underline",
+                  fontSize: 20,
+                  fontWeight: "bold",
+                  textAlign: "center",
+                  color: theme === "light" ? "#000" : "#FFF",
+                }}
+              >
+                Capítulo anterior
+              </Text>
+            </TouchableOpacity>
+          ) : (
+            undefined
+          )}
           {id < (data?.chapternumber ?? 0) ? (
             <TouchableOpacity
               onPress={() => {
@@ -188,13 +204,15 @@ const ChapterScreen = ({ route }: { route: any }) => {
                 });
               }}
               style={{
-                width: "100%",
-                height: 60,
-                borderRadius: 12,
                 padding: 20,
                 marginTop: -40,
                 marginBottom: 30,
-                backgroundColor: theme === "light" ? "#ccc" : "#3b3b3b",
+                width: "80%",
+                height: 60,
+                alignSelf: "center",
+                borderRadius: 50,
+                backgroundColor: theme === "light" ? "#FFF" : "#000",
+
               }}
             >
               <Text
@@ -213,11 +231,9 @@ const ChapterScreen = ({ route }: { route: any }) => {
               style={{
                 width: "100%",
                 height: 60,
-                borderRadius: 12,
                 padding: 20,
                 marginTop: -40,
                 marginBottom: 30,
-                backgroundColor: theme === "light" ? "#FFF" : "#000",
               }}
             >
               <Text
