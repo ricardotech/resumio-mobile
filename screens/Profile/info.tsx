@@ -32,7 +32,14 @@ import Toast from "react-native-toast-message";
 
 const InfoScreen = () => {
   const { theme, changeTheme } = useTheme();
-  const { user, loadUser, changeProfileImage, loading, updateUser, verificationEmail } = useAuth();
+  const {
+    user,
+    loadUser,
+    changeProfileImage,
+    loading,
+    updateUser,
+    verificationEmail,
+  } = useAuth();
   const [uploadProgress, setUploadProgress] = React.useState(0);
   const navigation = useNavigation<authScreenProp>();
 
@@ -105,11 +112,25 @@ const InfoScreen = () => {
               size={32}
               color={primaryTextColor(theme)}
             />
-            <Avatar rounded size={100}>
+            <Avatar size={100} rounded>
               <Image
                 source={{ uri: user?.thumbnail }}
+                onLoadStart={() => setImageLoading(true)}
                 onLoad={() => setImageLoading(false)}
+                style={{ width: "100%", height: "100%", borderRadius: 50 }}
               />
+              {imageLoading && (
+                <ActivityIndicator
+                  size="large"
+                  color={primaryTextColor(theme)}
+                  style={{
+                    position: "absolute",
+                    alignSelf: "center",
+                    zIndex: 1,
+                    bottom: 25,
+                  }}
+                />
+              )}
             </Avatar>
           </TouchableOpacity>
         </View>
@@ -136,10 +157,10 @@ const InfoScreen = () => {
           position: "bottom",
           visibilityTime: 2000,
           autoHide: true,
-          onHide: () => { },
-        })
-      })
-    }
+          onHide: () => {},
+        });
+      });
+    };
     return (
       <View
         style={{
@@ -187,10 +208,12 @@ const InfoScreen = () => {
           Seu email
         </Text>
         <TouchableOpacity onPress={verificationEmail}>
-          <Text style={{
-            color: primaryTextColor(theme),
-            marginLeft: 20,
-          }}>
+          <Text
+            style={{
+              color: primaryTextColor(theme),
+              marginLeft: 20,
+            }}
+          >
             Verificar email
           </Text>
         </TouchableOpacity>

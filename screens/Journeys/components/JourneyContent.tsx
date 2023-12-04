@@ -57,30 +57,37 @@ const JourneyContentScreen = () => {
         );
 
     };
-    const Content: React.FC<{ book: string }> = ({ book }) => {
+    const Content= () => {
+        const handleButtonClick = (book: string) => {
+            navigation.navigate("Chapter", {
+                book
+            });
+        };
         return (
             <View style={{
                 width: "90%",
-                alignSelf: 'center',
-                shadowColor: '#ccc',
-                shadowOffset: { width: 1, height: 4 },
-                shadowOpacity: 0.8,
-                shadowRadius: 4,
+                alignSelf: 'center'
             }}>
-                <TouchableOpacity
-                    style={{
-                        height: 60,
-                        borderRadius: 12,
-                        justifyContent: 'center',
-                        padding: 20,
-                        backgroundColor: '#ccc'
-                    }}
-                >
-                    <Text style={{
-                        fontSize: 20,
-                        fontWeight: 'bold'
-                    }}>{book}</Text>
-                </TouchableOpacity>
+                {books.map((book, index) => (
+                    <TouchableOpacity
+                        onPress={() => handleButtonClick(book)}
+                        key={index}
+                        style={{
+                            height: 60,
+                            borderRadius: 12,
+                            justifyContent: 'center',
+                            padding: 20,
+                            backgroundColor: '#ccc',
+                            marginTop: 10
+                        }}
+                    >
+                        <Text style={{
+                            fontSize: 20,
+                            fontWeight: 'bold',
+                            color: '#000'
+                        }}>{book}</Text>
+                    </TouchableOpacity>
+                ))}
             </View>
         )
     }
@@ -92,7 +99,7 @@ const JourneyContentScreen = () => {
             }}
         >
             <Header />
-            
+            <Content/>
         </SafeAreaView>
     )
 }

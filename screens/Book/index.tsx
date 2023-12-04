@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   View,
   Text,
@@ -14,128 +14,130 @@ import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { StackNavigatorParams, authScreenProp } from "../../App";
+import { useTheme } from "../../contexts/theme.context";
+import { primaryTextColor } from "../../utils/style";
+import { fetchData } from "../../utils/services";
 
 export default function BookScreen({ route }: { route: any }) {
   const navigation = useNavigation<authScreenProp>();
+  const { theme, changeTheme } = useTheme();
+  const [data, setData] = React.useState<{
+    chapter: string[];
+    chapternumber: number;
+  } | null>(null);
 
-  const { id, name, title, resume } = route.params;
-
+  const { id, name, title, resume, book } = route.params;
+  const ChapterText = () => {
+    fetchData(book, 1).then((data: any) => {
+      setData(data);
+      const chapter = data.chapternumber;
+    });
+  };
+  useEffect(() => {
+    ChapterText();
+  }, []);
+  const touchables = [];
+  for (let i = 1; i <= (data?.chapternumber ?? 0); i++) {
+    touchables.push(
+      <TouchableOpacity
+        key={i}
+        onPress={() => {
+          navigation.navigate("ChapterPage", {
+            id: i,
+            name: `Capítulo ${i}`,
+            title: `Capítulo ${i}`,
+            resume: `Capítulo ${i}`,
+            book: book,
+          });
+        }}
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-between",
+          backgroundColor: theme === "light" ? "#ccc" : "#292929",
+          padding: 20,
+          borderRadius: 12,
+          marginBottom: 10,
+        }}
+      >
+        <Text
+          style={{
+            color: theme === "light" ? "#000" : "#FFF",
+            fontSize: 18,
+            fontWeight: "bold",
+          }}
+        >
+          Capítulo {i}
+        </Text>
+      </TouchableOpacity>
+    );
+  }
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <SafeAreaView>
+    <SafeAreaView
+      style={{ flex: 1, backgroundColor: theme === "light" ? "#EEE" : "#111" }}
+    >
+      <View
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+          paddingRight: 20,
+          paddingBottom: 15,
+        }}
+      >
         <View
           style={{
-            borderBottomColor: "#DDD",
-            borderBottomWidth: 1,
-            height: 60,
             display: "flex",
             flexDirection: "row",
-            justifyContent: "space-between",
             alignItems: "center",
-            paddingHorizontal: 20,
           }}
         >
           <TouchableOpacity
             onPress={() => {
+              navigation.removeListener;
               navigation.goBack();
             }}
             style={{
-              zIndex: 999,
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "center",
-              marginLeft: -10,
+              marginLeft: 10,
             }}
           >
-            <Ionicons name="chevron-back-sharp" color="tomato" size={18} />
-            <Text
-              style={{
-                fontSize: 16,
-                textDecorationLine: "underline",
-                color: "tomato",
-              }}
-            >
-              Voltar
-            </Text>
+            <Ionicons
+              name="ios-arrow-back"
+              size={30}
+              color={primaryTextColor(theme)}
+            />
           </TouchableOpacity>
-          <View
+          <ContentLabel title={book} theme={theme} />
+          <Text
             style={{
-              height: 60,
-              justifyContent: "center",
-              position: "absolute",
-              width: Dimensions.get("window").width,
+              color: theme === "light" ? "#000" : "#FFF",
+              fontSize: 18,
             }}
           >
-            <Text
-              style={{
-                color: "#000",
-                fontSize: 20,
-                fontWeight: "400",
-                textAlign: "center",
-              }}
-            >
-              {name}
-            </Text>
-          </View>
+            - {data?.chapternumber} Capítulos
+          </Text>
         </View>
-        <ScrollView
-          showsVerticalScrollIndicator={false}
+      </View>
+      <ScrollView
+        style={{
+          flex: 1,
+          backgroundColor: theme === "light" ? "#EEE" : "#383838",
+          borderRadius: 20,
+          paddingTop: 20,
+          paddingHorizontal: 20,
+          marginBottom: -34,
+        }}
+      >
+        <View
           style={{
-            padding: 20,
+            display: "flex",
+            width: "100%",
+            marginBottom: 40,
           }}
-        >
-          <Text
-            style={{
-              marginTop: 20,
-              color: "#000",
-              fontSize: 28,
-              fontWeight: "900",
-              textAlign: "center",
-            }}
-          >
-            {title}
-          </Text>
-          <Text
-            style={{
-              marginTop: 40,
-              color: "#444",
-              fontSize: 16,
-              textAlign: "left",
-            }}
-          >
-            {resume}
-          </Text>
-          <TouchableOpacity
-            style={{
-              marginTop: 30,
-              height: 50,
-              width: "100%",
-              borderRadius: 10,
-              backgroundColor: "tomato",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Text
-              style={{
-                color: "#FFF",
-                fontSize: 16,
-                fontWeight: "900",
-                textAlign: "center",
-              }}
-            >
-              Confirmar leitura
-            </Text>
-          </TouchableOpacity>
-          <View
-            style={{
-              height: 30,
-            }}
-          />
-        </ScrollView>
-      </SafeAreaView>
-    </View>
+        >{touchables}</View>
+      </ScrollView>
+    </SafeAreaView>
   );
 }

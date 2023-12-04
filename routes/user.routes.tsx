@@ -18,6 +18,7 @@ import { Journey } from "../utils/types";
 import JourneyCollectionScreen from "../screens/Journeys/collection";
 import InfoScreen from "../screens/Profile/info";
 import JourneyContentScreen from "../screens/Journeys/components/JourneyContent";
+import ChapterScreen from "../screens/Journeys/components/ChapterScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -40,6 +41,20 @@ export type StackNavigatorParams = {
     id: string;
     name: string;
   };
+  Chapter: {
+    id: number;
+    name: string;
+    title?: string;
+    resume?: string;
+    book: string;
+  };
+  ChapterPage: {
+    id: number;
+    name: string;
+    title?: string;
+    resume?: string;
+    book: string;
+  }
 };
 
 const Stack = createStackNavigator<StackNavigatorParams>(); // Use the defined type
@@ -111,6 +126,7 @@ const TabNavigator = () => {
         name="Perfil"
         component={ProfileScreen}
       />
+
     </Tab.Navigator>
   );
 };
@@ -154,6 +170,20 @@ export function UserRoutes() {
           }}
           name="JourneyContentScreen"
           component={JourneyContentScreen}
+        />
+        <Stack.Screen
+          options={{
+            headerShown: false
+          }}
+          name="Chapter"
+          component={BookScreen}
+        />
+        <Stack.Screen
+          options={{
+            headerShown: false
+          }}
+          name="ChapterPage"
+          component={ChapterScreen}
         />
       </Stack.Group>
       <Stack.Screen

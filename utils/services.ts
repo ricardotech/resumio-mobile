@@ -204,9 +204,28 @@ export const fetchData = (
   chapter: number,
   verse?: number
 ): any => {
-  const number = bookToNumber(book.toLowerCase());
-  if (verse === undefined) {
-    return data[number - 1].chapters[chapter - 1];
-  }
-  return data[number - 1].chapters[chapter - 1][verse - 1];
+  return new Promise((resolve, reject) => {
+    const number = bookToNumber(book.toLowerCase());
+    if (verse === undefined) {
+      return (
+        resolve({
+          chapter: data[number - 1].chapters[chapter - 1],
+          chapternumber: data[number -1].chapters.length
+        })
+      )
+
+    }
+    if (number === -1) {
+      reject("Livro não encontrado");
+    } else if (chapter > data[number - 1].chapters.length) {
+      reject("Capítulo não encontrado");
+    } else if (verse > data[number - 1].chapters[chapter - 1].length) {
+      reject("Versículo não encontrado");
+    }
+    return resolve({
+      data: data[number - 1].chapters[chapter - 1][verse - 1]
+    });
+
+  })
+    
 };
