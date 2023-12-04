@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet, Dimensions } from "react-native";
+import { View, Text, StyleSheet, Dimensions, TouchableOpacity } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons"; // Import MaterialCommunityIcons from the appropriate library
 import * as Progress from "react-native-progress";
 import {
@@ -7,6 +7,8 @@ import {
   tertiaryBackgroundColor,
 } from "../../../utils/style";
 import { useTheme } from "../../../contexts/theme.context";
+import { authScreenProp } from "../../../App";
+import { useNavigation } from "@react-navigation/native";
 
 export default function JourneyCard({
   journey,
@@ -16,10 +18,14 @@ export default function JourneyCard({
   index: any;
 }) {
   const { theme } = useTheme();
-
+  const navigation = useNavigation<authScreenProp>();
+  const handleOpenJourney = () => {
+    navigation.navigate("JourneyContentScreen")
+  }
   if (journey)
     return (
-      <View
+      <TouchableOpacity
+      onPress={handleOpenJourney}
         style={{
           height: 150,
           width: Dimensions.get("window").width / 2 - 25,
@@ -58,7 +64,7 @@ export default function JourneyCard({
           borderWidth={0}
           borderRadius={10}
         />
-      </View>
+      </TouchableOpacity>
     );
 }
 

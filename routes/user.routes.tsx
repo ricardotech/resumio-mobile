@@ -16,6 +16,9 @@ import { useTheme } from "../contexts/theme.context";
 import SettingsScreen from "../screens/Profile/settings";
 import { Journey } from "../utils/types";
 import JourneyCollectionScreen from "../screens/Journeys/collection";
+import InfoScreen from "../screens/Profile/info";
+import JourneyContentScreen from "../screens/Journeys/components/JourneyContent";
+import ChapterScreen from "../screens/Journeys/components/ChapterScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -30,12 +33,28 @@ export type StackNavigatorParams = {
     resume?: string;
   }; // For the BookScreen screen
   Settings: undefined;
+  Info: undefined;
+  JourneyContentScreen: undefined;
   JourneyCollection: {
     journeys: Journey[];
     description: string;
     id: string;
     name: string;
   };
+  Chapter: {
+    id: number;
+    name: string;
+    title?: string;
+    resume?: string;
+    book: string;
+  };
+  ChapterPage: {
+    id: number;
+    name: string;
+    title?: string;
+    resume?: string;
+    book: string;
+  }
 };
 
 const Stack = createStackNavigator<StackNavigatorParams>(); // Use the defined type
@@ -59,9 +78,10 @@ const TabNavigator = () => {
             iconName = focused ? "ios-trophy" : "ios-trophy-outline";
           } else if (route.name === "Orações") {
             iconName = focused ? "ios-chatbox" : "ios-chatbox-outline";
-          }
+          } 
 
           // Você pode retornar qualquer componente aqui!
+          // @ts-ignore
           return <Ionicons name={iconName} size={size} color={color} />;
         },
         tabBarActiveTintColor: "tomato",
@@ -107,6 +127,7 @@ const TabNavigator = () => {
         name="Perfil"
         component={ProfileScreen}
       />
+
     </Tab.Navigator>
   );
 };
@@ -136,6 +157,34 @@ export function UserRoutes() {
           }}
           name="Settings"
           component={SettingsScreen}
+        />
+        <Stack.Screen
+          options={{
+            headerShown: false
+          }}
+          name="Info"
+          component={InfoScreen}
+        />
+        <Stack.Screen
+          options={{
+            headerShown: false
+          }}
+          name="JourneyContentScreen"
+          component={JourneyContentScreen}
+        />
+        <Stack.Screen
+          options={{
+            headerShown: false
+          }}
+          name="Chapter"
+          component={BookScreen}
+        />
+        <Stack.Screen
+          options={{
+            headerShown: false
+          }}
+          name="ChapterPage"
+          component={ChapterScreen}
         />
       </Stack.Group>
       <Stack.Screen
