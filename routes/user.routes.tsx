@@ -78,9 +78,10 @@ const TabNavigator = () => {
             iconName = focused ? "ios-trophy" : "ios-trophy-outline";
           } else if (route.name === "Orações") {
             iconName = focused ? "ios-chatbox" : "ios-chatbox-outline";
-          }
+          } 
 
           // Você pode retornar qualquer componente aqui!
+          // @ts-ignore
           return <Ionicons name={iconName} size={size} color={color} />;
         },
         tabBarActiveTintColor: "tomato",

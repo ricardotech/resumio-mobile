@@ -1,6 +1,6 @@
 import { View, Text, TouchableOpacity } from "react-native"
 import { ContentLabel } from "../../../components/ContentLabel";
-import { authScreenProp } from "../../../App";
+import { authScreenProp } from "../../../routes/user.routes";
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import { primaryTextColor } from "../../../utils/style";
@@ -60,7 +60,11 @@ const JourneyContentScreen = () => {
     const Content= () => {
         const handleButtonClick = (book: string) => {
             navigation.navigate("Chapter", {
-                book
+                id: 1,
+                name: `Capítulo 1`,
+                title: `Capítulo 1`,
+                resume: `Capítulo 1`,
+                book: book,
             });
         };
         return (

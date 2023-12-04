@@ -1,6 +1,6 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import { ContentLabel } from "../../../components/ContentLabel";
-import { authScreenProp } from "../../../App";
+import { authScreenProp } from "../../../routes/user.routes";
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import { primaryTextColor } from "../../../utils/style";
@@ -176,7 +176,7 @@ const ChapterScreen = ({ route }: { route: any }) => {
           >
             {chapterWithVerses()}
           </View>
-          {id < data?.chapternumber ? (
+          {id < (data?.chapternumber ?? 0) ? (
             <TouchableOpacity
               onPress={() => {
                 navigation.navigate("ChapterPage", {
@@ -217,7 +217,7 @@ const ChapterScreen = ({ route }: { route: any }) => {
                 padding: 20,
                 marginTop: -40,
                 marginBottom: 30,
-                backgroundColor: theme === "light" ? "#ccc" : "#3b3b3b",
+                backgroundColor: theme === "light" ? "#FFF" : "#000",
               }}
             >
               <Text

@@ -1,29 +1,25 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, {useState } from "react";
 import {
   View,
   Text,
-  ScrollView,
   TouchableOpacity,
   Image,
   TouchableWithoutFeedback,
   ActivityIndicator,
 } from "react-native";
-import { authScreenProp } from "../../App";
-import { AuthContext, useAuth } from "../../contexts/auth.context";
+import { authScreenProp } from "../../routes/auth.routes";
+import { useAuth } from "../../contexts/auth.context";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import {
-  primaryBackgroundColor,
-  primaryTextColor,
-  secondaryBackgroundColor,
-  secondaryTextColor,
+  primaryTextColor
 } from "../../utils/style";
 import { ContentLabel } from "../../components/ContentLabel";
 import { useTheme } from "../../contexts/theme.context";
 import { Avatar } from "@rneui/base";
 import { changeProfileImageFunc } from "../../utils/services";
-import { Button, Input } from "@rneui/themed";
+import { Input } from "@rneui/themed";
 import { KeyboardAvoidingView } from "react-native";
 import { Platform } from "react-native";
 import { Pressable } from "react-native";

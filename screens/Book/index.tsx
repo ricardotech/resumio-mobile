@@ -13,7 +13,7 @@ import { SvgXml } from "react-native-svg"; // Import SvgXml
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { StackNavigatorParams, authScreenProp } from "../../App";
+import { authScreenProp } from "../../routes/user.routes";
 import { useTheme } from "../../contexts/theme.context";
 import { primaryTextColor } from "../../utils/style";
 import { fetchData } from "../../utils/services";
