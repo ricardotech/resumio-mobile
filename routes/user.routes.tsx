@@ -70,6 +70,8 @@ const TabNavigator = () => {
 
           if (route.name === "Início") {
             iconName = focused ? "ios-home" : "ios-home-outline";
+          } else if (route.name === "Biblia") {
+            iconName = focused ? "ios-book" : "ios-book-outline";
           } else if (route.name === "Perfil") {
             iconName = focused ? "ios-person" : "ios-person-outline";
           } else if (route.name === "Jornadas") {
@@ -98,6 +100,13 @@ const TabNavigator = () => {
         }}
         name="Início"
         component={HomeScreen}
+      />
+      <Tab.Screen
+        options={{
+          headerShown: false,
+        }}
+        name="Biblia"
+        component={JourneyContentScreen}
       />
       <Tab.Screen
         options={{

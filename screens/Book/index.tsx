@@ -15,7 +15,11 @@ import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { authScreenProp } from "../../routes/user.routes";
 import { useTheme } from "../../contexts/theme.context";
-import { primaryTextColor } from "../../utils/style";
+import {
+  primaryBackgroundColor,
+  primaryTextColor,
+  tertiaryBackgroundColor,
+} from "../../utils/style";
 import { fetchData } from "../../utils/services";
 
 export default function BookScreen({ route }: { route: any }) {
@@ -55,7 +59,7 @@ export default function BookScreen({ route }: { route: any }) {
           flexDirection: "row",
           alignItems: "center",
           justifyContent: "space-between",
-          backgroundColor: theme === "light" ? "#ccc" : "#292929",
+          backgroundColor: tertiaryBackgroundColor(theme),
           padding: 20,
           borderRadius: 12,
           marginBottom: 10,
@@ -74,17 +78,15 @@ export default function BookScreen({ route }: { route: any }) {
     );
   }
   return (
-    <SafeAreaView
-      style={{ flex: 1, backgroundColor: theme === "light" ? "#EEE" : "#111" }}
-    >
+    <>
       <View
         style={{
+          paddingVertical: 20,
           display: "flex",
           flexDirection: "row",
+          backgroundColor: primaryBackgroundColor(theme),
           justifyContent: "space-between",
           alignItems: "center",
-          paddingRight: 20,
-          paddingBottom: 15,
         }}
       >
         <View
@@ -92,40 +94,30 @@ export default function BookScreen({ route }: { route: any }) {
             display: "flex",
             flexDirection: "row",
             alignItems: "center",
+            width: "100%",
+            justifyContent: "space-between",
+            paddingRight: 20,
           }}
         >
+          <ContentLabel title={book} theme={theme} />
           <TouchableOpacity
             onPress={() => {
               navigation.removeListener;
               navigation.goBack();
             }}
-            style={{
-              marginLeft: 10,
-            }}
           >
             <Ionicons
-              name="ios-arrow-back"
-              size={30}
+              name="ios-close"
               color={primaryTextColor(theme)}
+              size={26}
             />
           </TouchableOpacity>
-          <ContentLabel title={book} theme={theme} />
-          <Text
-            style={{
-              color: theme === "light" ? "#000" : "#FFF",
-              fontSize: 18,
-            }}
-          >
-            - {data?.chapternumber} Capítulos
-          </Text>
         </View>
       </View>
       <ScrollView
         style={{
           flex: 1,
-          backgroundColor: theme === "light" ? "#EEE" : "#383838",
-          borderRadius: 20,
-          paddingTop: 20,
+          backgroundColor: primaryBackgroundColor(theme),
           paddingHorizontal: 20,
           marginBottom: -34,
         }}
@@ -136,8 +128,15 @@ export default function BookScreen({ route }: { route: any }) {
             width: "100%",
             marginBottom: 40,
           }}
-        >{touchables}</View>
+        >
+          {touchables}
+        </View>
+        <View
+          style={{
+            height: 20,
+          }}
+        />
       </ScrollView>
-    </SafeAreaView>
+    </>
   );
 }

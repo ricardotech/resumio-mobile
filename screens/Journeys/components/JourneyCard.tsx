@@ -7,8 +7,9 @@ import {
   tertiaryBackgroundColor,
 } from "../../../utils/style";
 import { useTheme } from "../../../contexts/theme.context";
-import { authScreenProp } from "../../../App";
+
 import { useNavigation } from "@react-navigation/native";
+import { authScreenProp } from "../../../routes/user.routes";
 
 export default function JourneyCard({
   journey,
