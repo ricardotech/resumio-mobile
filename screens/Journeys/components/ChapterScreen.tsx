@@ -9,7 +9,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { fetchData } from "../../../utils/services";
 import React, { useEffect } from "react";
 import { ScrollView } from "react-native-gesture-handler";
-import { addProgress } from "../../../db/models/Progress";
+import { addProgress } from "../../../firestore/models/Progress";
 import { useAuth } from "../../../contexts/auth.context";
 
 const ChapterScreen = ({ route }: { route: any }) => {

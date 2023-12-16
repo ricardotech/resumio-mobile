@@ -13,15 +13,7 @@ import { AuthRoutes } from "./auth.routes";
 export default function Routes() {
   const navigation = useNavigation();
 
-  const [loading, setLoading] = useState<boolean>(true);
-
-  const { user } = useContext(AuthContext);
-
-  useEffect(() => {
-    setTimeout(() => {
-      setLoading(false);
-    }, 500);
-  }, []);
+  const { user, loading } = useContext(AuthContext);
 
   if (loading) return <Loading />;
 

@@ -228,7 +228,7 @@ export default function HomeScreen() {
               cachePolicy="memory-disk"
               contentFit="cover"
               transition={1000}
-              source={user?.thumbnail || require("../../assets/default.jpg")}
+              source={user?.photoURL || require("../../assets/default.jpg")}
               style={{ width: 60, height: 60, borderRadius: 50 }}
             />
           </View>
@@ -350,7 +350,7 @@ export default function HomeScreen() {
     return (
       <View style={{ alignItems: "center" }}>
         <Image
-              source={user?.thumbnail || require("../../assets/default.jpg")}
+              source={user?.photoURL || require("../../assets/default.jpg")}
               style={{ width: 100, height: 100, borderRadius: 50 }}
         />
         <Text
@@ -361,7 +361,7 @@ export default function HomeScreen() {
             marginTop: 10,
           }}
         >
-          {user?.name}
+          {user?.displayName}
         </Text>
         <Text
           style={{

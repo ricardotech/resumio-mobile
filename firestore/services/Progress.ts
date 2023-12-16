@@ -1,26 +1,17 @@
-import { addDoc, doc, setDoc } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  doc,
+  getDocs,
+  query,
+  setDoc,
+  where,
+} from "firebase/firestore";
 import { db } from "../../utils/firebaseConfig";
-import * as yup from "yup";
+import { ProgressChapter, progressChapterSchema } from "../models/Progress";
 
-// Define a validation schema using yup
-const progressChapterSchema = yup.object().shape({
-  userId: yup.string().required(),
-  book: yup.string().required(),
-  chapter: yup.number().integer().min(1).required(),
-  timestamp: yup.date().required(),
-});
-
-type ProgressChapter = {
-  userId: string;
-  book: string;
-  chapter: number;
-  timestamp: Date;
-};
-
-// Function to register reading progress
 async function addProgress(progress: ProgressChapter) {
   try {
-    // Validate the progress object with the yup schema
     await progressChapterSchema.validate(progress, { abortEarly: false });
 
     await setDoc(
@@ -33,7 +24,6 @@ async function addProgress(progress: ProgressChapter) {
     );
   } catch (error: any) {
     if (error.name === "ValidationError") {
-      // Handle validation errors
       const validationErrors = error.inner.reduce((errors: any, err: any) => {
         errors[err.path] = err.message;
         return errors;
@@ -46,4 +36,16 @@ async function addProgress(progress: ProgressChapter) {
   }
 }
 
-export { addProgress };
+async function getUserChaptersProgress(uid: string) {
+  const q = query(
+    collection(db, "ProgressChapter"),
+    where("userId", "==", uid)
+  );
+
+  const querySnapshot = await getDocs(q);
+  const chaptersProgressData = querySnapshot.docs.map((doc) => doc.data());
+
+  return chaptersProgressData;
+}
+
+export { addProgress, getUserChaptersProgress };

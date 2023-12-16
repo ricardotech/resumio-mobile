@@ -16,9 +16,14 @@ import {
   updateProfile,
   updateEmail,
   updatePassword,
+  onAuthStateChanged,
 } from "firebase/auth";
 import { app } from "../utils/firebaseConfig";
 import Toast from "react-native-toast-message";
+import { getUserChaptersProgress } from "../firestore/services/Progress";
+import { fetchFirestore } from "../firestore";
+import { ProgressChapter } from "../firestore/models/Progress";
+import { DocumentData } from "firebase/firestore";
 
 type User = {
   uid?: string;
@@ -71,16 +76,19 @@ type AuthContextData = {
   signUp: (credentials: SignUpCredentials) => Promise<any>;
   signOut: () => Promise<void>;
   changeProfileImage: (image: string) => Promise<void>;
-  loadUser: () => Promise<void>;
+  loadUser: () => Promise<void | string>;
   updateUser: (nome: string, email: string, senha: string) => Promise<void>;
   verificationEmail: () => void;
   loading: boolean;
   token: string;
-  api: AxiosInstance;
 };
 
 type AuthProviderProps = {
   children: ReactNode;
+};
+
+type FirestoreProps = {
+  userChaptersProgress: DocumentData[];
 };
 
 export const USER = "@Auth:user";
@@ -93,62 +101,36 @@ async function signOut() {
   await AsyncStorage.removeItem(USER);
 }
 
-const api = axios.create();
-const API_URL = "https://membros-375000.rj.r.appspot.com";
-api.defaults.baseURL = API_URL;
-
-async function handleApi() {
-  const storaged_token = await AsyncStorage.getItem(TOKEN);
-
-  api.defaults.headers.common["Authorization"] = `Bearer ${storaged_token}`;
-  api.interceptors.response.use(
-    function (response) {
-      return response;
-    },
-    function (error) {
-      if (
-        typeof error.response === "undefined" ||
-        [401, 419].includes(error.response.status)
-      ) {
-        signOut();
-      }
-      return Promise.reject(error);
-    }
-  );
-}
-
 function AuthProvider({ children }: AuthProviderProps) {
+  const auth = getAuth(app);
+
   const [user, setUser] = useState<User | null>();
   const [token, setToken] = useState<string>("");
 
   const [error, setError] = useState<Error | null>(null);
 
-  const [loading, setLoading] = useState(false);
-
-  const auth = getAuth(app);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    async function loadStoragedData() {
-      const storagedUser = await AsyncStorage.getItem(USER);
-      const storagedToken = await AsyncStorage.getItem(TOKEN);
-      if (storagedUser && storagedToken) {
-        setUser(JSON.parse(storagedUser));
-        setToken(JSON.stringify(TOKEN));
+    const auth = getAuth();
+
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        setUser({
+          uid: user.uid,
+          displayName: user.displayName || "",
+          email: user.email || "",
+          photoURL: user.photoURL || "",
+        });
+
+      } else {
+        setUser(null);
       }
+      setLoading(false);
+    });
 
-      loadUser();
-    }
-
-    loadStoragedData();
+    return () => unsubscribe();
   }, []);
-
-  useEffect(() => {
-    if (error !== null) {
-      setTimeout(() => {
-        setError(null);
-      }, 1250);
-    }
-  }, [error]);
 
   async function signIn({ email, password }: SignInCredentials) {
     try {
@@ -260,12 +242,14 @@ function AuthProvider({ children }: AuthProviderProps) {
       }
     }
   }
+
   function checkEmailVerified() {
     const user = getAuth().currentUser;
     if (user) {
       return user.emailVerified;
     }
   }
+
   function verificationEmail() {
     const user = getAuth().currentUser;
     const isVerified = checkEmailVerified();
@@ -284,7 +268,6 @@ function AuthProvider({ children }: AuthProviderProps) {
     const user = getAuth().currentUser;
 
     if (user) {
-      console.log(JSON.stringify(user));
       setUser({
         uid: user.uid,
         displayName: String(user.displayName),
@@ -292,6 +275,8 @@ function AuthProvider({ children }: AuthProviderProps) {
         photoURL: String(user.photoURL),
       });
     }
+
+    return String(user?.uid);
   }
 
   async function changeProfileImage(image: string) {
@@ -316,6 +301,7 @@ function AuthProvider({ children }: AuthProviderProps) {
         token,
         user,
         error,
+        loading,
         signIn,
         signUp,
         signOut,
@@ -323,8 +309,6 @@ function AuthProvider({ children }: AuthProviderProps) {
         loadUser,
         updateUser,
         verificationEmail,
-        loading,
-        api,
       }}
     >
       {children}
@@ -338,4 +322,4 @@ function useAuth() {
   return context;
 }
 
-export { AuthProvider, useAuth, signOut, handleApi };
+export { AuthProvider, useAuth, signOut };
