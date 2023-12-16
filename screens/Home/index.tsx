@@ -257,6 +257,13 @@ export default function HomeScreen() {
         <Header />
         <ScrollView>
           <DailyPray />
+          <Text
+            style={{
+              color: "#FFF",
+            }}
+          >
+            {JSON.stringify(user)}
+          </Text>
           <View
             style={{
               height: 70,

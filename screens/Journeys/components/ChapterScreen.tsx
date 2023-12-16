@@ -9,11 +9,17 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { fetchData } from "../../../utils/services";
 import React, { useEffect } from "react";
 import { ScrollView } from "react-native-gesture-handler";
+import { addProgress } from "../../../db/models/Progress";
+import { useAuth } from "../../../contexts/auth.context";
 
 const ChapterScreen = ({ route }: { route: any }) => {
-  const navigation = useNavigation<authScreenProp>();
   const { theme, changeTheme } = useTheme();
+  const { user } = useAuth();
+
+  const navigation = useNavigation<authScreenProp>();
+
   const { id, name, title, resume, book } = route.params;
+
   const [data, setData] = React.useState<{
     chapter: string[];
     chapternumber: number;
@@ -225,7 +231,14 @@ const ChapterScreen = ({ route }: { route: any }) => {
           ) : undefined}
           {id < (data?.chapternumber ?? 0) ? (
             <TouchableOpacity
-              onPress={() => {
+              onPress={async () => {
+                await addProgress({
+                  book: book,
+                  chapter: id,
+                  timestamp: new Date(),
+                  userId: String(user?.uid),
+                });
+
                 navigation.navigate("ChapterPage", {
                   id: id + 1,
                   name: `Capítulo ${id}`,

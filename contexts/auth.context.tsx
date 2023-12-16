@@ -21,11 +21,29 @@ import { app } from "../utils/firebaseConfig";
 import Toast from "react-native-toast-message";
 
 type User = {
-  id?: string;
-  name?: string;
-  username?: string;
-  email: string;
-  thumbnail?: string;
+  uid?: string;
+  email?: string;
+  emailVerified?: boolean;
+  displayName?: string;
+  isAnonymous?: boolean;
+  photoURL?: string;
+  providerData?: {
+    providerId: string;
+    uid: string;
+    displayName: string;
+    email: string;
+    phoneNumber: string | null;
+    photoURL: string;
+  }[];
+  stsTokenManager?: {
+    refreshToken: string;
+    accessToken: string;
+    expirationTime: number;
+  };
+  createdAt?: string;
+  lastLoginAt?: string;
+  apiKey?: string;
+  appName?: string;
 };
 
 type Error = {
@@ -144,9 +162,10 @@ function AuthProvider({ children }: AuthProviderProps) {
           AsyncStorage.setItem(USER, JSON.stringify(user));
           setToken(user.refreshToken);
           setUser({
-            id: user.uid,
-            name: String(user.displayName),
+            uid: String(user.uid),
+            displayName: String(user.displayName),
             email: String(user.email),
+            photoURL: String(user.photoURL),
           });
           setLoading(false);
           return user;
@@ -192,8 +211,8 @@ function AuthProvider({ children }: AuthProviderProps) {
           AsyncStorage.setItem(USER, JSON.stringify(user));
           setToken(user.refreshToken);
           setUser({
-            id: user.uid,
-            name: String(user.displayName),
+            uid: user.uid,
+            displayName: String(user.displayName),
             email: String(user.email),
           });
           setLoading(false);
@@ -230,14 +249,14 @@ function AuthProvider({ children }: AuthProviderProps) {
     const user = getAuth().currentUser;
 
     if (user) {
-      try{
+      try {
         updateProfile(user, {
           displayName: nome,
-        })
-        updateEmail(user, email)
-        updatePassword(user, senha)
-      }catch(error){
-        console.log(error)
+        });
+        updateEmail(user, email);
+        updatePassword(user, senha);
+      } catch (error) {
+        console.log(error);
       }
     }
   }
@@ -265,11 +284,12 @@ function AuthProvider({ children }: AuthProviderProps) {
     const user = getAuth().currentUser;
 
     if (user) {
+      console.log(JSON.stringify(user));
       setUser({
-        id: user.uid,
-        name: String(user.displayName),
+        uid: user.uid,
+        displayName: String(user.displayName),
         email: String(user.email),
-        thumbnail: String(user.photoURL),
+        photoURL: String(user.photoURL),
       });
     }
   }
@@ -282,10 +302,10 @@ function AuthProvider({ children }: AuthProviderProps) {
         photoURL: image,
       });
       setUser({
-        id: user.uid,
-        name: String(user.displayName),
+        uid: user.uid,
+        displayName: String(user.displayName),
         email: String(user.email),
-        thumbnail: image,
+        photoURL: image,
       });
     }
   }
