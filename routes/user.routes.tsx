@@ -27,10 +27,7 @@ export type authScreenProp = StackNavigationProp<StackNavigatorParams, "Tab">;
 export type StackNavigatorParams = {
   Tab: undefined; // For the TabNavigator screen
   Book: {
-    id: number;
-    name: string;
-    title?: string;
-    resume?: string;
+    book: string;
   }; // For the BookScreen screen
   Settings: undefined;
   Info: undefined;
@@ -54,7 +51,7 @@ export type StackNavigatorParams = {
     title?: string;
     resume?: string;
     book: string;
-  }
+  };
 };
 
 const Stack = createStackNavigator<StackNavigatorParams>(); // Use the defined type
@@ -80,7 +77,7 @@ const TabNavigator = () => {
             iconName = focused ? "ios-trophy" : "ios-trophy-outline";
           } else if (route.name === "Orações") {
             iconName = focused ? "ios-chatbox" : "ios-chatbox-outline";
-          } 
+          }
 
           // Você pode retornar qualquer componente aqui!
           // @ts-ignore
@@ -136,7 +133,6 @@ const TabNavigator = () => {
         name="Perfil"
         component={ProfileScreen}
       />
-
     </Tab.Navigator>
   );
 };
@@ -158,7 +154,6 @@ export function UserRoutes() {
           }}
           name="Book"
           component={BookScreen}
-          initialParams={{ id: 1, name: "", title: "", resume: "" }}
         />
         <Stack.Screen
           options={{
@@ -169,28 +164,21 @@ export function UserRoutes() {
         />
         <Stack.Screen
           options={{
-            headerShown: false
+            headerShown: false,
           }}
           name="Info"
           component={InfoScreen}
         />
         <Stack.Screen
           options={{
-            headerShown: false
+            headerShown: false,
           }}
           name="JourneyContentScreen"
           component={JourneyContentScreen}
         />
         <Stack.Screen
           options={{
-            headerShown: false
-          }}
-          name="Chapter"
-          component={BookScreen}
-        />
-        <Stack.Screen
-          options={{
-            headerShown: false
+            headerShown: false,
           }}
           name="ChapterPage"
           component={ChapterScreen}

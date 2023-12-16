@@ -261,10 +261,11 @@ export default function HomeScreen() {
           <DailyPray />
           <Text
             style={{
+              margin: 20,
               color: "#FFF",
             }}
           >
-            {JSON.stringify(userChaptersProgress)}
+            userChaptersProgress ✅
           </Text>
           <View
             style={{

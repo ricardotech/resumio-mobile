@@ -9,16 +9,20 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { fetchData } from "../../../utils/services";
 import React, { useEffect } from "react";
 import { ScrollView } from "react-native-gesture-handler";
-import { addProgress } from "../../../firestore/models/Progress";
 import { useAuth } from "../../../contexts/auth.context";
+import { useService } from "../../../contexts/service.context";
+import { books } from "../../../db";
 
 const ChapterScreen = ({ route }: { route: any }) => {
   const { theme, changeTheme } = useTheme();
   const { user } = useAuth();
+  const { addProgress } = useService();
 
   const navigation = useNavigation<authScreenProp>();
 
   const { id, name, title, resume, book } = route.params;
+
+  const bookId = books.findIndex((b) => b === book);
 
   const [data, setData] = React.useState<{
     chapter: string[];
@@ -187,7 +191,7 @@ const ChapterScreen = ({ route }: { route: any }) => {
           >
             {chapterWithVerses()}
           </View>
-          {id > 1 ? (
+          {/* {id > 1 ? (
             <TouchableOpacity
               onPress={() => {
                 navigation.navigate("ChapterPage", {
@@ -228,7 +232,7 @@ const ChapterScreen = ({ route }: { route: any }) => {
                 Capítulo anterior
               </Text>
             </TouchableOpacity>
-          ) : undefined}
+          ) : undefined} */}
           {id < (data?.chapternumber ?? 0) ? (
             <TouchableOpacity
               onPress={async () => {
@@ -251,7 +255,7 @@ const ChapterScreen = ({ route }: { route: any }) => {
                 paddingHorizontal: 20,
                 paddingVertical: 15,
                 marginTop: -30,
-                width: "80%",
+                width: "100%",
                 height: 60,
                 alignSelf: "center",
                 display: "flex",
@@ -270,25 +274,44 @@ const ChapterScreen = ({ route }: { route: any }) => {
                   color: theme === "light" ? "#000" : "#FFF",
                 }}
               >
-                Próximo capítulo
+                Marcar como lído
               </Text>
               <Ionicons
                 style={{
                   marginLeft: 10,
                 }}
-                name="arrow-forward"
+                name="checkmark"
                 size={20}
                 color={theme === "light" ? "#000" : "#FFF"}
               />
             </TouchableOpacity>
           ) : (
-            <View
+            <TouchableOpacity
+              onPress={async () => {
+                await addProgress({
+                  book: book,
+                  chapter: id,
+                  timestamp: new Date(),
+                  userId: String(user?.uid),
+                });
+
+                navigation.navigate("Book", {
+                  book: books[bookId + 1],
+                });
+              }}
               style={{
+                paddingHorizontal: 20,
+                paddingVertical: 15,
+                marginTop: -30,
                 width: "100%",
                 height: 60,
-                padding: 20,
-                marginTop: -40,
-                marginBottom: 30,
+                alignSelf: "center",
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "center",
+                borderRadius: 50,
+                backgroundColor: theme === "light" ? "#FFF" : "#000",
               }}
             >
               <Text
@@ -299,10 +322,19 @@ const ChapterScreen = ({ route }: { route: any }) => {
                   color: theme === "light" ? "#000" : "#FFF",
                 }}
               >
-                Fim do livro
+                Concluir o livro
               </Text>
-            </View>
+              <Ionicons
+                style={{
+                  marginLeft: 10,
+                }}
+                name="checkmark"
+                size={20}
+                color={theme === "light" ? "#000" : "#FFF"}
+              />
+            </TouchableOpacity>
           )}
+
           <View
             style={{
               height: 40,
