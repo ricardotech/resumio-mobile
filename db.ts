@@ -343,3 +343,336 @@ export const books = [
   "Judas",
   "Apocalipse",
 ];
+
+export const booksData = [
+  {
+    name: "Gênesis",
+    chapters: 50,
+    testament: "Antigo Testamento",
+  },
+  {
+    name: "Êxodo",
+    chapters: 40,
+    testament: "Antigo Testamento",
+  },
+  {
+    name: "Levítico",
+    chapters: 27,
+    testament: "Antigo Testamento",
+  },
+  {
+    name: "Números",
+    chapters: 36,
+    testament: "Antigo Testamento",
+  },
+  {
+    name: "Deuteronômio",
+    chapters: 34,
+    testament: "Antigo Testamento",
+  },
+  {
+    name: "Josué",
+    chapters: 24,
+    testament: "Antigo Testamento",
+  },
+  {
+    name: "Juízes",
+    chapters: 21,
+    testament: "Antigo Testamento",
+  },
+  {
+    name: "Rute",
+    chapters: 4,
+    testament: "Antigo Testamento",
+  },
+  {
+    name: "1 Samuel",
+    chapters: 31,
+    testament: "Antigo Testamento",
+  },
+  {
+    name: "2 Samuel",
+    chapters: 24,
+    testament: "Antigo Testamento",
+  },
+  {
+    name: "1 Reis",
+    chapters: 22,
+    testament: "Antigo Testamento",
+  },
+  {
+    name: "2 Reis",
+    chapters: 25,
+    testament: "Antigo Testamento",
+  },
+  {
+    name: "1 Crônicas",
+    chapters: 29,
+    testament: "Antigo Testamento",
+  },
+  {
+    name: "2 Crônicas",
+    chapters: 36,
+    testament: "Antigo Testamento",
+  },
+  {
+    name: "Esdras",
+    chapters: 10,
+    testament: "Antigo Testamento",
+  },
+  {
+    name: "Neemias",
+    chapters: 13,
+    testament: "Antigo Testamento",
+  },
+  {
+    name: "Ester",
+    chapters: 10,
+    testament: "Antigo Testamento",
+  },
+  {
+    name: "Jó",
+    chapters: 42,
+    testament: "Antigo Testamento",
+  },
+  {
+    name: "Salmos",
+    chapters: 150,
+    testament: "Antigo Testamento",
+  },
+  {
+    name: "Provérbios",
+    chapters: 31,
+    testament: "Antigo Testamento",
+  },
+  {
+    name: "Eclesiastes",
+    chapters: 12,
+    testament: "Antigo Testamento",
+  },
+  {
+    name: "Cânticos",
+    chapters: 8,
+    testament: "Antigo Testamento",
+  },
+  {
+    name: "Isaías",
+    chapters: 66,
+    testament: "Antigo Testamento",
+  },
+  {
+    name: "Jeremias",
+    chapters: 52,
+    testament: "Antigo Testamento",
+  },
+  {
+    name: "Lamentações",
+    chapters: 5,
+    testament: "Antigo Testamento",
+  },
+  {
+    name: "Ezequiel",
+    chapters: 48,
+    testament: "Antigo Testamento",
+  },
+  {
+    name: "Daniel",
+    chapters: 12,
+    testament: "Antigo Testamento",
+  },
+  {
+    name: "Oséias",
+    chapters: 14,
+    testament: "Antigo Testamento",
+  },
+  {
+    name: "Joel",
+    chapters: 3,
+    testament: "Antigo Testamento",
+  },
+  {
+    name: "Amós",
+    chapters: 9,
+    testament: "Antigo Testamento",
+  },
+  {
+    name: "Obadias",
+    chapters: 1,
+    testament: "Antigo Testamento",
+  },
+  {
+    name: "Jonas",
+    chapters: 4,
+    testament: "Antigo Testamento",
+  },
+  {
+    name: "Miquéias",
+    chapters: 7,
+    testament: "Antigo Testamento",
+  },
+  {
+    name: "Naum",
+    chapters: 3,
+    testament: "Antigo Testamento",
+  },
+  {
+    name: "Habacuque",
+    chapters: 3,
+    testament: "Antigo Testamento",
+  },
+  {
+    name: "Sofonias",
+    chapters: 3,
+    testament: "Antigo Testamento",
+  },
+  {
+    name: "Ageu",
+    chapters: 2,
+    testament: "Antigo Testamento",
+  },
+  {
+    name: "Zacarias",
+    chapters: 14,
+    testament: "Antigo Testamento",
+  },
+  {
+    name: "Malaquias",
+    chapters: 4,
+    testament: "Antigo Testamento",
+  },
+  {
+    name: "Mateus",
+    chapters: 28,
+    testament: "Novo Testamento",
+  },
+  {
+    name: "Marcos",
+    chapters: 16,
+    testament: "Novo Testamento",
+  },
+  {
+    name: "Lucas",
+    chapters: 24,
+    testament: "Novo Testamento",
+  },
+  {
+    name: "João",
+    chapters: 21,
+    testament: "Novo Testamento",
+  },
+  {
+    name: "Atos",
+    chapters: 28,
+    testament: "Novo Testamento",
+  },
+  {
+    name: "Romanos",
+    chapters: 16,
+    testament: "Novo Testamento",
+  },
+  {
+    name: "1 Coríntios",
+    chapters: 16,
+    testament: "Novo Testamento",
+  },
+  {
+    name: "2 Coríntios",
+    chapters: 13,
+    testament: "Novo Testamento",
+  },
+  {
+    name: "Gálatas",
+    chapters: 6,
+    testament: "Novo Testamento",
+  },
+  {
+    name: "Efésios",
+    chapters: 6,
+    testament: "Novo Testamento",
+  },
+  {
+    name: "Filipenses",
+    chapters: 4,
+    testament: "Novo Testamento",
+  },
+  {
+    name: "Colossenses",
+    chapters: 4,
+    testament: "Novo Testamento",
+  },
+  {
+    name: "1 Tessalonicenses",
+    chapters: 5,
+    testament: "Novo Testamento",
+  },
+  {
+    name: "2 Tessalonicenses",
+    chapters: 3,
+    testament: "Novo Testamento",
+  },
+  {
+    name: "1 Timóteo",
+    chapters: 6,
+    testament: "Novo Testamento",
+  },
+  {
+    name: "2 Timóteo",
+    chapters: 4,
+    testament: "Novo Testamento",
+  },
+  {
+    name: "Tito",
+    chapters: 3,
+    testament: "Novo Testamento",
+  },
+  {
+    name: "Filemom",
+    chapters: 1,
+    testament: "Novo Testamento",
+  },
+  {
+    name: "Hebreus",
+    chapters: 13,
+    testament: "Novo Testamento",
+  },
+  {
+    name: "Tiago",
+    chapters: 5,
+    testament: "Novo Testamento",
+  },
+  {
+    name: "1 Pedro",
+    chapters: 5,
+    testament: "Novo Testamento",
+  },
+  {
+    name: "2 Pedro",
+    chapters: 3,
+    testament: "Novo Testamento",
+  },
+  {
+    name: "1 João",
+    chapters: 5,
+    testament: "Novo Testamento",
+  },
+  {
+    name: "2 João",
+    chapters: 1,
+    testament: "Novo Testamento",
+  },
+  {
+    name: "3 João",
+    chapters: 1,
+    testament: "Novo Testamento",
+  },
+  {
+    name: "Judas",
+    chapters: 1,
+    testament: "Novo Testamento",
+  },
+  {
+    name: "Apocalipse",
+    chapters: 22,
+    testament: "Novo Testamento",
+  },
+];

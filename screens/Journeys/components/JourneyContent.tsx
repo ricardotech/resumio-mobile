@@ -13,7 +13,11 @@ import { useTheme } from "../../../contexts/theme.context";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ScrollView } from "react-native-gesture-handler";
 import { StatusBar } from "expo-status-bar";
-import { books } from "../../../db";
+import { books, booksData } from "../../../db";
+import { useService } from "../../../contexts/service.context";
+import { fetchData } from "../../../utils/services";
+import { useEffect, useState } from "react";
+import { ProgressChapter } from "../../../firestore/models/Progress";
 
 const JourneyContentScreen = () => {
   const navigation = useNavigation<authScreenProp>();
@@ -45,6 +49,10 @@ const JourneyContentScreen = () => {
   };
 
   const Content = () => {
+    const { userChaptersProgress } = useService();
+
+
+
     return (
       <ScrollView
         showsVerticalScrollIndicator={false}
@@ -53,35 +61,59 @@ const JourneyContentScreen = () => {
           alignSelf: "center",
         }}
       >
-        {books.map((book, index) => (
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate("Book", {
-                id: index,
-                book: book,
-              });
-            }}
-            key={index}
-            style={{
-              height: 60,
-              borderRadius: 12,
-              justifyContent: "center",
-              padding: 20,
-              backgroundColor: tertiaryBackgroundColor(theme),
-              marginTop: 10,
-            }}
-          >
-            <Text
-              style={{
-                fontSize: 20,
-                fontWeight: "bold",
-                color: primaryTextColor(theme),
-              }}
-            >
-              {book}
-            </Text>
-          </TouchableOpacity>
-        ))}
+        {userChaptersProgress &&
+          books.map((book, index) => {
+
+            const isBookRead = (book: any) => {
+              const totalChapters = booksData[index].chapters;
+              const readChapters = userChaptersProgress.filter(
+                (progress) => progress.book === book
+              );
+              return readChapters.length === totalChapters;
+            };
+
+            return (
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate("Book", {
+                    book: book,
+                  });
+                }}
+                key={index}
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  height: 60,
+                  borderRadius: 12,
+                  justifyContent: "space-between",
+                  padding: 20,
+                  backgroundColor: tertiaryBackgroundColor(theme),
+                  marginTop: 10,
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: 20,
+                    fontWeight: "bold",
+                    color: primaryTextColor(theme),
+                  }}
+                >
+                  {book}
+                </Text>
+                {isBookRead(book) && (
+                  <Text
+                    style={{
+                      fontSize: 20,
+                      fontWeight: "bold",
+                      color: primaryTextColor(theme),
+                    }}
+                  >
+                    ✅
+                  </Text>
+                )}
+              </TouchableOpacity>
+            );
+          })}
         <View
           style={{
             height: 40,
@@ -90,6 +122,7 @@ const JourneyContentScreen = () => {
       </ScrollView>
     );
   };
+
   return (
     <View
       style={{

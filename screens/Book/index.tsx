@@ -146,9 +146,9 @@ export default function BookScreen({ route }: { route: any }) {
           <ContentLabel
             title={book}
             description={`${
-              ((userBookChaptersProgress?.length || 0) /
-                (data?.chapternumber || 1)) *
-              100
+              Number(((userBookChaptersProgress?.length || 0) /
+              (data?.chapternumber || 1)) *
+            100).toFixed(0)
             }% Concluído`}
             theme={theme}
           />
