@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer } from "react";
+import React, { useEffect, useReducer, useRef } from "react";
 import {
   View,
   Text,
@@ -39,6 +39,17 @@ export default function BookScreen({ route }: { route: any }) {
     chapter: string[];
     chapternumber: number;
   } | null>(null);
+
+  const scrollViewRef = useRef<ScrollView | null>(null);
+
+  useEffect(() => {
+    // Scroll to the top when the component mounts or route parameters change
+    if (scrollViewRef.current) {
+      scrollViewRef.current.scrollTo({ x: 0, y: 0, animated: false });
+    }
+
+    ChapterText();
+  }, [route.params]);
 
   useEffect(() => {
     ChapterText();
@@ -156,6 +167,7 @@ export default function BookScreen({ route }: { route: any }) {
         </View>
       </View>
       <ScrollView
+        ref={scrollViewRef}
         style={{
           flex: 1,
           backgroundColor: primaryBackgroundColor(theme),

@@ -29,7 +29,11 @@ const ChapterScreen = ({ route }: { route: any }) => {
     chapternumber: number;
   } | null>(null);
 
-  const ChapterText = () => {
+  useEffect(() => {
+    fetchChapterData();
+  }, [id]);
+
+  const fetchChapterData = () => {
     fetchData(book, id)
       .then((data: any) => {
         setData(data);
@@ -39,6 +43,7 @@ const ChapterScreen = ({ route }: { route: any }) => {
       });
     return data;
   };
+
   const chapterWithVerses = () => {
     const chapter = data?.chapter;
     const chapterWithVerses = chapter?.map((item: string, index: number) => {
@@ -73,10 +78,6 @@ const ChapterScreen = ({ route }: { route: any }) => {
     return chapterWithVerses;
   };
 
-  useEffect(() => {
-    setData(null);
-    ChapterText();
-  }, [id]);
   const Header = () => {
     return (
       <View
@@ -274,7 +275,7 @@ const ChapterScreen = ({ route }: { route: any }) => {
                   color: theme === "light" ? "#000" : "#FFF",
                 }}
               >
-                Marcar como lído
+                Concluir capítulo
               </Text>
               <Ionicons
                 style={{
