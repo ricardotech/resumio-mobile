@@ -3,11 +3,16 @@ import { ContentLabel } from "../../../components/ContentLabel";
 import { authScreenProp } from "../../../routes/user.routes";
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
-import { primaryTextColor } from "../../../utils/style";
+import {
+  primaryBackgroundColor,
+  primaryTextColor,
+  secondaryBackgroundColor,
+  secondaryTextColor,
+} from "../../../utils/style";
 import { useTheme } from "../../../contexts/theme.context";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { fetchData } from "../../../utils/services";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import { useAuth } from "../../../contexts/auth.context";
 import { useService } from "../../../contexts/service.context";
@@ -23,6 +28,8 @@ const ChapterScreen = ({ route }: { route: any }) => {
   const { id, name, title, resume, book } = route.params;
 
   const bookId = books.findIndex((b) => b === book);
+
+  const [showCongrats, setShowCongrats] = useState<boolean>(false);
 
   const [data, setData] = React.useState<{
     chapter: string[];
@@ -296,9 +303,15 @@ const ChapterScreen = ({ route }: { route: any }) => {
                   userId: String(user?.uid),
                 });
 
-                navigation.navigate("Book", {
-                  book: books[bookId + 1],
-                });
+                // If the book is the last of the books array alert You Finished
+                if (bookId === books.length - 1) {
+                  setShowCongrats(true);
+                  return;
+                } else {
+                  navigation.navigate("Book", {
+                    book: books[bookId + 1],
+                  });
+                }
               }}
               style={{
                 paddingHorizontal: 20,
@@ -345,12 +358,91 @@ const ChapterScreen = ({ route }: { route: any }) => {
       </SafeAreaView>
     );
   };
+
+  const CongratsOverlay = () => {
+    return (
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: "rgba(0, 0, 0, 0.89)", // Adjust opacity by changing the last value (0.5).
+          justifyContent: "center",
+          alignItems: "center",
+          position: "absolute",
+          top: 0,
+          bottom: 0,
+          left: 0,
+          right: 0,
+          padding: 20,
+        }}
+      >
+        <Text
+          style={{
+            marginTop: -60,
+            marginLeft: 20,
+            fontSize: 70,
+          }}
+        >
+          🎉
+        </Text>
+        <Text
+          style={{
+            fontSize: 26,
+            fontWeight: "bold",
+            color: primaryTextColor(theme),
+            textAlign: "center",
+            marginTop: 20,
+          }}
+        >
+          Missão Cumprida!
+        </Text>
+        <Text
+          style={{
+            marginTop: 10,
+            fontSize: 18,
+            color: primaryTextColor(theme),
+            textAlign: "center",
+            width: "80%",
+          }}
+        >
+          Você concluiu a incrível jornada de leitura da Bíblia.
+        </Text>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate("Tab")
+          }}
+          style={{
+            height: 40,
+            width: "100%",
+            borderRadius: 8,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            marginTop: 20,
+            backgroundColor: secondaryBackgroundColor(theme),
+          }}
+        >
+          <Text
+            style={{
+              fontSize: 16,
+              fontWeight: "bold",
+              color: secondaryTextColor(theme),
+              textAlign: "center",
+            }}
+          >
+            Concluir jornada 
+          </Text>
+        </TouchableOpacity>
+      </View>
+    );
+  };
+
   return (
     <SafeAreaView
       style={{ flex: 1, backgroundColor: theme === "light" ? "#fff" : "#000" }}
     >
       <Header />
       <Content />
+      {showCongrats && <CongratsOverlay />}
     </SafeAreaView>
   );
 };

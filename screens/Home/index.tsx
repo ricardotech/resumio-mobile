@@ -258,15 +258,7 @@ export default function HomeScreen() {
       <SafeAreaView>
         <Header />
         <ScrollView>
-          <DailyPray />
-          <Text
-            style={{
-              margin: 20,
-              color: "#FFF",
-            }}
-          >
-            userChaptersProgress ✅
-          </Text>
+          {/* <DailyPray /> */}
           <View
             style={{
               height: 70,
