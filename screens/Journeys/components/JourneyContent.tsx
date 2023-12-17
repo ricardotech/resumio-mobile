@@ -13,78 +13,15 @@ import { useTheme } from "../../../contexts/theme.context";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ScrollView } from "react-native-gesture-handler";
 import { StatusBar } from "expo-status-bar";
+import { books, booksData } from "../../../db";
+import { useService } from "../../../contexts/service.context";
+import { fetchData } from "../../../utils/services";
+import { useEffect, useState } from "react";
+import { ProgressChapter } from "../../../firestore/models/Progress";
 
 const JourneyContentScreen = () => {
   const navigation = useNavigation<authScreenProp>();
   const { theme, changeTheme } = useTheme();
-  const books = [
-    "Gênesis",
-    "Êxodo",
-    "Levítico",
-    "Números",
-    "Deuteronômio",
-    "Josué",
-    "Juízes",
-    "Rute",
-    "1 Samuel",
-    "2 Samuel",
-    "1 Reis",
-    "2 Reis",
-    "1 Crônicas",
-    "2 Crônicas",
-    "Esdras",
-    "Neemias",
-    "Ester",
-    "Jó",
-    "Salmos",
-    "Provérbios",
-    "Eclesiastes",
-    "Cânticos",
-    "Isaías",
-    "Jeremias",
-    "Lamentações",
-    "Ezequiel",
-    "Daniel",
-    "Oséias",
-    "Joel",
-    "Amós",
-    "Obadias",
-    "Jonas",
-    "Miquéias",
-    "Naum",
-    "Habacuque",
-    "Sofonias",
-    "Ageu",
-    "Zacarias",
-    "Malaquias",
-    "Mateus",
-    "Marcos",
-    "Lucas",
-    "João",
-    "Atos",
-    "Romanos",
-    "1 Coríntios",
-    "2 Coríntios",
-    "Gálatas",
-    "Efésios",
-    "Filipenses",
-    "Colossenses",
-    "1 Tessalonicenses",
-    "2 Tessalonicenses",
-    "1 Timóteo",
-    "2 Timóteo",
-    "Tito",
-    "Filemom",
-    "Hebreus",
-    "Tiago",
-    "1 Pedro",
-    "2 Pedro",
-    "1 João",
-    "2 João",
-    "3 João",
-    "Judas",
-    "Apocalipse",
-  ];
 
   const Header = () => {
     return (
@@ -112,6 +49,10 @@ const JourneyContentScreen = () => {
   };
 
   const Content = () => {
+    const { userChaptersProgress } = useService();
+
+
+
     return (
       <ScrollView
         showsVerticalScrollIndicator={false}
@@ -120,38 +61,59 @@ const JourneyContentScreen = () => {
           alignSelf: "center",
         }}
       >
-        {books.map((book, index) => (
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate("Chapter", {
-                id: 1,
-                name: `Capítulo 1`,
-                title: `Capítulo 1`,
-                resume: `Capítulo 1`,
-                book: book,
-              });
-            }}
-            key={index}
-            style={{
-              height: 60,
-              borderRadius: 12,
-              justifyContent: "center",
-              padding: 20,
-              backgroundColor: tertiaryBackgroundColor(theme),
-              marginTop: 10,
-            }}
-          >
-            <Text
-              style={{
-                fontSize: 20,
-                fontWeight: "bold",
-                color: primaryTextColor(theme),
-              }}
-            >
-              {book}
-            </Text>
-          </TouchableOpacity>
-        ))}
+        {userChaptersProgress &&
+          books.map((book, index) => {
+
+            const isBookRead = (book: any) => {
+              const totalChapters = booksData[index].chapters;
+              const readChapters = userChaptersProgress.filter(
+                (progress) => progress.book === book
+              );
+              return readChapters.length === totalChapters;
+            };
+
+            return (
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate("Book", {
+                    book: book,
+                  });
+                }}
+                key={index}
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  height: 60,
+                  borderRadius: 12,
+                  justifyContent: "space-between",
+                  padding: 20,
+                  backgroundColor: tertiaryBackgroundColor(theme),
+                  marginTop: 10,
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: 20,
+                    fontWeight: "bold",
+                    color: primaryTextColor(theme),
+                  }}
+                >
+                  {book}
+                </Text>
+                {isBookRead(book) && (
+                  <Text
+                    style={{
+                      fontSize: 20,
+                      fontWeight: "bold",
+                      color: primaryTextColor(theme),
+                    }}
+                  >
+                    ✅
+                  </Text>
+                )}
+              </TouchableOpacity>
+            );
+          })}
         <View
           style={{
             height: 40,
@@ -160,6 +122,7 @@ const JourneyContentScreen = () => {
       </ScrollView>
     );
   };
+
   return (
     <View
       style={{

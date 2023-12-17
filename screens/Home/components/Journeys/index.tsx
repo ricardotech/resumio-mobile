@@ -21,7 +21,7 @@ import { ContentLabel } from "../../../../components/ContentLabel";
 
 import { genesis, exodus } from "../../../../db";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { StackNavigatorParams } from "../../../../App";
+import { StackNavigatorParams } from "../../../../routes/user.routes";
 
 export default function Journeys() {
   type authScreenProp = StackNavigationProp<StackNavigatorParams, "Tab">;

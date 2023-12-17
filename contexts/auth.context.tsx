@@ -16,16 +16,39 @@ import {
   updateProfile,
   updateEmail,
   updatePassword,
+  onAuthStateChanged,
 } from "firebase/auth";
 import { app } from "../utils/firebaseConfig";
 import Toast from "react-native-toast-message";
+import { getUserChaptersProgress } from "../firestore/services/Progress";
+import { fetchFirestore } from "../firestore";
+import { ProgressChapter } from "../firestore/models/Progress";
+import { DocumentData } from "firebase/firestore";
 
 type User = {
-  id?: string;
-  name?: string;
-  username?: string;
-  email: string;
-  thumbnail?: string;
+  uid?: string;
+  email?: string;
+  emailVerified?: boolean;
+  displayName?: string;
+  isAnonymous?: boolean;
+  photoURL?: string;
+  providerData?: {
+    providerId: string;
+    uid: string;
+    displayName: string;
+    email: string;
+    phoneNumber: string | null;
+    photoURL: string;
+  }[];
+  stsTokenManager?: {
+    refreshToken: string;
+    accessToken: string;
+    expirationTime: number;
+  };
+  createdAt?: string;
+  lastLoginAt?: string;
+  apiKey?: string;
+  appName?: string;
 };
 
 type Error = {
@@ -53,16 +76,19 @@ type AuthContextData = {
   signUp: (credentials: SignUpCredentials) => Promise<any>;
   signOut: () => Promise<void>;
   changeProfileImage: (image: string) => Promise<void>;
-  loadUser: () => Promise<void>;
+  loadUser: () => Promise<void | string>;
   updateUser: (nome: string, email: string, senha: string) => Promise<void>;
   verificationEmail: () => void;
   loading: boolean;
   token: string;
-  api: AxiosInstance;
 };
 
 type AuthProviderProps = {
   children: ReactNode;
+};
+
+type FirestoreProps = {
+  userChaptersProgress: DocumentData[];
 };
 
 export const USER = "@Auth:user";
@@ -75,62 +101,36 @@ async function signOut() {
   await AsyncStorage.removeItem(USER);
 }
 
-const api = axios.create();
-const API_URL = "https://membros-375000.rj.r.appspot.com";
-api.defaults.baseURL = API_URL;
-
-async function handleApi() {
-  const storaged_token = await AsyncStorage.getItem(TOKEN);
-
-  api.defaults.headers.common["Authorization"] = `Bearer ${storaged_token}`;
-  api.interceptors.response.use(
-    function (response) {
-      return response;
-    },
-    function (error) {
-      if (
-        typeof error.response === "undefined" ||
-        [401, 419].includes(error.response.status)
-      ) {
-        signOut();
-      }
-      return Promise.reject(error);
-    }
-  );
-}
-
 function AuthProvider({ children }: AuthProviderProps) {
+  const auth = getAuth(app);
+
   const [user, setUser] = useState<User | null>();
   const [token, setToken] = useState<string>("");
 
   const [error, setError] = useState<Error | null>(null);
 
-  const [loading, setLoading] = useState(false);
-
-  const auth = getAuth(app);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    async function loadStoragedData() {
-      const storagedUser = await AsyncStorage.getItem(USER);
-      const storagedToken = await AsyncStorage.getItem(TOKEN);
-      if (storagedUser && storagedToken) {
-        setUser(JSON.parse(storagedUser));
-        setToken(JSON.stringify(TOKEN));
+    const auth = getAuth();
+
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        setUser({
+          uid: user.uid,
+          displayName: user.displayName || "",
+          email: user.email || "",
+          photoURL: user.photoURL || "",
+        });
+
+      } else {
+        setUser(null);
       }
+      setLoading(false);
+    });
 
-      loadUser();
-    }
-
-    loadStoragedData();
+    return () => unsubscribe();
   }, []);
-
-  useEffect(() => {
-    if (error !== null) {
-      setTimeout(() => {
-        setError(null);
-      }, 1250);
-    }
-  }, [error]);
 
   async function signIn({ email, password }: SignInCredentials) {
     try {
@@ -144,9 +144,10 @@ function AuthProvider({ children }: AuthProviderProps) {
           AsyncStorage.setItem(USER, JSON.stringify(user));
           setToken(user.refreshToken);
           setUser({
-            id: user.uid,
-            name: String(user.displayName),
+            uid: String(user.uid),
+            displayName: String(user.displayName),
             email: String(user.email),
+            photoURL: String(user.photoURL),
           });
           setLoading(false);
           return user;
@@ -192,8 +193,8 @@ function AuthProvider({ children }: AuthProviderProps) {
           AsyncStorage.setItem(USER, JSON.stringify(user));
           setToken(user.refreshToken);
           setUser({
-            id: user.uid,
-            name: String(user.displayName),
+            uid: user.uid,
+            displayName: String(user.displayName),
             email: String(user.email),
           });
           setLoading(false);
@@ -230,23 +231,25 @@ function AuthProvider({ children }: AuthProviderProps) {
     const user = getAuth().currentUser;
 
     if (user) {
-      try{
+      try {
         updateProfile(user, {
           displayName: nome,
-        })
-        updateEmail(user, email)
-        updatePassword(user, senha)
-      }catch(error){
-        console.log(error)
+        });
+        updateEmail(user, email);
+        updatePassword(user, senha);
+      } catch (error) {
+        console.log(error);
       }
     }
   }
+
   function checkEmailVerified() {
     const user = getAuth().currentUser;
     if (user) {
       return user.emailVerified;
     }
   }
+
   function verificationEmail() {
     const user = getAuth().currentUser;
     const isVerified = checkEmailVerified();
@@ -266,12 +269,14 @@ function AuthProvider({ children }: AuthProviderProps) {
 
     if (user) {
       setUser({
-        id: user.uid,
-        name: String(user.displayName),
+        uid: user.uid,
+        displayName: String(user.displayName),
         email: String(user.email),
-        thumbnail: String(user.photoURL),
+        photoURL: String(user.photoURL),
       });
     }
+
+    return String(user?.uid);
   }
 
   async function changeProfileImage(image: string) {
@@ -282,10 +287,10 @@ function AuthProvider({ children }: AuthProviderProps) {
         photoURL: image,
       });
       setUser({
-        id: user.uid,
-        name: String(user.displayName),
+        uid: user.uid,
+        displayName: String(user.displayName),
         email: String(user.email),
-        thumbnail: image,
+        photoURL: image,
       });
     }
   }
@@ -296,6 +301,7 @@ function AuthProvider({ children }: AuthProviderProps) {
         token,
         user,
         error,
+        loading,
         signIn,
         signUp,
         signOut,
@@ -303,8 +309,6 @@ function AuthProvider({ children }: AuthProviderProps) {
         loadUser,
         updateUser,
         verificationEmail,
-        loading,
-        api,
       }}
     >
       {children}
@@ -318,4 +322,4 @@ function useAuth() {
   return context;
 }
 
-export { AuthProvider, useAuth, signOut, handleApi };
+export { AuthProvider, useAuth, signOut };

@@ -24,11 +24,13 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import { authScreenProp } from "../../routes/user.routes";
+import { useService } from "../../contexts/service.context";
 
 export default function HomeScreen() {
   const navigation = useNavigation<authScreenProp>();
 
   const { user } = useAuth();
+  const { userChaptersProgress } = useService();
   const { theme, changeTheme } = useTheme();
 
   const Header = () => {
@@ -256,7 +258,7 @@ export default function HomeScreen() {
       <SafeAreaView>
         <Header />
         <ScrollView>
-          <DailyPray />
+          {/* <DailyPray /> */}
           <View
             style={{
               height: 70,
