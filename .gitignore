@@ -6,6 +6,13 @@ node_modules/
 # EAS
 eas.json
 
+# Prebuild
+ios/
+android/
+
+# Environment Variables
+.env
+
 # Expo
 .expo/
 dist/

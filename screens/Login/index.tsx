@@ -11,7 +11,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Input, Icon, Button } from "@rneui/themed";
 import { Ionicons } from "@expo/vector-icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import React from "react";
 import {
   getAuth,
@@ -38,7 +38,7 @@ const LoginPage = () => {
 
   const { theme } = useTheme();
 
-  const { loading, signIn } = useAuth();
+  const { loading, signIn, signInGoogle } = useAuth();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -105,176 +105,346 @@ const LoginPage = () => {
     }
   };
 
-  return (
-    <SafeAreaView
-      style={{
-        flex: 1,
-        backgroundColor: primaryBackgroundColor(theme),
-      }}
-    >
-      <StatusBar style={theme === "dark" ? "light" : "dark"} />
-      <Pressable
+  const [googleAccessToken, setGoogleAccessToken] = useState("");
+
+  const [isLogging, setIsLogging] = useState(false);
+
+  const [screen, setScreen] = useState<"SignInWithEmail" | "SignIn">("SignIn");
+
+  const SignInPage = () => {
+    return (
+      <SafeAreaView
         style={{
           flex: 1,
           backgroundColor: primaryBackgroundColor(theme),
         }}
-        onPress={Keyboard.dismiss}
       >
-        <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
+        <StatusBar style={theme === "dark" ? "light" : "dark"} />
+        <Pressable
           style={{
-            backgroundColor: primaryBackgroundColor(theme),
             flex: 1,
-            flexDirection: "column",
+            backgroundColor: primaryBackgroundColor(theme),
           }}
+          onPress={Keyboard.dismiss}
         >
-          <TouchableOpacity
-            onPress={() => {
-              navigation.removeListener;
-              navigation.goBack();
+          <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            style={{
+              backgroundColor: primaryBackgroundColor(theme),
+              flex: 1,
+              flexDirection: "column",
             }}
           >
             <View
               style={{
-                height: 24,
-              }}
-            />
-          </TouchableOpacity>
-          <View
-            style={{
-              padding: 20,
-            }}
-          >
-            <Text
-              style={{
-                color: primaryTextColor(theme),
-                marginTop: 20,
-                fontSize: 28,
-                fontWeight: "bold",
+                paddingHorizontal: 20,
               }}
             >
-              Bem vindo de volta!👋
-            </Text>
-          </View>
-          <View>
-            <Text
+              <Text
+                style={{
+                  color: primaryTextColor(theme),
+                  marginTop: 20,
+                  fontSize: 36,
+                  fontWeight: "bold",
+                }}
+              >
+                Resumio
+              </Text>
+              <Text
+                style={{
+                  color: primaryTextColor(theme),
+                  fontSize: 16,
+                }}
+              >
+                Entrar na sua conta
+              </Text>
+            </View>
+
+            <View
               style={{
-                color: primaryTextColor(theme),
-                marginTop: 10,
-                fontSize: 20,
-                fontWeight: "bold",
-                marginLeft: 20,
+                flex: 1,
+                justifyContent: "flex-end",
+                alignItems: "center",
               }}
             >
-              Email
-            </Text>
-            <Input
-              autoCapitalize="none"
-              keyboardType="email-address"
-              style={{
-                paddingLeft: 0,
-                color: primaryTextColor(theme),
-                padding: 10,
-                fontSize: 20,
-              }}
-              inputContainerStyle={{
-                width: "95%",
-                alignSelf: "center",
-              }}
-              onChangeText={setEmail}
-              value={email}
-            />
-            <Text
-              style={{
-                color: primaryTextColor(theme),
-                marginTop: 10,
-                fontSize: 20,
-                fontWeight: "bold",
-                marginLeft: 20,
-              }}
-            >
-              Senha
-            </Text>
-            <Input
-              secureTextEntry={!isPasswordVisible}
-              style={{
-                paddingLeft: 0,
-                color: primaryTextColor(theme),
-                padding: 10,
-                fontSize: 20,
-              }}
-              rightIcon={
-                <TouchableWithoutFeedback onPress={handlePasswordVisibility}>
-                  <Ionicons
-                    name={isPasswordVisible ? "ios-eye-off" : "ios-eye"}
-                    size={24}
-                    color={primaryTextColor(theme)}
+              <Button
+                loading={loading}
+                title="Entrar com Google"
+                icon={
+                  <Icon
+                    size={16}
+                    name="google"
+                    type="material-community"
+                    color={secondaryTextColor(theme)}
+                    style={{
+                      marginLeft: 10,
+                    }}
                   />
-                </TouchableWithoutFeedback>
-              }
-              inputContainerStyle={{
-                width: "95%",
-                alignSelf: "center",
-              }}
-              onChangeText={setPassword}
-              value={password}
-            />
-          </View>
-          <View
+                }
+                iconRight
+                buttonStyle={{
+                  backgroundColor: secondaryBackgroundColor(theme),
+                  borderRadius: 30,
+                  height: 50,
+                }}
+                containerStyle={{
+                  width: "90%",
+                }}
+                loadingProps={{
+                  size: "small",
+                  color: secondaryTextColor(theme),
+                }}
+                titleStyle={{
+                  fontWeight: "bold",
+                  color: secondaryTextColor(theme),
+                }}
+                onPress={signInGoogle}
+              />
+              {/* <Button
+                loading={loading}
+                title="Entrar com email"
+                icon={
+                  <Icon
+                    size={16}
+                    name="email"
+                    type="material-community"
+                    color={secondaryTextColor(theme)}
+                    style={{
+                      marginLeft: 10,
+                    }}
+                  />
+                }
+                iconRight
+                buttonStyle={{
+                  backgroundColor: secondaryBackgroundColor(theme),
+                  borderRadius: 30,
+                  height: 50,
+                }}
+                containerStyle={{
+                  marginTop: 10,
+                  width: "90%",
+                }}
+                loadingProps={{
+                  size: "small",
+                  color: secondaryTextColor(theme),
+                }}
+                titleStyle={{
+                  fontWeight: "bold",
+                  color: secondaryTextColor(theme),
+                }}
+                onPress={handleLogin}
+              />
+              <Button
+                title="Ainda não tem uma conta?"
+                buttonStyle={{
+                  backgroundColor: "transparent",
+                  borderRadius: 30,
+                  height: 50,
+                }}
+                containerStyle={{
+                  width: "90%",
+                  marginTop: 10,
+                }}
+                loadingProps={{ size: "small", color: primaryTextColor(theme) }}
+                titleStyle={{
+                  fontWeight: "bold",
+                  color: primaryTextColor(theme),
+                }}
+                onPress={() => {
+                  navigation.navigate("SignUp");
+                }}
+              /> */}
+            </View>
+          </KeyboardAvoidingView>
+        </Pressable>
+        <Toast />
+      </SafeAreaView>
+    );
+  };
+
+  const SignInWithEmail = () => {
+    return (
+      <SafeAreaView
+        style={{
+          flex: 1,
+          backgroundColor: primaryBackgroundColor(theme),
+        }}
+      >
+        <StatusBar style={theme === "dark" ? "light" : "dark"} />
+        <Pressable
+          style={{
+            flex: 1,
+            backgroundColor: primaryBackgroundColor(theme),
+          }}
+          onPress={Keyboard.dismiss}
+        >
+          <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
             style={{
+              backgroundColor: primaryBackgroundColor(theme),
               flex: 1,
-              justifyContent: "flex-end",
-              alignItems: "center",
-              marginBottom: 70,
+              flexDirection: "column",
             }}
           >
-            <Button
-              title="Ainda não tem uma conta?"
-              buttonStyle={{
-                marginBottom: 20,
-                backgroundColor: "transparent",
-                borderRadius: 30,
-                height: 50,
-              }}
-              containerStyle={{
-                width: "90%",
-                marginHorizontal: 50,
-                marginVertical: -8,
-              }}
-              loadingProps={{ size: "small", color: primaryTextColor(theme) }}
-              titleStyle={{
-                fontWeight: "bold",
-                color: primaryTextColor(theme),
-              }}
+            <TouchableOpacity
               onPress={() => {
-                navigation.navigate("SignUp");
+                navigation.removeListener;
+                navigation.goBack();
               }}
-            />
-            <Button
-              disabled={!isValidLogin}
-              loading={loading}
-              title="Entrar"
-              buttonStyle={{
-                backgroundColor: secondaryBackgroundColor(theme),
-                borderRadius: 30,
-                height: 50,
+            >
+              <View
+                style={{
+                  height: 24,
+                }}
+              />
+            </TouchableOpacity>
+            <View
+              style={{
+                padding: 20,
               }}
-              containerStyle={{
-                width: "90%",
-                marginHorizontal: 50,
+            >
+              <Text
+                style={{
+                  color: primaryTextColor(theme),
+                  marginTop: 20,
+                  fontSize: 28,
+                  fontWeight: "bold",
+                }}
+              >
+                Bem vindo de volta!👋
+              </Text>
+            </View>
+            <View>
+              <Text
+                style={{
+                  color: primaryTextColor(theme),
+                  marginTop: 10,
+                  fontSize: 20,
+                  fontWeight: "bold",
+                  marginLeft: 20,
+                }}
+              >
+                Email
+              </Text>
+              <Input
+                autoCapitalize="none"
+                keyboardType="email-address"
+                style={{
+                  paddingLeft: 0,
+                  color: primaryTextColor(theme),
+                  padding: 10,
+                  fontSize: 20,
+                }}
+                inputContainerStyle={{
+                  width: "95%",
+                  alignSelf: "center",
+                }}
+                onChangeText={setEmail}
+                value={email}
+              />
+              <Text
+                style={{
+                  color: primaryTextColor(theme),
+                  marginTop: 10,
+                  fontSize: 20,
+                  fontWeight: "bold",
+                  marginLeft: 20,
+                }}
+              >
+                Senha
+              </Text>
+              <Input
+                secureTextEntry={!isPasswordVisible}
+                style={{
+                  paddingLeft: 0,
+                  color: primaryTextColor(theme),
+                  padding: 10,
+                  fontSize: 20,
+                }}
+                rightIcon={
+                  <TouchableWithoutFeedback onPress={handlePasswordVisibility}>
+                    <Ionicons
+                      name={isPasswordVisible ? "ios-eye-off" : "ios-eye"}
+                      size={24}
+                      color={primaryTextColor(theme)}
+                    />
+                  </TouchableWithoutFeedback>
+                }
+                inputContainerStyle={{
+                  width: "95%",
+                  alignSelf: "center",
+                }}
+                onChangeText={setPassword}
+                value={password}
+              />
+            </View>
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "flex-end",
+                alignItems: "center",
+                marginBottom: 70,
               }}
-              loadingProps={{ size: "small", color: secondaryTextColor(theme) }}
-              titleStyle={{
-                fontWeight: "bold",
-                color: secondaryTextColor(theme),
-              }}
-              onPress={handleLogin}
-            />
-          </View>
-        </KeyboardAvoidingView>
-      </Pressable>
-      <Toast />
-    </SafeAreaView>
+            >
+              <Button
+                title="Ainda não tem uma conta?"
+                buttonStyle={{
+                  marginBottom: 20,
+                  backgroundColor: "transparent",
+                  borderRadius: 30,
+                  height: 50,
+                }}
+                containerStyle={{
+                  width: "90%",
+                  marginHorizontal: 50,
+                  marginVertical: -8,
+                }}
+                loadingProps={{ size: "small", color: primaryTextColor(theme) }}
+                titleStyle={{
+                  fontWeight: "bold",
+                  color: primaryTextColor(theme),
+                }}
+                onPress={() => {
+                  navigation.navigate("SignUp");
+                }}
+              />
+
+              <Button
+                disabled={!isValidLogin}
+                loading={loading}
+                title="Entrar"
+                buttonStyle={{
+                  backgroundColor: secondaryBackgroundColor(theme),
+                  borderRadius: 30,
+                  height: 50,
+                }}
+                containerStyle={{
+                  width: "90%",
+                  marginHorizontal: 50,
+                }}
+                loadingProps={{
+                  size: "small",
+                  color: secondaryTextColor(theme),
+                }}
+                titleStyle={{
+                  fontWeight: "bold",
+                  color: secondaryTextColor(theme),
+                }}
+                onPress={handleLogin}
+              />
+            </View>
+          </KeyboardAvoidingView>
+        </Pressable>
+        <Toast />
+      </SafeAreaView>
+    );
+  };
+
+  return (
+    <>
+      {screen === "SignIn" && <SignInPage />}
+      {screen === "SignInWithEmail" && <SignInWithEmail />}
+    </>
   );
 };
 

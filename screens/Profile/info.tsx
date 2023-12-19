@@ -110,7 +110,7 @@ const InfoScreen = () => {
             />
             <Avatar size={100} rounded>
               <Image
-                source={{ uri: user?.photoURL }}
+                source={{ uri: user?.picture }}
                 onLoadStart={() => setImageLoading(true)}
                 onLoad={() => setImageLoading(false)}
                 style={{ width: "100%", height: "100%", borderRadius: 50 }}
@@ -168,7 +168,7 @@ const InfoScreen = () => {
         <Text
           style={{
             color: primaryTextColor(theme),
-            marginTop: 10,
+            marginTop: 20,
             fontSize: 20,
             fontWeight: "bold",
             marginLeft: 20,
@@ -178,7 +178,7 @@ const InfoScreen = () => {
         </Text>
         <Input
           autoCapitalize="words"
-          placeholder={user?.displayName}
+          placeholder={user?.name}
           style={{
             paddingLeft: 0,
             color: primaryTextColor(theme),

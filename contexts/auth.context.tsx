@@ -17,13 +17,23 @@ import {
   updateEmail,
   updatePassword,
   onAuthStateChanged,
+  signInWithCustomToken,
 } from "firebase/auth";
-import { app } from "../utils/firebaseConfig";
+import { app, db } from "../utils/firebaseConfig";
 import Toast from "react-native-toast-message";
-import { getUserChaptersProgress } from "../firestore/services/Progress";
-import { fetchFirestore } from "../firestore";
+
 import { ProgressChapter } from "../firestore/models/Progress";
-import { DocumentData } from "firebase/firestore";
+import {
+  DocumentData,
+  collection,
+  doc,
+  getDocs,
+  query,
+  setDoc,
+  updateDoc,
+  where,
+} from "firebase/firestore";
+import { IOS_CLIENT_ID, WEB_CLIENT_ID } from "@env";
 
 type User = {
   uid?: string;
@@ -70,9 +80,10 @@ type SignUpCredentials = {
 };
 
 type AuthContextData = {
-  user: User | undefined | null;
+  user: UserData | undefined | null;
   error: Error | undefined | null;
   signIn: (credentials: SignInCredentials) => Promise<any>;
+  signInGoogle: () => Promise<void>;
   signUp: (credentials: SignUpCredentials) => Promise<any>;
   signOut: () => Promise<void>;
   changeProfileImage: (image: string) => Promise<void>;
@@ -94,6 +105,13 @@ type FirestoreProps = {
 export const USER = "@Auth:user";
 export const TOKEN = "@Auth:token";
 
+import * as AppleAuthentication from "expo-apple-authentication";
+import * as Google from "expo-auth-session/providers/google";
+import * as WebBrowser from "expo-web-browser";
+import { UserData, userDataSchema } from "../firestore/models/User";
+import { Alert } from "react-native";
+import { useService } from "./service.context";
+
 export const AuthContext = createContext({} as AuthContextData);
 
 async function signOut() {
@@ -101,36 +119,141 @@ async function signOut() {
   await AsyncStorage.removeItem(USER);
 }
 
+WebBrowser.maybeCompleteAuthSession();
+
 function AuthProvider({ children }: AuthProviderProps) {
   const auth = getAuth(app);
 
-  const [user, setUser] = useState<User | null>();
+  const [user, setUser] = useState<UserData | null>();
   const [token, setToken] = useState<string>("");
 
   const [error, setError] = useState<Error | null>(null);
 
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const auth = getAuth();
+  // useEffect(() => {
+  //   const auth = getAuth();
 
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        setUser({
-          uid: user.uid,
-          displayName: user.displayName || "",
-          email: user.email || "",
-          photoURL: user.photoURL || "",
-        });
+  //   const unsubscribe = onAuthStateChanged(auth, async (user) => {
+  //     if (user) {
+  //       setUser({
+  //         uid: user.uid,
+  //         displayName: user.displayName || "",
+  //         email: user.email || "",
+  //         photoURL: user.photoURL || "",
+  //       });
+  //     } else {
+  //       setUser(null);
+  //     }
+  //     setLoading(false);
+  //   });
 
+  //   return () => unsubscribe();
+  // }, []);
+
+  const [request, response, promptAsync] = Google.useAuthRequest({
+    webClientId: WEB_CLIENT_ID,
+    iosClientId: IOS_CLIENT_ID,
+  });
+
+  async function loadUser() {
+    setLoading(true);
+    const userAS = await AsyncStorage.getItem(USER);
+    const tokenAS = await AsyncStorage.getItem(TOKEN);
+
+    try {
+      if (userAS) {
+        const userJSON: UserData = JSON.parse(userAS);
+        const q = query(
+          collection(db, "Users"),
+          where("id", "==", userJSON.id)
+        );
+
+        const querySnapshot = await getDocs(q);
+        const user = querySnapshot.docs.map((doc) => doc.data())[0];
+        setUser(user as UserData);
+        setLoading(false);
       } else {
-        setUser(null);
+        setLoading(false);
       }
+    } catch (e) {
       setLoading(false);
-    });
+    }
 
-    return () => unsubscribe();
+    // if (user && token) {
+    //   setUser(JSON.parse(user));
+    //   setToken(token);
+
+    //   // await getUserChaptersProgress(JSON.parse(user).uid);
+    // }
+  }
+
+  useEffect(() => {
+    loadUser();
   }, []);
+
+  useEffect(() => {
+    handleSignInGoogle();
+  }, [response]);
+
+  async function handleSignInGoogle() {
+    setLoading(true);
+    if (response?.type === "success") {
+      const { authentication }: any = await response;
+
+      const userInfo = await axios.get(
+        "https://www.googleapis.com/userinfo/v2/me",
+        {
+          headers: {
+            Authorization: `Bearer ${authentication.accessToken}`,
+          },
+        }
+      );
+
+      AsyncStorage.setItem(TOKEN, authentication.accessToken);
+      AsyncStorage.setItem(USER, JSON.stringify(userInfo.data as UserData));
+      setToken(authentication.accessToken);
+      const q = query(
+        collection(db, "Users"),
+        where("id", "==", userInfo.data.id)
+      );
+
+      const querySnapshot = await getDocs(q);
+      const user = querySnapshot.docs.map((doc) => doc.data())[0];
+      setUser(user as UserData);
+
+      if (!user) {
+        await addUser(userInfo.data as UserData);
+      }
+
+      setLoading(false);
+    }
+  }
+
+  async function signInGoogle() {
+    await promptAsync({
+      showInRecents: true,
+    });
+  }
+
+  async function addUser(user: UserData) {
+    try {
+      await userDataSchema.validate(user, { abortEarly: false });
+
+      await setDoc(doc(db, "Users", user.id), user);
+    } catch (error: any) {
+      if (error.name === "ValidationError") {
+        const validationErrors = error.inner.reduce((errors: any, err: any) => {
+          errors[err.path] = err.message;
+          return errors;
+        }, {});
+
+        console.error("Erro de validação:", validationErrors);
+      } else {
+        console.error(`Erro ao registrar progresso: ${error}`);
+      }
+    }
+  }
 
   async function signIn({ email, password }: SignInCredentials) {
     try {
@@ -143,12 +266,12 @@ function AuthProvider({ children }: AuthProviderProps) {
           AsyncStorage.setItem(TOKEN, user.refreshToken);
           AsyncStorage.setItem(USER, JSON.stringify(user));
           setToken(user.refreshToken);
-          setUser({
-            uid: String(user.uid),
-            displayName: String(user.displayName),
-            email: String(user.email),
-            photoURL: String(user.photoURL),
-          });
+          // setUser({
+          //   uid: String(user.uid),
+          //   displayName: String(user.displayName),
+          //   email: String(user.email),
+          //   photoURL: String(user.photoURL),
+          // });
           setLoading(false);
           return user;
         })
@@ -182,7 +305,6 @@ function AuthProvider({ children }: AuthProviderProps) {
       const res = await createUserWithEmailAndPassword(auth, email, password)
         .then(async (userCredential) => {
           const user = userCredential.user;
-          console.log(JSON.stringify(user));
 
           await updateProfile(user, {
             displayName: name,
@@ -192,11 +314,11 @@ function AuthProvider({ children }: AuthProviderProps) {
           AsyncStorage.setItem(TOKEN, user.refreshToken);
           AsyncStorage.setItem(USER, JSON.stringify(user));
           setToken(user.refreshToken);
-          setUser({
-            uid: user.uid,
-            displayName: String(user.displayName),
-            email: String(user.email),
-          });
+          // setUser({
+          //   uid: user.uid,
+          //   displayName: String(user.displayName),
+          //   email: String(user.email),
+          // });
           setLoading(false);
           return user;
         })
@@ -238,7 +360,7 @@ function AuthProvider({ children }: AuthProviderProps) {
         updateEmail(user, email);
         updatePassword(user, senha);
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
     }
   }
@@ -264,35 +386,31 @@ function AuthProvider({ children }: AuthProviderProps) {
     }
   }
 
-  async function loadUser() {
-    const user = getAuth().currentUser;
+  // async function loadUser() {
+  //   const user = getAuth().currentUser;
 
-    if (user) {
-      setUser({
-        uid: user.uid,
-        displayName: String(user.displayName),
-        email: String(user.email),
-        photoURL: String(user.photoURL),
-      });
-    }
+  //   if (user) {
+  //     // setUser({
+  //     //   uid: user.uid,
+  //     //   displayName: String(user.displayName),
+  //     //   email: String(user.email),
+  //     //   photoURL: String(user.photoURL),
+  //     // });
+  //   }
 
-    return String(user?.uid);
-  }
+  //   return String(user?.uid);
+  // }
 
-  async function changeProfileImage(image: string) {
-    const user = getAuth().currentUser;
-
-    if (user) {
-      await updateProfile(user, {
-        photoURL: image,
-      });
-      setUser({
-        uid: user.uid,
-        displayName: String(user.displayName),
-        email: String(user.email),
-        photoURL: image,
-      });
-    }
+  async function changeProfileImage(photoURL: string) {
+    console.log(photoURL);
+    await updateDoc(doc(db, "Users", String(user?.id)), {
+      ...(user as UserData),
+      picture: photoURL,
+    });
+    setUser({
+      ...(user as UserData),
+      picture: photoURL,
+    });
   }
 
   return (
@@ -303,6 +421,7 @@ function AuthProvider({ children }: AuthProviderProps) {
         error,
         loading,
         signIn,
+        signInGoogle,
         signUp,
         signOut,
         changeProfileImage,

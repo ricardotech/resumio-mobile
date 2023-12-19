@@ -7,11 +7,9 @@ import {
   ScrollView,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import Books from "./components/Books";
 import { ContentLabel } from "../../components/ContentLabel";
 import { useAuth } from "../../contexts/auth.context";
 import { Ionicons } from "@expo/vector-icons";
-import Journeys from "./components/Journeys";
 import { useTheme } from "../../contexts/theme.context";
 import { Button } from "../../components/Button";
 import { Theme } from "../../utils/types";
@@ -189,61 +187,6 @@ export default function HomeScreen() {
     );
   };
 
-  const ScripturesResumes = () => {
-    return (
-      <View
-        style={{
-          marginTop: 25,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "flex-start",
-        }}
-      >
-        <ContentLabel theme={theme} title="O que diz as escrituras?" />
-
-        <View
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-          }}
-        >
-          <Books />
-        </View>
-      </View>
-    );
-  };
-
-  const MyJourneys = () => {
-    return (
-      <View
-        style={{
-          marginTop: 40,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "flex-start",
-        }}
-      >
-        <ContentLabel
-          theme={theme}
-          size="sm"
-          title="Suas jornadas"
-          description="Continue de onde parou"
-        />
-
-        <View
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-          }}
-        >
-          <Journeys />
-        </View>
-      </View>
-    );
-  };
-
   return (
     <View
       style={{
@@ -259,6 +202,13 @@ export default function HomeScreen() {
         <Header />
         <ScrollView>
           {/* <DailyPray /> */}
+          <Text
+            style={{
+              color: "#333",
+            }}
+          >
+            {JSON.stringify(user)}
+          </Text>
           <View
             style={{
               height: 70,

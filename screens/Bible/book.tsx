@@ -76,7 +76,8 @@ export default function BookScreen({ route }: { route: any }) {
           alignItems: "center",
           justifyContent: "space-between",
           backgroundColor: tertiaryBackgroundColor(theme),
-          padding: 20,
+          paddingHorizontal: 20,
+          height: 60,
           borderRadius: 12,
           marginBottom: 10,
         }}
@@ -145,11 +146,11 @@ export default function BookScreen({ route }: { route: any }) {
         >
           <ContentLabel
             title={book}
-            description={`${
-              Number(((userBookChaptersProgress?.length || 0) /
-              (data?.chapternumber || 1)) *
-            100).toFixed(0)
-            }% Concluído`}
+            description={`${Number(
+              ((userBookChaptersProgress?.length || 0) /
+                (data?.chapternumber || 1)) *
+                100
+            ).toFixed(0)}% Concluído`}
             theme={theme}
           />
           <TouchableOpacity

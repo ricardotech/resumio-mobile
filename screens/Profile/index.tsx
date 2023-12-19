@@ -19,15 +19,11 @@ import { useEffect } from "react";
 import { authScreenProp } from "../../routes/user.routes";
 import { Statistic } from "../../utils/types";
 
-
 export default function HomeScreen() {
-
   const navigation = useNavigation<authScreenProp>();
 
-  const { user, loadUser } = useAuth();
+  const { user } = useAuth();
   const { theme, changeTheme } = useTheme();
-
-
 
   const statistics: Statistic[] = [
     {
@@ -228,7 +224,7 @@ export default function HomeScreen() {
               cachePolicy="memory-disk"
               contentFit="cover"
               transition={1000}
-              source={user?.photoURL || require("../../assets/default.jpg")}
+              source={user?.picture || require("../../assets/default.jpg")}
               style={{ width: 60, height: 60, borderRadius: 50 }}
             />
           </View>
@@ -350,8 +346,8 @@ export default function HomeScreen() {
     return (
       <View style={{ alignItems: "center" }}>
         <Image
-              source={user?.photoURL || require("../../assets/default.jpg")}
-              style={{ width: 100, height: 100, borderRadius: 50 }}
+          source={user?.picture || require("../../assets/default.jpg")}
+          style={{ width: 100, height: 100, borderRadius: 50 }}
         />
         <Text
           style={{
@@ -361,7 +357,7 @@ export default function HomeScreen() {
             marginTop: 10,
           }}
         >
-          {user?.displayName}
+          {user?.name}
         </Text>
         <Text
           style={{
@@ -375,10 +371,6 @@ export default function HomeScreen() {
       </View>
     );
   };
-
-  useEffect(() => {
-    loadUser();
-  }, []);
 
   return (
     <View

@@ -73,7 +73,12 @@ import { app, storage } from "./firebaseConfig";
 //   );
 // }
 
-export const changeProfileImageFunc = async (usuario: any, setUploadProgress: any, loadUser: any, changeProfileImage: any) => {
+export const changeProfileImageFunc = async (
+  usuario: any,
+  setUploadProgress: any,
+  loadUser: any,
+  changeProfileImage: any
+) => {
   let res = await ImagePicker.launchImageLibraryAsync({
     mediaTypes: ImagePicker.MediaTypeOptions.Images,
     allowsEditing: true,
@@ -107,23 +112,19 @@ export const changeProfileImageFunc = async (usuario: any, setUploadProgress: an
         }
       },
       (error) => {
-        console.log(error)
+        console.log(error);
       },
       () => {
         // Handle successful uploads on complete
         // For instance, get the download URL: https://firebasestorage.googleapis.com/...
-        getDownloadURL(uploadTask.snapshot.ref).then(
-          (downloadURL) => {
-            console.log("File available at", downloadURL);
-            changeProfileImage(downloadURL);
-            loadUser()
-            setUploadProgress(0); 
-          }
-        );
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          changeProfileImage(downloadURL);
+          setUploadProgress(0);
+        });
       }
     );
   }
-}
+};
 
 // Pegar os dados do JSON da biblia
 const books: string[] = [
@@ -207,13 +208,10 @@ export const fetchData = (
   return new Promise((resolve, reject) => {
     const number = bookToNumber(book.toLowerCase());
     if (verse === undefined) {
-      return (
-        resolve({
-          chapter: data[number - 1].chapters[chapter - 1],
-          chapternumber: data[number -1].chapters.length
-        })
-      )
-
+      return resolve({
+        chapter: data[number - 1].chapters[chapter - 1],
+        chapternumber: data[number - 1].chapters.length,
+      });
     }
     if (number === -1) {
       reject("Livro não encontrado");
@@ -223,9 +221,7 @@ export const fetchData = (
       reject("Versículo não encontrado");
     }
     return resolve({
-      data: data[number - 1].chapters[chapter - 1][verse - 1]
+      data: data[number - 1].chapters[chapter - 1][verse - 1],
     });
-
-  })
-    
+  });
 };

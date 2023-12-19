@@ -5,7 +5,7 @@ import { Ionicons } from "@expo/vector-icons";
 // Importe suas telas aqui
 import HomeScreen from "../screens/Home";
 import ProfileScreen from "../screens/Profile";
-import BookScreen from "../screens/Book";
+import BookScreen from "../screens/Bible/book";
 import {
   StackNavigationProp,
   createStackNavigator,
@@ -17,8 +17,8 @@ import SettingsScreen from "../screens/Profile/settings";
 import { Journey } from "../utils/types";
 import JourneyCollectionScreen from "../screens/Journeys/collection";
 import InfoScreen from "../screens/Profile/info";
-import JourneyContentScreen from "../screens/Journeys/components/JourneyContent";
-import ChapterScreen from "../screens/Journeys/components/ChapterScreen";
+import ChapterScreen from "../screens/Bible/chapter";
+import Bible from "../screens/Bible";
 
 const Tab = createBottomTabNavigator();
 
@@ -103,7 +103,7 @@ const TabNavigator = () => {
           headerShown: false,
         }}
         name="Biblia"
-        component={JourneyContentScreen}
+        component={Bible}
       />
       <Tab.Screen
         options={{
@@ -168,13 +168,6 @@ export function UserRoutes() {
           }}
           name="Info"
           component={InfoScreen}
-        />
-        <Stack.Screen
-          options={{
-            headerShown: false,
-          }}
-          name="JourneyContentScreen"
-          component={JourneyContentScreen}
         />
         <Stack.Screen
           options={{

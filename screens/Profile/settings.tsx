@@ -3,10 +3,10 @@ import { View, Text, ScrollView, TouchableOpacity, Switch } from "react-native";
 import { Ionicons, MaterialIcons, FontAwesome5 } from "@expo/vector-icons";
 import { useTheme } from "../../contexts/theme.context";
 import { primaryTextColor } from "../../utils/style";
-import { authScreenProp } from "../../App";
 import { useNavigation } from "@react-navigation/native";
 import { ContentLabel } from "../../components/ContentLabel";
 import { useAuth } from "../../contexts/auth.context";
+import { authScreenProp } from "../../routes/user.routes";
 
 const SettingsScreen = () => {
   const { signOut } = useAuth();

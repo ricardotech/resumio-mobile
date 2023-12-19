@@ -21,6 +21,7 @@ import {
   ProgressChapter,
   progressChapterSchema,
 } from "../firestore/models/Progress";
+import { useAuth } from "./auth.context";
 
 type ServiceContextData = {
   userChaptersProgress: ProgressChapter[] | undefined;
@@ -38,18 +39,16 @@ function ServicesProvider({ children }: ServiceProviderProps) {
   const [userChaptersProgress, setUserChaptersProgress] =
     useState<ProgressChapter[]>();
 
+  const { user } = useAuth();
+
   useEffect(() => {
-    const auth = getAuth();
-
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+    async function loadServices() {
       if (user) {
-        const userChaptersProgress = await getUserChaptersProgress(user.uid);
-        setUserChaptersProgress(userChaptersProgress as ProgressChapter[]);
+        await getUserChaptersProgress(user.id);
       }
-    });
-
-    return () => unsubscribe();
-  }, []);
+    }
+    loadServices();
+  }, [user]);
 
   async function addProgress(progress: ProgressChapter) {
     try {
@@ -100,6 +99,7 @@ function ServicesProvider({ children }: ServiceProviderProps) {
     const querySnapshot = await getDocs(q);
     const chaptersProgressData = querySnapshot.docs.map((doc) => doc.data());
 
+    setUserChaptersProgress(chaptersProgressData as ProgressChapter[]);
     return chaptersProgressData;
   }
 

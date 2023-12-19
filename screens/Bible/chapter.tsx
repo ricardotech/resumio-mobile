@@ -1,6 +1,6 @@
 import { View, Text, TouchableOpacity } from "react-native";
-import { ContentLabel } from "../../../components/ContentLabel";
-import { authScreenProp } from "../../../routes/user.routes";
+import { ContentLabel } from "../../components/ContentLabel";
+import { authScreenProp } from "../../routes/user.routes";
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import {
@@ -8,17 +8,17 @@ import {
   primaryTextColor,
   secondaryBackgroundColor,
   secondaryTextColor,
-} from "../../../utils/style";
-import { useTheme } from "../../../contexts/theme.context";
+} from "../../utils/style";
+import { useTheme } from "../../contexts/theme.context";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { fetchData } from "../../../utils/services";
+import { fetchData } from "../../utils/services";
 import React, { useEffect, useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
-import { useAuth } from "../../../contexts/auth.context";
-import { useService } from "../../../contexts/service.context";
-import { books } from "../../../db";
+import { useAuth } from "../../contexts/auth.context";
+import { useService } from "../../contexts/service.context";
+import { books } from "../../db";
 
-const ChapterScreen = ({ route }: { route: any }) => {
+export default function ChapterScreen({ route }: { route: any }) {
   const { theme, changeTheme } = useTheme();
   const { user } = useAuth();
   const { addProgress } = useService();
@@ -248,7 +248,7 @@ const ChapterScreen = ({ route }: { route: any }) => {
                   book: book,
                   chapter: id,
                   timestamp: new Date(),
-                  userId: String(user?.uid),
+                  userId: String(user?.id),
                 });
 
                 navigation.navigate("ChapterPage", {
@@ -300,7 +300,7 @@ const ChapterScreen = ({ route }: { route: any }) => {
                   book: book,
                   chapter: id,
                   timestamp: new Date(),
-                  userId: String(user?.uid),
+                  userId: String(user?.id),
                 });
 
                 // If the book is the last of the books array alert You Finished
@@ -408,7 +408,7 @@ const ChapterScreen = ({ route }: { route: any }) => {
         </Text>
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate("Tab")
+            navigation.navigate("Tab");
           }}
           style={{
             height: 40,
@@ -429,7 +429,7 @@ const ChapterScreen = ({ route }: { route: any }) => {
               textAlign: "center",
             }}
           >
-            Concluir jornada 
+            Concluir jornada
           </Text>
         </TouchableOpacity>
       </View>
@@ -445,6 +445,4 @@ const ChapterScreen = ({ route }: { route: any }) => {
       {showCongrats && <CongratsOverlay />}
     </SafeAreaView>
   );
-};
-
-export default ChapterScreen;
+}
