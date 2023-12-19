@@ -8,6 +8,16 @@ node_modules/
 dist/
 web-build/
 
+# VSCode
+.vscode/
+
+# Prebuild
+ios/
+android
+
+# Yarn
+yarn.lock
+
 # Native
 *.orig.*
 *.jks
