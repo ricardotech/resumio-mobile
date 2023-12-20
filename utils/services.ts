@@ -203,7 +203,7 @@ const bookToNumber = (book: string): number => {
 export const fetchData = (
   book: string,
   chapter: number,
-  verse?: number
+  verse?: number | number[]
 ): any => {
   return new Promise((resolve, reject) => {
     const number = bookToNumber(book.toLowerCase());
@@ -217,11 +217,26 @@ export const fetchData = (
       reject("Livro não encontrado");
     } else if (chapter > data[number - 1].chapters.length) {
       reject("Capítulo não encontrado");
-    } else if (verse > data[number - 1].chapters[chapter - 1].length) {
+    } else if (Array.isArray(verse)) {
+      const versesData = verse.map(v => {
+        if (v > data[number - 1].chapters[chapter - 1].length) {
+          reject("Versículo não encontrado");
+        }
+        return data[number - 1].chapters[chapter - 1][v - 1];
+      });
+      return resolve({ data: versesData });
+    } else if (typeof verse === 'number' && verse > data[number - 1].chapters[chapter - 1].length) {
       reject("Versículo não encontrado");
     }
-    return resolve({
-      data: data[number - 1].chapters[chapter - 1][verse - 1],
-    });
+    if (typeof verse === 'number') {
+      return resolve({
+        data: data[number - 1].chapters[chapter - 1][verse - 1],
+      });
+    } else {
+      reject("Verse is not a number");
+    }
   });
 };
+
+//Examplo de uso da função com um ou mais versículos
+//  fetchData("Gênesis", 1, [1, 2, 4])
