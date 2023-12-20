@@ -19,6 +19,7 @@ import JourneyCollectionScreen from "../screens/Journeys/collection";
 import InfoScreen from "../screens/Profile/info";
 import ChapterScreen from "../screens/Bible/chapter";
 import Bible from "../screens/Bible";
+import DevotionalScreen from "../screens/Devotional";
 
 const Tab = createBottomTabNavigator();
 
@@ -45,12 +46,17 @@ export type StackNavigatorParams = {
     resume?: string;
     book: string;
   };
-  ChapterPage: {
+  ChapterScreen: {
     id: number;
     name: string;
     title?: string;
     resume?: string;
     book: string;
+  };
+  DevotionalScreen: {
+    id: string;
+    title?: string;
+    metadata?: object;
   };
 };
 
@@ -173,8 +179,15 @@ export function UserRoutes() {
           options={{
             headerShown: false,
           }}
-          name="ChapterPage"
+          name="ChapterScreen"
           component={ChapterScreen}
+        />
+        <Stack.Screen
+          options={{
+            headerShown: false,
+          }}
+          name="DevotionalScreen"
+          component={DevotionalScreen}
         />
       </Stack.Group>
       <Stack.Screen

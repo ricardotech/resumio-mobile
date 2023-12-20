@@ -10,6 +10,7 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { app, db } from "../utils/firebaseConfig";
 import {
   DocumentData,
+  Timestamp,
   collection,
   doc,
   getDocs,
@@ -22,8 +23,11 @@ import {
   progressChapterSchema,
 } from "../firestore/models/Progress";
 import { useAuth } from "./auth.context";
+import { Devotional } from "../firestore/models/Devotional";
 
 type ServiceContextData = {
+  devotionals: Devotional[] | undefined;
+  getDevotionals: () => Promise<DocumentData[] | undefined>;
   userChaptersProgress: ProgressChapter[] | undefined;
   getUserChaptersProgress: (uid: string) => Promise<DocumentData[] | undefined>;
   addProgress: (progress: ProgressChapter) => Promise<void>;
@@ -39,12 +43,15 @@ function ServicesProvider({ children }: ServiceProviderProps) {
   const [userChaptersProgress, setUserChaptersProgress] =
     useState<ProgressChapter[]>();
 
+  const [devotionals, setDevotionals] = useState<Devotional[]>();
+
   const { user } = useAuth();
 
   useEffect(() => {
     async function loadServices() {
       if (user) {
         await getUserChaptersProgress(user.id);
+        await getDevotionals();
       }
     }
     loadServices();
@@ -103,9 +110,21 @@ function ServicesProvider({ children }: ServiceProviderProps) {
     return chaptersProgressData;
   }
 
+  async function getDevotionals() {
+    let q = query(collection(db, "Devotionals"));
+
+    const querySnapshot = await getDocs(q);
+    const devotionalsData = querySnapshot.docs.map((doc) => doc.data());
+
+    setDevotionals(devotionalsData as Devotional[]);
+    return devotionalsData;
+  }
+
   return (
     <ServiceContext.Provider
       value={{
+        devotionals,
+        getDevotionals,
         userChaptersProgress,
         getUserChaptersProgress,
         addProgress,

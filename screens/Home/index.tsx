@@ -160,6 +160,11 @@ export default function HomeScreen() {
             tudo que somos.
           </Text>
           <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("DevotionalScreen", {
+                id: "0",
+              });
+            }}
             style={{
               height: 45,
               width: "100%",
@@ -201,14 +206,8 @@ export default function HomeScreen() {
       <SafeAreaView>
         <Header />
         <ScrollView>
-          {/* <DailyPray /> */}
-          <Text
-            style={{
-              color: "#333",
-            }}
-          >
-            {JSON.stringify(user)}
-          </Text>
+          <DailyPray />
+
           <View
             style={{
               height: 70,

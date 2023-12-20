@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Image } from "expo-image";
 import {
   View,
@@ -18,61 +18,21 @@ import { useNavigation } from "@react-navigation/native";
 import { useEffect } from "react";
 import { authScreenProp } from "../../routes/user.routes";
 import { Statistic } from "../../utils/types";
+import { useService } from "../../contexts/service.context";
 
 export default function HomeScreen() {
   const navigation = useNavigation<authScreenProp>();
 
   const { user } = useAuth();
+  const { userChaptersProgress } = useService();
   const { theme, changeTheme } = useTheme();
 
   const statistics: Statistic[] = [
     {
-      key: "challenges",
-      value: 127,
-      label: "Challenges",
+      key: "Quantidade de capítulos lidos",
+      value: userChaptersProgress?.length || 0,
+      label: "Capítulos",
       emoji: "🏆",
-    },
-    {
-      key: "lessons",
-      value: 458,
-      label: "Lessons",
-      emoji: "📚",
-    },
-    {
-      key: "xp",
-      value: 1234,
-      label: "XP",
-      emoji: "🎉",
-    },
-    {
-      key: "streak",
-      value: 3,
-      label: "Streak",
-      emoji: "🔥",
-    },
-    {
-      key: "rank",
-      value: 1,
-      label: "Rank",
-      emoji: "🥇",
-    },
-    {
-      key: "journeys",
-      value: 3,
-      label: "Journeys",
-      emoji: "🌎",
-    },
-    {
-      key: "prayers",
-      value: 3,
-      label: "Prayers",
-      emoji: "🙏",
-    },
-    {
-      key: "groups",
-      value: 3,
-      label: "Groups",
-      emoji: "👥",
     },
   ];
 
@@ -104,7 +64,7 @@ export default function HomeScreen() {
           marginBottom: 10,
           marginLeft: 10,
           width: Dimensions.get("window").width / 2 - 20,
-          alignItems: "flex-start",
+          alignItems: "center",
         }}
       >
         <Text
@@ -117,7 +77,7 @@ export default function HomeScreen() {
         </Text>
         <View
           style={{
-            marginLeft: 20,
+            marginLeft: 10,
           }}
         >
           <Text
@@ -397,9 +357,11 @@ export default function HomeScreen() {
             <>
               <Profile />
 
-              <Statistics />
-
-              <Experience />
+              <View
+                style={{
+                  paddingTop: 20,
+                }}
+              />
             </>
           }
           data={statistics}
