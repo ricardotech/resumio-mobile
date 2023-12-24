@@ -165,6 +165,7 @@ const LoginPage = () => {
                 flex: 1,
                 justifyContent: "flex-end",
                 alignItems: "center",
+                paddingBottom: 20
               }}
             >
               <Button

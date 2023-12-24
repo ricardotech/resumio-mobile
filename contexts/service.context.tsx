@@ -10,12 +10,15 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { app, db } from "../utils/firebaseConfig";
 import {
   DocumentData,
+  FieldValue,
   Timestamp,
+  arrayUnion,
   collection,
   doc,
   getDocs,
   query,
   setDoc,
+  updateDoc,
   where,
 } from "firebase/firestore";
 import {
@@ -31,6 +34,7 @@ type ServiceContextData = {
   userChaptersProgress: ProgressChapter[] | undefined;
   getUserChaptersProgress: (uid: string) => Promise<DocumentData[] | undefined>;
   addProgress: (progress: ProgressChapter) => Promise<void>;
+  addDevotionalTaskDone: (task: DevotionalTaskDone) => Promise<void>;
 };
 
 type ServiceProviderProps = {
@@ -38,6 +42,12 @@ type ServiceProviderProps = {
 };
 
 export const ServiceContext = createContext({} as ServiceContextData);
+
+type DevotionalTaskDone = {
+  userId: string;
+  devotionalId: string;
+  task: "oracao" | "explicacao" | "aplicacao" | "texto" | "exemplos";
+};
 
 function ServicesProvider({ children }: ServiceProviderProps) {
   const [userChaptersProgress, setUserChaptersProgress] =
@@ -97,6 +107,41 @@ function ServicesProvider({ children }: ServiceProviderProps) {
     }
   }
 
+  async function addDevotionalTaskDone(task: DevotionalTaskDone) {
+    try {
+      // Reference to the 'ProgressDevotional' collection
+      const progressDevotionalColRef = collection(db, "ProgressDevotional");
+
+      // Create a query to find the document based on userId and devotionalId
+      const q = query(
+        progressDevotionalColRef,
+        where("userId", "==", task.userId),
+        where("devotionalId", "==", task.devotionalId)
+      );
+
+      console.log("query", q);
+
+      // Execute the query
+      const querySnapshot = await getDocs(q);
+
+      if (!querySnapshot.empty) {
+        // Assuming there's only one document that matches
+        const documentRef = querySnapshot.docs[0].ref;
+
+        // Update the document
+        await updateDoc(documentRef, {
+          // Assuming tasksDone is an array and coinsEarned is a number
+          // Adjust based on your actual document structure
+          tasksDone: arrayUnion(task.task),
+          coinsEarned: 20,
+        });
+      } else {
+        console.log("No matching document found");
+      }
+    } catch (error) {
+      console.error(`Erro ao registrar devocional: ${error}`);
+    }
+  }
   async function getUserChaptersProgress(uid: string) {
     const q = query(
       collection(db, "ProgressChapter"),
@@ -128,6 +173,7 @@ function ServicesProvider({ children }: ServiceProviderProps) {
         userChaptersProgress,
         getUserChaptersProgress,
         addProgress,
+        addDevotionalTaskDone,
       }}
     >
       {children}

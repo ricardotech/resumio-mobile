@@ -29,6 +29,8 @@ export default function DevotionalScreen({ route }: { route: any }) {
   const { user } = useAuth();
   const { devotionals } = useService();
 
+  const { addDevotionalTaskDone } = useService();
+
   const navigation = useNavigation<authScreenProp>();
 
   const { id, name, title, resume, book } = route.params;
@@ -227,7 +229,7 @@ export default function DevotionalScreen({ route }: { route: any }) {
                 {content}
               </Text>
               <TouchableOpacity
-                onPress={() => {}}
+                onPress={onPress}
                 style={{
                   height: 45,
                   width: "100%",
@@ -279,7 +281,14 @@ export default function DevotionalScreen({ route }: { route: any }) {
           isOpen
           time={1}
           value="aplicacao"
-          onPress={() => {}}
+          onPress={async () => {
+            const res = addDevotionalTaskDone({
+              devotionalId: id,
+              task: "aplicacao",
+              userId: String(user?.id),
+            });
+            console.log(JSON.stringify(res));
+          }}
           icon={<Ionicons size={20} name="today-outline" color="#FFF" />}
           content={actualDevotional?.aplicacao || ""}
           title="Onde se aplica?"
