@@ -32,6 +32,7 @@ import { authScreenProp } from "../../routes/auth.routes";
 
 import Toast from "react-native-toast-message";
 import { StatusBar } from "expo-status-bar";
+import DevotionalScreen from "../Devotional";
 
 const LoginPage = () => {
   const navigation = useNavigation<authScreenProp>();
@@ -201,7 +202,7 @@ const LoginPage = () => {
                 }}
                 onPress={signInGoogle}
               />
-              {/* <Button
+              <Button
                 loading={loading}
                 title="Entrar com email"
                 icon={
@@ -254,7 +255,7 @@ const LoginPage = () => {
                 onPress={() => {
                   navigation.navigate("SignUp");
                 }}
-              /> */}
+              />
             </View>
           </KeyboardAvoidingView>
         </Pressable>

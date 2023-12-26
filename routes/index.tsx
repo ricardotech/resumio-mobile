@@ -19,7 +19,9 @@ export default function Routes() {
 
   if (loading || loadingServices) return <Loading />;
 
-  if (user) {
-    return <UserRoutes />;
-  } else return <AuthRoutes />;
+  // if (user) {
+  //   return <UserRoutes />;
+  // } else return <AuthRoutes />;
+  
+  return user ? <UserRoutes /> : <AuthRoutes />;
 }

@@ -20,6 +20,7 @@ import InfoScreen from "../screens/Profile/info";
 import ChapterScreen from "../screens/Bible/chapter";
 import Bible from "../screens/Bible";
 import DevotionalScreen from "../screens/Devotional";
+import { PlayDevotionalScreen } from "../screens/PlayDevotional";
 
 const Tab = createBottomTabNavigator();
 
@@ -33,6 +34,7 @@ export type StackNavigatorParams = {
   Settings: undefined;
   Info: undefined;
   JourneyContentScreen: undefined;
+  PlayDevotionalScreen: undefined
   JourneyCollection: {
     journeys: Journey[];
     description: string;
@@ -58,6 +60,7 @@ export type StackNavigatorParams = {
     title?: string;
     metadata?: object;
   };
+  
 };
 
 const Stack = createStackNavigator<StackNavigatorParams>(); // Use the defined type
@@ -188,6 +191,13 @@ export function UserRoutes() {
           }}
           name="DevotionalScreen"
           component={DevotionalScreen}
+        />
+        <Stack.Screen
+          options={{
+            headerShown: false,
+          }}
+          name="PlayDevotionalScreen"
+          component={PlayDevotionalScreen}
         />
       </Stack.Group>
       <Stack.Screen

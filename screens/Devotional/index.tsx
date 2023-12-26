@@ -317,6 +317,106 @@ export default function DevotionalScreen({ route }: { route: any }) {
           content={actualDevotional?.reflexao || ""}
           title="Explicação"
         />
+        <TouchableOpacity
+          style={{
+            marginTop: 20,
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            paddingHorizontal: 20,
+          }}
+          onPress={() => {
+            navigation.navigate("PlayDevotionalScreen")
+        }}
+        >
+          <View
+            style={{
+              width: "100%",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "flex-start",
+              backgroundColor: "#009cb8",
+              borderRadius: 10,
+              padding: 20,
+            }}
+          >
+            <View
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+                width: "100%",
+              }}
+            >
+              <View
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                <Ionicons size={20} name="ios-play" color="#FFF" />
+
+                <Text
+                  style={{
+                    marginLeft: 5,
+                    fontSize: 20,
+                    fontWeight: "bold",
+                    color: "#FFF",
+                  }}
+                >
+                  Ouvir
+                </Text>
+              </View>
+              <View
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                <View
+                  style={{
+                    borderRadius: 10,
+                    backgroundColor: "#FFF",
+                    display: "flex",
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    padding: 5,
+                    paddingHorizontal: 7,
+                    marginLeft: 5,
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      color: "#009cb8",
+                    }}
+                  >
+                    5 min
+                  </Text>
+                </View>
+              </View>
+            </View>
+            <View
+              style={{
+                width: "100%",
+              }}
+            >
+              <Text
+                style={{
+                  marginTop: 10,
+                  fontSize: 14,
+                  color: "#FFF",
+                }}
+              >
+                Ouça o devocional de hoje.
+              </Text>
+            </View>
+          </View>
+        </TouchableOpacity>
         <View
           style={{
             height: 40,
