@@ -42,10 +42,12 @@ const Filters = ({
   searchTerm: string;
   setSearchTerm: any;
   setFilteredBooks: any;
-  activeFilter: "old" | "new" | undefined;
+  activeFilter: "search" | "old" | "new" | undefined;
   setActiveFilter: any;
 }) => {
   const { theme } = useTheme();
+
+  const searchTextInputRef = useRef<TextInput>(null);
 
   const horizontalScrollViewRef = useRef<ScrollView>(null);
   const filterPositions = useRef<{ [key: string]: number }>({}).current;
@@ -89,15 +91,13 @@ const Filters = ({
           backgroundColor:
             filterValue === activeFilter
               ? "tomato"
-              : theme === "dark"
-              ? "#222"
-              : "#EEE",
+              : tertiaryBackgroundColor(theme),
           borderRadius: 10,
         }}
       >
         <Text
           style={{
-            color: "#FFF",
+            color: primaryTextColor(theme),
           }}
         >
           {title}
@@ -154,42 +154,90 @@ const Filters = ({
           paddingLeft: 20,
         }}
       >
-        <View
-          style={{
-            backgroundColor: theme === "dark" ? "#222" : "#EEE",
-            borderRadius: 10,
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-between",
-            width: 130,
-            height: 35,
-            paddingHorizontal: 10,
-            marginRight: 10,
-          }}
-        >
-          <TextInput
+        {activeFilter === "search" ? (
+          <View
             style={{
-              width: "85%",
-              color: "#FFF",
+              backgroundColor: tertiaryBackgroundColor(theme),
+              borderRadius: 10,
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+              width: 130,
+              height: 35,
+              paddingHorizontal: 10,
+              marginRight: 10,
             }}
-            onChangeText={(e) => {
-              setSearchTerm(e);
-            }}
-            value={searchTerm}
-          />
-          {searchTerm.length > 0 ? (
+          >
+            <TextInput
+              ref={searchTextInputRef}
+              style={{
+                width: "85%",
+                color: primaryTextColor(theme),
+              }}
+              onChangeText={(e) => {
+                setSearchTerm(e);
+              }}
+              value={searchTerm}
+            />
             <Pressable
               onPress={() => {
                 setSearchTerm("");
+                setActiveFilter(undefined);
               }}
             >
-              <Ionicons style={{}} name="close" size={16} color="#999" />
+              <Ionicons
+                style={{}}
+                name="close"
+                size={16}
+                color={primaryTextColor(theme)}
+              />
             </Pressable>
-          ) : (
-            <Ionicons style={{}} name="search" color="#999" />
-          )}
-        </View>
+          </View>
+        ) : (
+          <Pressable
+            onPress={() => {
+              setActiveFilter("search");
+              setSearchTerm("");
+
+              searchTextInputRef.current?.focus();
+            }}
+            style={{
+              backgroundColor: tertiaryBackgroundColor(theme),
+              borderRadius: 10,
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+              width: 35,
+              height: 35,
+              paddingHorizontal: 10,
+              marginRight: 10,
+            }}
+          >
+            {searchTerm.length > 0 ? (
+              <Pressable
+                onPress={() => {
+                  setSearchTerm("");
+                  setActiveFilter(undefined);
+                }}
+              >
+                <Ionicons
+                  style={{}}
+                  name="close"
+                  size={16}
+                  color={primaryTextColor(theme)}
+                />
+              </Pressable>
+            ) : (
+              <Ionicons
+                style={{}}
+                name="search"
+                color={primaryTextColor(theme)}
+              />
+            )}
+          </Pressable>
+        )}
         <Filter
           filterValue="old"
           title="Antigo Testamento"
@@ -222,7 +270,9 @@ export default function BibleScreen() {
 
   const [filteredBooks, setFilteredBooks] = useState<string[]>([]);
 
-  const [activeFilter, setActiveFilter] = useState<"old" | "new" | undefined>();
+  const [activeFilter, setActiveFilter] = useState<
+    "search" | "old" | "new" | undefined
+  >();
 
   useEffect(() => {
     if (searchTerm) {

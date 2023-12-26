@@ -118,13 +118,13 @@ const TabNavigator = () => {
         name="Jornadas"
         component={JourneysScreen}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         options={{
           headerShown: false,
         }}
         name="Deafios"
         component={ChallengesScreen}
-      />
+      /> */}
       {/* <Tab.Screen
         options={{
           headerShown: false,
