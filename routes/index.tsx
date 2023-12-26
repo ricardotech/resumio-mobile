@@ -9,13 +9,15 @@ import Loading from "../screens/Loading";
 
 import { useNavigation } from "@react-navigation/native";
 import { AuthRoutes } from "./auth.routes";
+import { useService } from "../contexts/service.context";
 
 export default function Routes() {
   const navigation = useNavigation();
 
   const { user, loading } = useContext(AuthContext);
+  const { loadingServices } = useService();
 
-  if (loading) return <Loading />;
+  if (loading || loadingServices) return <Loading />;
 
   if (user) {
     return <UserRoutes />;

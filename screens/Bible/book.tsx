@@ -62,7 +62,7 @@ export default function BookScreen({ route }: { route: any }) {
       <TouchableOpacity
         key={i}
         onPress={() => {
-          navigation.navigate("ChapterPage", {
+          navigation.navigate("ChapterScreen", {
             id: i,
             name: `Capítulo ${i}`,
             title: `Capítulo ${i}`,

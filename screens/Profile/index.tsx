@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Image } from "expo-image";
 import {
   View,
@@ -7,6 +7,8 @@ import {
   Dimensions,
   FlatList,
   Platform,
+  ScrollView,
+  RefreshControl,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ContentLabel } from "../../components/ContentLabel";
@@ -18,61 +20,22 @@ import { useNavigation } from "@react-navigation/native";
 import { useEffect } from "react";
 import { authScreenProp } from "../../routes/user.routes";
 import { Statistic } from "../../utils/types";
+import { useService } from "../../contexts/service.context";
+import { Divider } from "@rneui/base";
 
 export default function HomeScreen() {
   const navigation = useNavigation<authScreenProp>();
 
   const { user } = useAuth();
+  const { userChaptersProgress } = useService();
   const { theme, changeTheme } = useTheme();
 
   const statistics: Statistic[] = [
     {
-      key: "challenges",
-      value: 127,
-      label: "Challenges",
+      key: "Quantidade de capítulos lidos",
+      value: userChaptersProgress?.length || 0,
+      label: "Capítulos",
       emoji: "🏆",
-    },
-    {
-      key: "lessons",
-      value: 458,
-      label: "Lessons",
-      emoji: "📚",
-    },
-    {
-      key: "xp",
-      value: 1234,
-      label: "XP",
-      emoji: "🎉",
-    },
-    {
-      key: "streak",
-      value: 3,
-      label: "Streak",
-      emoji: "🔥",
-    },
-    {
-      key: "rank",
-      value: 1,
-      label: "Rank",
-      emoji: "🥇",
-    },
-    {
-      key: "journeys",
-      value: 3,
-      label: "Journeys",
-      emoji: "🌎",
-    },
-    {
-      key: "prayers",
-      value: 3,
-      label: "Prayers",
-      emoji: "🙏",
-    },
-    {
-      key: "groups",
-      value: 3,
-      label: "Groups",
-      emoji: "👥",
     },
   ];
 
@@ -104,7 +67,7 @@ export default function HomeScreen() {
           marginBottom: 10,
           marginLeft: 10,
           width: Dimensions.get("window").width / 2 - 20,
-          alignItems: "flex-start",
+          alignItems: "center",
         }}
       >
         <Text
@@ -117,7 +80,7 @@ export default function HomeScreen() {
         </Text>
         <View
           style={{
-            marginLeft: 20,
+            marginLeft: 10,
           }}
         >
           <Text
@@ -344,72 +307,237 @@ export default function HomeScreen() {
 
   const Profile = () => {
     return (
-      <View style={{ alignItems: "center" }}>
-        <Image
-          source={user?.picture || require("../../assets/default.jpg")}
-          style={{ width: 100, height: 100, borderRadius: 50 }}
-        />
+      <View
+        style={{
+          paddingHorizontal: 20,
+        }}
+      >
+        <View
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+            width: "100%",
+            marginTop: 10,
+          }}
+        >
+          <Image
+            source={user?.picture || require("../../assets/default.jpg")}
+            style={{ width: 100, height: 100, borderRadius: 50 }}
+          />
+        </View>
         <Text
           style={{
             color: primaryTextColor(theme),
             fontSize: 24,
-            fontWeight: "bold",
+            fontWeight: "500",
             marginTop: 10,
           }}
         >
-          {user?.name}
+          Ricardo Domene
         </Text>
         <Text
           style={{
             color: primaryTextColor(theme),
             fontSize: 16,
-            marginTop: 5,
+            marginTop: 10,
           }}
         >
-          Joined since 20 June 2020
+          Desde novembro de 2023
         </Text>
       </View>
     );
   };
 
+  const insignias = [
+    require("../../assets/insignias_0/alpha.png"),
+    require("../../assets/insignias_0/beta.png"),
+    require("../../assets/insignias_0/delta.png"),
+    require("../../assets/insignias_0/epsilon.png"),
+    require("../../assets/insignias_0/gamma.png"),
+    require("../../assets/insignias_0/zeta.png"),
+  ];
+
+  const InsigniasView = ({ columns = 4 }) => {
+    const windowWidth = Dimensions.get("window").width;
+    const imageSize = windowWidth / columns - 27.5;
+
+    // Function to create rows of images
+    const renderRows = () => {
+      let rows: any[] = [];
+      let currentRowItems: any[] = [];
+
+      insignias.forEach((item, index) => {
+        currentRowItems.push(
+          <Image
+            key={index}
+            source={item}
+            contentFit="fill"
+            style={{
+              width: imageSize,
+              height: imageSize,
+              marginRight: (index + 1) % columns === 0 ? 0 : 10, // Add right margin except for the last item in the row
+            }}
+          />
+        );
+
+        // If this is the last column in the row or the last item, add the row
+        if ((index + 1) % columns === 0 || index === insignias.length - 1) {
+          rows.push(
+            <View
+              key={index}
+              style={{ flexDirection: "row", marginBottom: 10 }}
+            >
+              {currentRowItems}
+            </View>
+          );
+          currentRowItems = []; // Reset currentRowItems for the next row
+        }
+      });
+
+      return rows;
+    };
+
+    return (
+     <View style={{
+      paddingHorizontal: 20
+     }}>
+       <View style={{ paddingHorizontal: 20,
+        backgroundColor: theme === "light" ? "#E5E5E5" : "#222",
+        borderRadius: 10,
+        padding: 15,
+        width: "100%",
+      }}>
+        <Text
+          style={{
+            color: primaryTextColor(theme),
+            fontSize: 24,
+            fontWeight: "500",
+            marginBottom: 20,
+          }}
+        >
+          Conquistas
+        </Text>
+
+        {renderRows()}
+      </View>
+     </View>
+    );
+  };
+
+  const CoinsView = ({ columns = 4 }) => {
+    return (
+      <View style={{ padding: 20 }}>
+        <View
+          style={{
+            backgroundColor: theme === "light" ? "#E5E5E5" : "#222",
+            borderRadius: 10,
+            padding: 15,
+            width: "100%",
+          }}
+        >
+          <View
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+              width: "100%",
+            }}
+          >
+            <Text
+              style={{
+                color: primaryTextColor(theme),
+                fontSize: 20,
+                fontWeight: "400",
+              }}
+            >
+              Moedas
+            </Text>
+            <Ionicons
+              color={primaryTextColor(theme)}
+              name="information-circle"
+              size={20}
+            />
+          </View>
+
+          <View
+            style={{
+              marginTop: 10,
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              width: "100%",
+            }}
+          >
+            <Image
+              cachePolicy="memory-disk"
+              contentFit="cover"
+              transition={1000}
+              source={require("../../assets/coin.png")}
+              style={{ width: 30, height: 30, borderRadius: 50 }}
+            />
+            <Text
+              style={{
+                marginLeft: 10,
+                color: primaryTextColor(theme),
+                fontSize: 24,
+                fontWeight: "500",
+              }}
+            >
+              23.00
+            </Text>
+          </View>
+        </View>
+      </View>
+    );
+  };
+
+  const [refreshing, setRefreshing] = useState(false);
+
+  async function onRefresh() {
+    setRefreshing(false);
+  }
+
   return (
     <View
       style={{
         flex: 1,
-        backgroundColor: primaryBackgroundColor(theme),
+        backgroundColor: theme === "light" ? "#EEE" : "#222",
+
         display: "flex",
         flexDirection: "column",
-        justifyContent: "space-between",
       }}
     >
       <SafeAreaView>
         <Header />
 
-        <FlatList
-          ListFooterComponent={
-            <View
-              style={{
-                height: 60,
-              }}
+        <ScrollView
+          style={{
+            height: "100%",
+          }}
+          refreshControl={
+            <RefreshControl
+              tintColor={primaryTextColor(theme)}
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+              colors={["#009cb8"]}
             />
           }
-          ListHeaderComponent={
-            <>
-              <Profile />
+        >
+          <Profile />
 
-              <Statistics />
-
-              <Experience />
-            </>
-          }
-          data={statistics}
-          renderItem={renderStatisticItem}
-          keyExtractor={(item) => item.key}
-          numColumns={2} // Two items per row
-          style={{
-            paddingLeft: 5,
-          }}
-        />
+          <View
+            style={{
+              marginTop: 20,
+              height: "100%",
+              backgroundColor: primaryBackgroundColor(theme),
+            }}
+          >
+            <CoinsView />
+            <InsigniasView />
+          </View>
+        </ScrollView>
       </SafeAreaView>
     </View>
   );

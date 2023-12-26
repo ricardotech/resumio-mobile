@@ -1,9 +1,8 @@
-import React, {useState } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
   TouchableOpacity,
-  Image,
   TouchableWithoutFeedback,
   ActivityIndicator,
 } from "react-native";
@@ -12,9 +11,7 @@ import { useAuth } from "../../contexts/auth.context";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import {
-  primaryTextColor
-} from "../../utils/style";
+import { primaryTextColor } from "../../utils/style";
 import { ContentLabel } from "../../components/ContentLabel";
 import { useTheme } from "../../contexts/theme.context";
 import { Avatar } from "@rneui/base";
@@ -25,6 +22,7 @@ import { Platform } from "react-native";
 import { Pressable } from "react-native";
 import { Keyboard } from "react-native";
 import Toast from "react-native-toast-message";
+import { Image } from "expo-image";
 
 const InfoScreen = () => {
   const { theme, changeTheme } = useTheme();
@@ -49,6 +47,7 @@ const InfoScreen = () => {
           alignItems: "center",
           paddingRight: 20,
           paddingBottom: 15,
+          marginTop: -40
         }}
       >
         <View
@@ -81,6 +80,7 @@ const InfoScreen = () => {
 
   const ProfileInfo = () => {
     const [imageLoading, setImageLoading] = useState(true);
+
     const handleChangeImage = () => {
       changeProfileImageFunc(
         user,
@@ -89,6 +89,7 @@ const InfoScreen = () => {
         changeProfileImage
       );
     };
+
     return (
       <View>
         <View
@@ -110,6 +111,8 @@ const InfoScreen = () => {
             />
             <Avatar size={100} rounded>
               <Image
+                cachePolicy="memory-disk"
+                contentFit="cover"
                 source={{ uri: user?.picture }}
                 onLoadStart={() => setImageLoading(true)}
                 onLoad={() => setImageLoading(false)}

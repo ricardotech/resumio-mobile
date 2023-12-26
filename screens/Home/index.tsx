@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   View,
   Text,
@@ -23,12 +23,14 @@ import { useNavigation } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import { authScreenProp } from "../../routes/user.routes";
 import { useService } from "../../contexts/service.context";
+import { Image } from "expo-image";
+import Loading from "../Loading";
 
 export default function HomeScreen() {
   const navigation = useNavigation<authScreenProp>();
 
   const { user } = useAuth();
-  const { userChaptersProgress } = useService();
+  const { userChaptersProgress, userStreak, coinsEarned } = useService();
   const { theme, changeTheme } = useTheme();
 
   const Header = () => {
@@ -54,13 +56,67 @@ export default function HomeScreen() {
           <TouchableOpacity
             style={{
               marginLeft: 15,
+              height: 30,
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+              backgroundColor: "rgba(255, 117, 28, 0.3)",
+              paddingHorizontal: 10,
+              paddingRight: 13,
+              borderRadius: 100,
             }}
           >
-            <Ionicons
-              name="ios-notifications-outline"
-              color={primaryTextColor(theme)}
-              size={30}
+            <Text
+              style={{
+                color: primaryTextColor(theme),
+                marginRight: 5
+              }}
+            >
+              🔥
+            </Text>
+            <Text
+              style={{
+                color: primaryTextColor(theme),
+              }}
+            >
+              {userStreak?.currentStreak}
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              marginLeft: 10,
+              height: 30,
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+              backgroundColor: "rgba(181, 141, 16, 0.3)",
+              paddingHorizontal: 10,
+              paddingRight: 13,
+              borderRadius: 100,
+            }}
+          >
+            <Image
+              cachePolicy="memory-disk"
+              contentFit="cover"
+              transition={1000}
+              source={require("../../assets/coin.png")}
+              style={{
+                width: 25,
+                height: 25,
+                borderRadius: 50,
+                marginRight: 5,
+              }}
             />
+
+            <Text
+              style={{
+                color: primaryTextColor(theme),
+              }}
+            >
+              {coinsEarned}
+            </Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -160,6 +216,11 @@ export default function HomeScreen() {
             tudo que somos.
           </Text>
           <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("DevotionalScreen", {
+                id: "0",
+              });
+            }}
             style={{
               height: 45,
               width: "100%",
@@ -201,14 +262,8 @@ export default function HomeScreen() {
       <SafeAreaView>
         <Header />
         <ScrollView>
-          {/* <DailyPray /> */}
-          <Text
-            style={{
-              color: "#333",
-            }}
-          >
-            {JSON.stringify(user)}
-          </Text>
+          <DailyPray />
+
           <View
             style={{
               height: 70,

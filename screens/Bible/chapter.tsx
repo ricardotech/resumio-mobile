@@ -202,7 +202,7 @@ export default function ChapterScreen({ route }: { route: any }) {
           {/* {id > 1 ? (
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate("ChapterPage", {
+                navigation.navigate("ChapterScreen", {
                   id: id - 1,
                   name: `Capítulo ${id}`,
                   title: `Capítulo ${id}`,
@@ -251,7 +251,7 @@ export default function ChapterScreen({ route }: { route: any }) {
                   userId: String(user?.id),
                 });
 
-                navigation.navigate("ChapterPage", {
+                navigation.navigate("ChapterScreen", {
                   id: id + 1,
                   name: `Capítulo ${id}`,
                   title: `Capítulo ${id}`,

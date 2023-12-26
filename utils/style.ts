@@ -17,5 +17,5 @@ export const secondaryBackgroundColor = (theme: Theme): string => {
 };
 
 export const tertiaryBackgroundColor = (theme: Theme): string => {
-  return theme === "light" ? "#EEE" : "#151515";
+  return theme === "light" ? "#E7E7E7" : "#151515";
 };
