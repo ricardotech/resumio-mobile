@@ -2,14 +2,14 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { ImageBackground } from "expo-image";
 import Background from "../../assets/PlayDevotionalBackground.png"
 import { TouchableOpacity, View } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { primaryTextColor } from "../../utils/style";
 import { Ionicons } from "@expo/vector-icons";
 import { useTheme } from "../../contexts/theme.context";
 import { useNavigation } from "@react-navigation/native";
 import { authScreenProp } from "../../routes/auth.routes";
 import { Text } from "react-native";
-import { Slider } from "@rneui/themed";
+import Slider from '@react-native-community/slider';
 import { Audio } from "expo-av";
 import musica from "../../assets/audios/Musica.mp3"
 
@@ -21,7 +21,7 @@ export function PlayDevotionalScreen() {
     const [sound, setSound] = useState<Audio.Sound | null>(null);
     const [status, setStatus] = useState({} as any);
     const [playbackPosition, setPlaybackPosition] = useState(0);
-    const [ isplaying, setIsPlaying ] = useState(false);
+    const [isplaying, setIsPlaying] = useState(false);
 
 
     async function LoadFile() {
@@ -60,7 +60,13 @@ export function PlayDevotionalScreen() {
         sound?.pauseAsync();
     }
 
-    const timeInMinutes = () => {
+    async function setSoundPosition(position: number) {
+        if (sound && status?.durationMillis) {
+            sound.setPositionAsync(position * status.durationMillis);
+        }
+    }
+
+    const TotalTimeInMinutes = () => {
         if (status?.durationMillis) {
             const minutes = Math.floor(status.durationMillis / 60000);
             const seconds = ((status.durationMillis % 60000) / 1000).toFixed(0);
@@ -81,9 +87,16 @@ export function PlayDevotionalScreen() {
 
     useEffect(() => {
         LoadFile();
+        TotalTimeInMinutes();
     }, []);
 
     useEffect(() => {
+        if (status?.positionMillis && status?.durationMillis) {
+            setPlaybackPosition(status.positionMillis / status.durationMillis);
+        }
+    }, [status?.positionMillis, status?.durationMillis]);
+
+    const TimeComponent = useCallback(() => {
 
         if (sound) {
             sound.setOnPlaybackStatusUpdate((status) => {
@@ -92,13 +105,15 @@ export function PlayDevotionalScreen() {
                 }
             });
         }
+        return (
+            <Text style={{
+                color: primaryTextColor(theme),
+                fontSize: 16,
+                textAlign: "right"
+            }}> {currentTimeInMinutes()}</Text>
 
-        return () => {
-            if (sound) {
-                sound.setOnPlaybackStatusUpdate(null);
-            }
-        };
-    }, [sound]);
+        )
+    }, [playbackPosition, status])
 
     return (
         <ImageBackground style={{
@@ -201,16 +216,10 @@ export function PlayDevotionalScreen() {
                         <Slider
                             thumbTintColor={primaryTextColor(theme)}
                             value={playbackPosition}
-                            thumbStyle={{
-                                width: 20,
-                                height: 20,
-                                borderRadius: 20,
-                            }}
-                            allowTouchTrack
-                            onValueChange={(value) => {
-                                if (status?.durationMillis) {
-                                    sound?.setPositionAsync(value * status.durationMillis);
-                                }
+                            minimumValue={0}
+                            maximumValue={1}
+                            onValueChange={async (value) => {
+                                await setSoundPosition(value);
                             }}
                             minimumTrackTintColor="#4ab7f7"
                             maximumTrackTintColor="#cccccc4c"
@@ -218,11 +227,20 @@ export function PlayDevotionalScreen() {
                                 width: "100%",
                             }}
                         />
-                        <Text style={{
-                            color: primaryTextColor(theme),
-                            fontSize: 16,
-                            textAlign: "right"
-                        }}> {currentTimeInMinutes()} / {timeInMinutes()}</Text>
+                        <View style={{
+                            display: "flex",
+                            flexDirection: "row",
+                            alignItems: "center",
+                            justifyContent: "flex-end",
+                            marginTop: 10
+                        }}>
+                            <TimeComponent />
+                            <Text style={{
+                                color: primaryTextColor(theme),
+                                fontSize: 16
+                            }}> / {TotalTimeInMinutes()}</Text>
+                        </View>
+
                     </View>
                     <View style={{
                         display: "flex",
@@ -246,6 +264,7 @@ export function PlayDevotionalScreen() {
                                 }}
                             >
                                 <Ionicons
+                                    // @ts-ignore
                                     name={icon}
                                     size={30}
                                     color={primaryTextColor(theme)}
